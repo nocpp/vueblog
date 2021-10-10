@@ -11,4 +11,4 @@ publish: true
 
 ## Git
 	工作区-（add）->暂存区-（commit）->版本区-->远程仓库
-	关联远程仓库 git remote add origin https://ss.git
+	关联远程仓库 git remote add/remove origin https://ss.git
