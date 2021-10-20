@@ -105,3 +105,66 @@ const merge = function(nums1, m, nums2, n) {
     }
 };
 ```
+> 指针就是个索引，通过移动指针访问不同元素
+
+
+### 三数求和问题
+:::tip
+真题描述：给你一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？请你找出所有满足条件且不重复的三元组。
+
+示例:
+给定数组 nums = [-1, 0, 1, 2, -1, -4]， 满足要求的三元组集合为： [ [-1, 0, 1], [-1, -1, 2] ]
+:::
+```js
+function threeSum(_arr) {
+    let result = [];
+
+    _arr = _arr.sort((a, b) => a - b);
+    
+    const len = _arr.length;
+    for (let i = 0; i < len - 2; i++) {
+        let j = i + 1, k = len - 1;
+        
+        //防止重复元素
+        if (i > 0 && _arr[i] === _arr[i - 1]) {
+            continue;
+        }
+        
+        while (j < k) {
+            if (_arr[i] + _arr[j] + _arr[k] === 0) {
+                result.push([_arr[i], _arr[j], _arr[k]]);
+                k--;
+                j++;
+                
+                //防止重复元素
+                while (j < k && _arr[j] === _arr[j - 1]) {
+                    j++;
+                }
+                
+                //防止重复元素
+                while (j < k && _arr[k] === _arr[k + 1]) {
+                    k--;
+                }
+            } else if (_arr[i] + _arr[j] + _arr[k] > 0) {
+                k--;
+                
+                //防止重复元素
+                while (j < k && _arr[k] === _arr[k + 1]) {
+                    k--;
+                }
+            } else {
+                j++;
+                
+                //防止重复元素
+                while (j < k && _arr[j] === _arr[j - 1]) {
+                    j++;
+                }
+            }
+        }
+    }
+    
+    return result;
+}
+```
+
+> 当想到“有序”和“数组”时，就应该想到对撞指针解法
