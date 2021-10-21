@@ -12,3 +12,26 @@ publish: true
 ## Git
 	工作区-（add）->暂存区-（commit）->版本区-->远程仓库
 	关联远程仓库 git remote add/remove origin https://ss.git
+	
+
+## git 中 origin是什么意思？
+	origin就是远程仓库链接的别名，可以修改为其它名字。origin是git默认的名字，master是其默认分支。没关联远程仓库时，默认指向本地仓库。
+```git
+git remote -v
+```
+使用以上git命令可以看到如下输出
+```git
+origin https://github.com/user1/repository.git (fetch)
+origin https://github.com/user1/repository.git (push)
+```
+```git
+git remote add upstream https://github.com/user1/repository.git
+```
+使用以上git命令可以看到如下输出
+```git
+origin https://github.com/user2/repository.git (fetch)
+origin https://github.com/user2/repository.git (push)
+upstream https://github.com/user1/repository.git (push)
+upstream https://github.com/user1/repository.git (push)
+```
+增加了指向user1代码库的upstream
