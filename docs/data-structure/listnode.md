@@ -229,6 +229,34 @@ function reverseFn(head) {
 }
 ```
 
+```js
+//递归解法
+function testFn(head) {
+    let result = null;
+    reverse(head);
+    if (head) {
+        head.next = null;
+    }
+    
+    logList(result);
+    
+    function reverse(node) {
+        if (!node) {
+            return;
+        }
+        
+        if (!node.next) {
+            result = node;
+            return node;
+        }
+        
+        let next = reverse(node.next);
+        next.next = node;
+        return node;
+    }
+}
+```
+
 ## 局部反转1个链表，反转从位置 m 到 n 的链表。请使用一趟扫描完成反转。
 说明:  
 1 ≤ m ≤ n ≤ 链表长度。  
@@ -263,5 +291,44 @@ function reverseFn(head, m, n) {
 	start.next = cur;
 	
 	logList(dummy.next);
+}
+```
+
+```js
+//递归解法
+function testFn(head, left, right) {
+    let step = right - left;
+    if (step < 1) {
+        return head;
+    }
+    
+    const dummy = new ListNode();
+    dummy.next = head;
+    
+    let curr = dummy;
+    let start = null;
+    let end = null;
+    let result = null;
+    while(left--) {
+        start = curr;
+        curr = curr.next;
+    }
+    
+    reverse(curr, step);
+    start.next.next = end;
+    start.next = result;
+    logList(dummy.next);
+    
+    function reverse(node, count) {
+        if (count === 0) {
+            result = node;
+            end = node.next;
+            return node;
+        }
+        
+        let next = reverse(node.next, count - 1);
+        next.next = node;
+        return node;
+    }
 }
 ```
