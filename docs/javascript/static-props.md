@@ -39,7 +39,7 @@ Foo.prop = 1;
 
 Foo.classMethod() // 'hello'
 var foo = new Foo();
-foo.classMethod();
+foo.classMethod(); // uncaught TypeError: foo.classMethod is not a function
 ```
 > ES6 明确规定， Class 内部只有静态方法， 没有静态属性。所以静态属性只能写在外面
 

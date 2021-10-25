@@ -101,3 +101,167 @@ function combineListNode(l1, l2) {
 	return head;
 }
 ```
+
+## 给定一个排序链表，删除所有重复的元素，使得每个元素只出现一次。
+示例：  
+输入: 1->1->2  
+输出: 1->2  
+示例 2:  
+输入: 1->1->2->3->3  
+输出: 1->2->3
+
+### 思路分析
+> 删除链表结点，关键在于找到目标结点的前结点进行操作
+定义一个头结点, 遍历链表，重复的删除
+```js
+function deleteFn(head) {
+	let cur = head;
+	
+	while(cur && cur.next) {
+		if (cur.val === cur.next.val) {
+			cur.next = cur.next.next;
+		} else {
+			cur = cur.next;
+		}
+	}
+	
+	logList(head);
+}
+```
+
+## 给定一个排序链表，删除所有含有重复数字的结点，只保留原始链表中 没有重复出现的数字。
+### 示例：
+:::tip
+输入: 1->2->3->3->4->4->5  
+输出: 1->2->5  
+示例 2:  
+输入: 1->1->1->2->3  
+输出: 2->3
+:::
+### 思路分析
+与上题有区别的地方在于，本题需要删除所有含有重复数字的结点，有可能删除第一个结点，所以需要引入dummy结点作为头结点
+```js
+function deleteFn(head) {
+	if (!head || !head.next) return head;
+	
+	let dummy = new ListNode(null);
+	dummy.next = head;
+	
+	let cur = dummy;
+	
+	while (cur.next && cur.next.next) {
+		if (cur.next.val === cur.next.next.val) {
+			let tempVal = cur.next.val;
+			while (cur.next && cur.next.val === tempVal) {
+				cur.next = cur.next.next;
+			}
+		} else {
+			cur = cur.next;
+		}
+	}
+	
+	logList(dummy.next);
+}
+```
+
+## 快慢指针与多指针
+链表题目中，有一类会涉及到反复的遍历。涉及反复遍历的题目，题目本身虽然不会直接跟你说“你好，我是一道需要反复遍历的题目”，但只要你尝试用常规的思路分析它，你会发现它一定涉及反复遍历；同时，涉及反复遍历的题目，还有一个更明显的特征，就是它们往往会涉及相对复杂的链表操作，比如反转、指定位置的删除等等。
+
+解决这类问题，我们用到的是双指针中的“快慢指针”。快慢指针指的是两个一前一后的指针，两个指针往同一个方向走，只是一个快一个慢。快慢指针严格来说只能有俩，不过实际做题中，可能会出现一前、一中、一后的三个指针，这种超过两个指针的解题方法也叫“多指针法”。
+
+
+## 给定一个链表，删除链表的倒数第 n 个结点，并且返回链表的头结点。（快慢指针）
+示例：
+:::tip
+给定一个链表: 1->2->3->4->5, 和 n = 2.
+当删除了倒数第二个结点后，链表变为 1->2->3->5.
+
+保证：n是有效的
+:::
+思路分析：  
+1. 倒数变正数，链表正常是正向遍历的，无法倒着遍历。倒数n个就是正数len-n+1个，len代表链表的总长度
+2. 为了求得len，一般思路是需要遍历一遍链表，算出len，然后再来一个遍历
+3. 可以使用快慢指针来简化问题
+
+```js
+//快指针先走n步，等走到最后，慢指针下一个元素就是要删除的结点
+function deleteFn(head, n) {
+	let dummy = new ListNode(null);
+	dummy.next = head;
+	
+	let slow = quick = dummy;
+	
+	let i = 0;
+	while (quick && quick.next) {
+		quick = quick.next;
+		if (i > n) {
+			slow = slow.next;
+		}
+	}
+	
+	slow.next = slow.next.next;
+	
+	logList(dummy.next);
+}
+```
+
+## 定义一个函数，输入一个链表的头结点，反转该链表并输出反转后链表的头结点。(多指针法)
+:::tip
+1->2->3->4->5->NULL
+5->4->3->2->1->NULL
+:::
+
+```js
+//使用三个指针，分别指向前一个，当前，下一个，每次替换前一个和当前，保存下一个
+function reverseFn(head) {
+	let pre = null;
+	let cur = head;
+	
+	while (cur !== null) {
+		let next = cur.next;
+		
+		cur.next = pre;
+		pre = cur;
+		cur = next;
+	}
+	
+	logList(pre);
+}
+```
+
+## 局部反转1个链表，反转从位置 m 到 n 的链表。请使用一趟扫描完成反转。
+说明:  
+1 ≤ m ≤ n ≤ 链表长度。  
+示例:  
+:::tip
+输入: 1->2->3->4->5->NULL, m = 2, n = 4
+输出: 1->4->3->2->5->NULL
+:::
+```js
+function reverseFn(head, m, n) {
+	let dummy = new ListNode(null);
+	dummy.next = head;
+	
+	let p = dummy, pre = null, cur, leftHand, start;
+	
+	for (let i = 0; i < m - 1; i++) {
+		p = p.next;
+	}
+	
+	leftHand = p;
+	cur = p.next;
+	start = p.next;
+	
+	for (let i = m - 1; i < n; i++) {
+		let next = cur.next;
+		cur.next = pre;
+		pre = cur;
+		cur = next;
+	}
+	
+	leftHand.next = pre;
+	start.next = cur;
+	
+	logList(dummy.next);
+}
+```
