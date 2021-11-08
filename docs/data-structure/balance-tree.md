@@ -33,3 +33,62 @@ publish: true
    15   7
 ```
 > 返回 true 。
+
+```js
+const isBalance = (root) => {
+	let flag = true;
+	
+	function dfs(root) {
+		if (!root || !flag) {
+			return 0;
+		}
+		
+		const left = dfs(root.left);
+		const right = dfs(root.right);
+		
+		if (Math.abs(left - right) > 1) {
+			flag = false;
+			return 0;
+		}
+		
+		return Math.max(left, right) + 1;
+	}
+	
+	dfs(root);
+	
+	return flag;
+};
+```
+
+## 题目描述：给你一棵二叉搜索树，请你返回一棵平衡后的二叉搜索树，新生成的树应该与原来的树有着相同的节点值。
+如果一棵二叉搜索树中，每个节点的两棵子树高度差不超过 1 ，我们就称这棵二叉搜索树是平衡的。
+如果有多种构造方法，请你返回任意一种。
+> 思路分析，二叉搜索树的中序遍历是有序的，这道题就可以转变为根据有序数组，生成平衡二叉树，和上次讲的题一样了，从中间拿起来
+```js
+const generateTree = (root) => {
+	let sorted = [];
+	
+	function scan(rootInner) {
+		if (!rootInner) return;
+		
+		scan(rootInner.left);
+		sorted.push(rootInner.val);
+		scan(rootInner.right);
+	}
+	
+	scan(root);
+	
+	function dfs(low, high) {
+		if (low > high) return;
+		
+		const mid = Math.floor(low + (high - low) / 2);
+		const node = new TreeNode(sorted[mid]);
+		node.left = dfs(low, mid - 1);
+		node.right = dfs(mid + 1, high);
+		
+		return node;
+	}
+	
+	return dfs(0, sorted.length - 1);
+};
+```
