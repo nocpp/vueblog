@@ -100,3 +100,64 @@ function run (coins, amount) {
     return f[amount] === Infinity ? -1 : f[amount]
 }
 ```
+
+## 背包问题
+:::tip
+有 n 件物品，物品体积用一个名为 w 的数组存起来，物品的价值用一个名为 value 的数组存起来；每件物品的体积用 w[i] 来表示，每件物品的价值用 value[i] 来表示。现在有一个容量为 c 的背包，问你如何选取物品放入背包，才能使得背包内的物品总价值最大？
+:::
+
+> 注意：每种物品都只有1件。
+
+```js
+//没看懂
+/**
+ * @param {Object} n 物品总数量
+ * @param {Object} w 物品重量数组
+ * @param {Object} value 物品价值数组
+ * @param {Object} c 背包容量
+ */
+function back(n, w, value, c) {
+	let d = (new Array(c + 1)).fill(0);
+	
+	let res = -Infinity;
+	
+	for (let i = 1; i <= n; i++) {
+		for (let v = c; v >= w[i]; v--) {
+			d[v] = Math.max(d[v], d[v - w[i]] + value[i])
+			
+			if (d[v] > res) {
+				res = d[v];
+			}
+		}
+	}
+	
+	return res;
+}
+```
+
+## 已知一个无序数组，求这个数组的最长子序列的长度
+```js
+const list = [10,9,2,5,3,7,101,18];
+function child(list) {
+	const len = list.length;
+	
+	if (!len) return 0;
+	
+	const dp = (new Array(len)).fill(1);
+	let maxLen = 1;
+	
+	for (let i = 1; i < len; i++) {
+		for (let j = 0; j < i; j++) {
+			if (list[j] < list[i]) {
+				dp[i] = Math.max(dp[i], dp[j] + 1);
+			}
+		}
+		
+		if (dp[i] > maxLen) {
+			maxLen = dp[i];
+		}
+	}
+	
+	return maxLen;
+}
+```
