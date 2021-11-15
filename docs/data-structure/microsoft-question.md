@@ -85,3 +85,73 @@ var longestPalindrome = function(s) {
     return s.slice(st, ed + 1);//返回最长回文子串
 };
 ```
+
+## 根据前序遍历和中序遍历生成二叉树
+:::tip
+前序遍历的特点是第一个元素是根节点  
+中序遍历的特点是根节点在数组中间，然后根节点左侧元素是左子树结点，右侧是右子树结点  
+然后就可以根据先在前序遍历结果中找到根节点，再在中序遍历中找到根结点索引，再找左右子树结点
+:::
+> 二叉树就要想到递归，二叉树定义是要求二叉树每个结点都满足，所以挨着判断每个二叉树结点
+```js
+/**
+ * @param {number[]} preorder
+ * @param {number[]} inorder
+ * @return {TreeNode}
+ */
+var buildTree = function(preorder, inorder) {
+	const len = preorder.length;
+	
+	function build(preL, preR, inL, inR) {
+        if(preL > preR) {//递归终止条件
+            return null
+        }
+		
+		const root = new TreeNode()
+        root.val = preorder[preL];
+		
+		const k = inorder.indexOf(root.val)  //找到根节点索引
+		
+		const numLeft = k - inL;//左子树结点数量，用来划分前序遍历左右子树结点范围的
+		
+		root.left = build(preL + 1, preL + numLeft, inL, k - 1);//左子树
+		root.right = build(preL + numLeft + 1, preR, k + 1, inR);//右子树
+		
+		return root;
+	}
+	
+	return build(0, len - 1, 0, len - 1);
+};
+```
+
+## 根据中序遍历和后序遍历生成二叉树
+> 思路同上大同小异
+```js
+/**
+ * @param {number[]} inorder
+ * @param {number[]} postorder
+ * @return {TreeNode}
+ */
+var buildTree = function(inorder, postorder) {
+    const len = inorder.length;
+
+    function build(inL, inR, poL, poR) {
+        if (inL > inR) {
+            return null;
+        }
+
+        const root = new TreeNode();
+        root.val = postorder[poR];
+
+        const k = inorder.indexOf(root.val);
+        const numLeft = k - inL;//左子树结点数量，用来划分后序遍历左右子树结点范围的
+
+        root.left = build(inL, k - 1, poL, poL + numLeft - 1);
+        root.right = build(k + 1, inR, poL + numLeft, poR - 1);
+
+        return root;
+    }
+
+    return build(0, len - 1, 0, len - 1);
+};
+```
