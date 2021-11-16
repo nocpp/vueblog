@@ -5,7 +5,7 @@ sidebar: 'auto'
 categories:
  - vue
 tags:
- - 框架
+ - vue
 publish: true
 ---
 
@@ -28,7 +28,7 @@ let vm = new Vue({
 
 //其中vm代理了vm._data, vm.name === vm._data.name
 ```
-![数据代理核心](前端框架面试_files/1.jpg)
+![数据代理核心](img/1.jpg)
 
 2. 模板解析，把获取el节点，appendChild到DocumentFragment（内存）中，递归所有子节点，把文本节点中{{}}和元素节点的属性（事件属性绑定事件，bind(vm)，其它属性）
 替换为vm中对应属性，显示出来，给每个变量new Watcher，添加Dep
@@ -40,7 +40,7 @@ let vm = new Vue({
 vm中set是实现数据代理的，vm中data的set是实现数据劫持的
 遍历vm中所有属性节点，设置set，改变时，Dep调用notify方法，执行Watcher，触发视图更新
 
-1. Watcher是观察的Html中{{name}},{{user.id}},和指令中的变量，当对应变量变化时，更新视图
+1. Watcher是观察的Html中 name, user.id,和指令中的变量，当对应变量变化时，更新视图
 2. Dep是负责通知和监听
 
 ### Vue生命周期

@@ -5,7 +5,7 @@ sidebar: 'auto'
 categories:
  - javascript
 tags:
- - es6
+ - ES6
 publish: true
 ---
 
