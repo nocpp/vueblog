@@ -155,3 +155,49 @@ var buildTree = function(inorder, postorder) {
     return build(0, len - 1, 0, len - 1);
 };
 ```
+
+## 复制带随机指针的链表
+:::tip
+题目描述：给定一个链表，每个节点包含一个额外增加的随机指针，该指针可以指向链表中的任何节点或空节点。要求返回这个链表的 深拷贝。
+
+示例：  
+输入：head = [[7,null],[13,0],[11,4],[10,2],[1,0]]  
+输出：[[7,null],[13,0],[11,4],[10,2],[1,0]]  
+:::
+> 思路分析：此题属于链表复制增强版题目，遍历链表复制链表，并记录复制结点和原结点的对应关系，方便复制random指针，然后再遍历，复制random结点
+```js
+/**
+ * @param {Node} head
+ * @return {Node}
+ */
+var copyRandomList = function(head) {
+    if (!head) return null;
+
+    let copyHead = new Node();
+    let copyNode = copyHead;
+    let nodeMap = new Map();
+
+    let cur = head;
+
+    while (cur) {//遍历复制链表，目前只复制链结点值
+        copyNode.val = cur.val;
+        copyNode.next = cur.next ? new Node() : null;
+
+        nodeMap.set(cur, copyNode);//利用Map结构存储原结点和复制结点的关系，方便后面random结点的复制
+
+        copyNode = copyNode.next;
+        cur = cur.next;
+    }
+
+    copyNode = copyHead;
+    cur = head;
+
+    while (cur) {//复制random结点
+        copyNode.random = cur.random ? nodeMap.get(cur.random) : null;
+        copyNode = copyNode.next;
+        cur = cur.next;
+    }
+
+    return copyHead;
+};
+```
