@@ -22,7 +22,7 @@ RN是原生渲染
 ## 讲讲JS的数据类型？
 最新的 ECMAScript 标准定义了 9种数据类型:
 
-7 种原始类型
+### 7 种原始类型
 - Boolean
 - Undefined
 - Null
@@ -31,7 +31,7 @@ RN是原生渲染
 - String
 - Symbol  let s = Symbol()
 
-2 种结构类型
+### 2 种结构类型
 - Object
 - Function
 
@@ -123,17 +123,17 @@ objectSymbols
 
 ## css水平、垂直居中的写法，请至少写出4种?
 
->这题考查的是css的基础知识是否全面，所以平时一定要注意多积累
+> 这题考查的是css的基础知识是否全面，所以平时一定要注意多积累
 
 ### 水平居中
 - 行内元素: text-align: center
 - 块级元素: margin: 0 auto
-- position:absolute +left:50%+ transform:translateX(-50%)
+- position:absolute +left:50%+ transform:translateX(-50%) || maringleft: -50%
 - display:flex + justify-content: center
 
 ### 垂直居中
 - 设置line-height 等于height
-- position：absolute +top:50%+ transform:translateY(-50%)
+- position：absolute +top:50%+ transform:translateY(-50%) || maringTop: -50%
 - display:flex + align-items: center
 - display: table-cell;vertical-align: middle;
 
@@ -152,7 +152,7 @@ rem是全部的长度都相对于根元素html元素。通常做法是给html元
 px像素（Pixel）。相对长度单位。像素px是相对于显示器屏幕分辨率而言的。一般电脑的分辨率有1920*1024等不同的分辨率
 ，前者是屏幕宽度总共有1920个像素, 后者则是高度为1024个像素
 
-## 画一条0.5px的直线？
+### 画一条0.5px的直线？
 > 考查的是css3的transform
 ```css
 .box {
@@ -161,7 +161,7 @@ px像素（Pixel）。相对长度单位。像素px是相对于显示器屏幕�
 }
 ```
 
-## 说一下盒模型？
+### 说一下盒模型？
 > 盒模型是css中重要的基础知识，也是必考的基础知识
 1. 盒模型的组成  
     由里向外content,padding,border,margin.
@@ -169,7 +169,7 @@ px像素（Pixel）。相对长度单位。像素px是相对于显示器屏幕�
 	- border-box: IE盒子模型中，width表示content+padding+border这三个部分的宽度
     - content-box: 在标准的盒子模型中，width指content部分的宽度 (默认是这个)
 
-## 画一个简单的三角形
+### 画一个简单的三角形
 ```css
  .a{
     width: 0;
@@ -196,58 +196,53 @@ px像素（Pixel）。相对长度单位。像素px是相对于显示器屏幕�
 </div>
 ```
 
->BFC （块级格式化上下文），是 W3C CSS 2.1 规范中的一个概念，它决定了元素如何对其内容进行定位，以及与其他元素的关系和相互作用。
+## BFC （块级格式化上下文）
+是 W3C CSS 2.1 规范中的一个概念，它决定了元素如何对其内容进行定位，以及与其他元素的关系和相互作用。
 
-满足以下条件，就是一个BFC元素
-
-*触发条件:*
-
+### 触发条件:
 - 根元素(html元素)
 - 浮动元素
 - 绝对和固定定位元素，position: absolute/fixed
 - 行内块儿元素/弹性盒子/表格单元，标题，display: inline-block / (table-cell 、 table-caption此元素会作为一个表格标题显示), flex 、inline-flex 之一的元素
 - 滚动相关元素 ovevflow !== visible
 
-*解决问题*
- 
+### 解决问题
 - margin重合问题
 - 高度塌陷问题，（包含浮动元素，高度塌陷问题：在通常情况下父元素的高度会被子元素撑开，
     而在这里因为其子元素为浮动元素所以父元素发生了高度坍塌，上下边界重合。这时就可以用bfc来清除浮动了。）
 - 阻止元素被浮动元素覆盖，做流式布局
 ```html
 <div style="height: 100px;width: 100px;float: left;background: lightblue">我是一个左浮动的元素</div>
-<div style="width: 200px; height: 200px;background: #eee">我是一个没有设置浮动,
-也没有触发 BFC 元素, width: 200px; height:200px; background: #eee;</div>
+<div style="width: 200px; height: 200px;background: #eee">我是一个没有设置浮动,也没有触发 BFC 元素, width: 200px; height:200px; background: #eee;</div>
 ```
 
-**BFC的使用**
-
-解决margin重合的问题
-
+### BFC的使用
+1. 解决margin重合的问题
 ```html
 <div class="aside"></div>
 <div class="text">
     <div class="main"></div>
 </div>
-<!--下面是css代码-->
- .aside {
-        margin-bottom: 100px;  
-        width: 100px;
-        height: 150px;
-        background: #f66;
-    }
-    .main {
-        margin-top: 100px;
-        height: 200px;
-        background: #fcc;
-    }
-     .text{
-        /*盒子main的外面包一个div，通过改变此div的属性使两个盒子分属于两个不同的BFC，以此来阻止margin重叠*/
-        overflow: hidden;  //此时已经触发了BFC属性。
-    }
+```
+```css
+.aside {
+    margin-bottom: 100px;  
+    width: 100px;
+    height: 150px;
+    background: #f66;
+}
+.main {
+    margin-top: 100px;
+    height: 200px;
+    background: #fcc;
+}
+ .text{
+    /*盒子main的外面包一个div，通过改变此div的属性使两个盒子分属于两个不同的BFC，以此来阻止margin重叠*/
+    overflow: hidden;  //此时已经触发了BFC属性。
+}
 ```
 
-**遍历A节点的父节点下的所有子节点**
+### 找到A节点的父节点下的所有子节点
 ```js
 <script>
     var b=document.getElementById("a").parentNode.children;
@@ -255,138 +250,131 @@ px像素（Pixel）。相对长度单位。像素px是相对于显示器屏幕�
 </script>
 ```
 
-**用js递归的方式写1到100求和？**
+### 用js递归的方式写1到100求和?
+> 思路分析：使用倒推法推导出递归式，然后找到递归边界，然后编码
 ```js
-function add(num1,num2){
-	var num = num1+num2;
-        if(num2+1>100){
-	 return num;
-	}else{
-	  return add(num,num2+1)
-        }
- }
-var sum =add(1,2);   
-```
-
-**浏览器内核**
-
-主要分两个部分：渲染引擎、js引擎
-渲染引擎：负责取得网页的内容（html css img ...），以及计算网页的显示方式，
-    然后会输出至显示器或者打印机。浏览器的内核不同对于网页的语法解释也不同，所以渲染的效果也不一样
-js引擎：解析和执行javascript 来实现网页的动态效果
-    最开始渲染引擎和js引擎并没有区分的很明确，后来js引擎越来越独立，内核就倾向于只指渲染引擎
-IE : trident 内核
-Firefox : gecko 内核
-Safari : webkit 内核
-Opera : 以前是 presto 内核， Opera 现已改用Google - Chrome 的 Blink 内核
-Chrome: Blink (基于 webkit ，Google与Opera Software共同开发)
-
-**HTTP 的请求方式场景**
-
-Get 方法：获取数据通常(查看数据)-查看
-POST 方法：向服务器提交数据通常(创建数据)-create
-PUT 方法：向服务器提交数据通常(更新数据)-update，与POST方法很像，也是提交数据，但PUT制定了资源在服务器上的位置，常用在修改数据
-HEAD 方法：只请求页面的首部信息
-```
-一个HEAD请求的响应可被缓存
-HEAD请求常常被忽略，但是能提供很多有用的信息，特别是在有限的速度和带宽下。主要有以下特点：
-1、只请求资源的首部；
-2、检查超链接的有效性；
-3、检查网页是否被修改；
-4、多用于自动搜索机器人获取网页的标志信息，获取rss种子信息，或者传递安全认证信息等
-```
-DELETE 方法：删除服务器上的资源
-OPTIONS 方法：用于获取当前URL支持的请求方式
-TRACE 方法：用于激活一个远程的应用层请求消息回路
-CONNECT 方法：把请求链接转换到透明的TCP/IP的通道
-HTTP/1.1协议中预留给能够将连接改为管道方式的代理服务器。
-
-1）方法名称是区分大小写的，当某个请求所针对的资源不支持对应的请求方法的时候，服务器应当返回状态码405（Mothod Not Allowed）；当服务器不认识或者不支持对应的请求方法时，应返回状态码501（Not Implemented）。
-2）HTTP服务器至少应该实现GET和HEAD/POST方法，其他方法都是可选的，此外除上述方法，特定的HTTP服务器支持扩展自定义的方法。
-
-**HTTP状态码**
-
-1XX ：信息状态码
-    100 continue 继续，一般在发送 post 请求时，已发送了 http header 之后服务端将返回此信息，表示确认，之后发送具体参数信息
-
-2XX ：成功状态码
-    200 ok 正常返回信息
-    201 created  请求成功并且服务器创建了新资源
-    202 accepted 服务器已经接收请求，但尚未处理
-
-3XX ：重定向
-    301 move per 请求的网页已经永久重定向
-    302 found 临时重定向
-    303 see other 临时重定向，且总是使用get请求新的url
-    304 not modified 自从上次请求后，请求的网页未修改过
-
-4XX ：客户端错误
-    400 bad request 服务器无法理解请求的格式，客户端不应当尝试再次使用相同的内容发起请求
-    401 unauthorized 请求未授权
-    403 forbidden 禁止访问
-
-    404 not found 找不到如何与url匹配的资源
-    405（Mothod Not Allowed）
+function sumNum (endNum) {
+    //求1+2+3...+99+100
     
-5XX ：服务器错误
-    500 internal server error 最常见的服务器端的错误
-    503 service unacailable 服务器端暂时无法处理请求（可能是过载或维护）
-    501（Not Implemented）
+    //递归式 f(n) = n + f(n-1)
+    //递归边界 n < 1
+    
+    if (endNum < 1) {
+        return 0;
+    }
+    
+    const sum = endNum + sumNum(endNum - 1);
+    
+    return sum;
+}
+```
 
-*301重定向和302重定向的区别*
-　　302重定向只是暂时的重定向，搜索引擎会抓取新的内容而保留旧的地址，因为服务器返回302，所以，搜索搜索引擎认为新的网址是暂时的。
-    比如未登录跳登录页面，访问不存在的页面跳转404页面
-    只有在Cache-Control或Expires中进行了指定的情况下，这个响应才是可缓存的。
+## 浏览器内核
+主要分两个部分：渲染引擎、js引擎
 
-　　而301重定向是永久的重定向，搜索引擎在抓取新的内容的同时也将旧的网址替换为了重定向之后的网址，比如http跳https
-    除非额外指定，否则这个响应也是可缓存的。
+### 渲染引擎：
+负责取得网页的内容（html css img ...），以及计算网页的显示方式，然后会输出至显示器或者打印机。浏览器的内核不同对于网页的语法解释也不同，所以渲染的效果也不一样
 
-*http缓存/浏览器缓存*
-浏览器第一次向一个web服务器发起http请求后，服务器会返回请求的资源，
-并且在响应头中添加一些有关缓存的字段如：Cache-Control、Expires、Last-Modified、ETag、Date等等。
+### js引擎：
+解析和执行javascript 来实现网页的动态效果，最开始渲染引擎和js引擎并没有区分的很明确，后来js引擎越来越独立，内核就倾向于只指渲染引擎
+
+### 常见浏览器内核
+- IE : trident 内核
+- Firefox : gecko 内核
+- Safari : webkit 内核
+- Opera : 以前是 presto 内核， Opera 现已改用Google - Chrome 的 Blink 内核
+- Chrome: Blink (基于 webkit ，Google与Opera Software共同开发)
+
+### HTTP 的请求方式场景
+- GET 方法：获取数据通常(查看数据)-查看
+- POST 方法：向服务器提交数据通常(创建数据)-create
+- PUT 方法：向服务器提交数据通常(更新数据)-update，与POST方法很像，也是提交数据，但PUT制定了资源在服务器上的位置，常用在修改数据
+- HEAD 方法：只请求页面的首部信息
+:::tip
+一个HEAD请求的响应可被缓存，HEAD请求常常被忽略，但是能提供很多有用的信息，特别是在有限的速度和带宽下。主要有以下特点:  
+1. 只请求资源的首部；
+2. 检查超链接的有效性；
+3. 检查网页是否被修改；
+4. 多用于自动搜索机器人获取网页的标志信息，获取rss种子信息，或者传递安全认证信息等
+:::
+- DELETE 方法：删除服务器上的资源
+- OPTIONS 方法：用于获取当前URL支持的请求方式（pg查询时会自动调options）
+- TRACE 方法：用于激活一个远程的应用层请求消息回路
+- CONNECT 方法：把请求链接转换到透明的TCP/IP的通道（HTTP/1.1协议中预留给能够将连接改为管道方式的代理服务器。）
+
+:::tip
+1. 方法名称是区分大小写的，当某个请求所针对的资源不支持对应的请求方法的时候，服务器应当返回状态码405（Mothod Not Allowed）；当服务器不认识或者不支持对应的请求方法时，应返回状态码501（Not Implemented）。
+2. HTTP服务器至少应该实现GET和HEAD/POST方法，其他方法都是可选的，此外除上述方法，特定的HTTP服务器支持扩展自定义的方法。
+:::
+
+### HTTP状态码
+- 1XX ：信息状态码
+    + 100 continue 继续，一般在发送 post 请求时，已发送了 http header 之后服务端将返回此信息，表示确认，之后发送具体参数信息
+- 2XX ：成功状态码
+    + 200 ok 正常返回信息 --> get
+    + 201 created  请求成功并且服务器创建了新资源 --> post
+    + 202 accepted 服务器已经接收请求，但尚未处理
+- 3XX ：重定向
+    + 301 move per 请求的网页已经永久重定向
+    + 302 found 临时重定向
+    + 303 see other 临时重定向，且总是使用get请求新的url
+    + 304 not modified 自从上次请求后，请求的网页未修改过
+- 4XX ：客户端错误
+    + 400 bad request 服务器无法理解请求的格式，客户端不应当尝试再次使用相同的内容发起请求
+    + 401 unauthorized 请求未授权
+    + 403 forbidden 禁止访问
+    + 404 not found 找不到如何与url匹配的资源
+    + 405（Mothod Not Allowed）
+- 5XX ：服务器错误
+    + 500 internal server error 最常见的服务器端的错误
+    + 503 service unacailable 服务器端暂时无法处理请求（可能是过载或维护）
+    + 501（Not Implemented）
+
+### 301重定向和302重定向的区别
+- 301重定向是永久的重定向，搜索引擎在抓取新的内容的同时也将旧的网址替换为了重定向之后的网址，比如http跳https。除非额外指定，否则这个响应也是可缓存的。
+- 302重定向只是暂时的重定向，搜索引擎会抓取新的内容而保留旧的地址，因为服务器返回302，所以，搜索搜索引擎认为新的网址是暂时的。比如未登录跳登录页面，访问不存在的页面跳转404页面。只有在Cache-Control或Expires中进行了指定的情况下，这个响应才是可缓存的。
+
+### http缓存/浏览器缓存
+浏览器第一次向一个web服务器发起http请求后，服务器会返回请求的资源，并且在响应头中添加一些有关缓存的字段如：Cache-Control、Expires、Last-Modified、ETag、Date等等。
+
 之后浏览器再向该服务器请求该资源就可以视情况使用强缓存和协商缓存。
 
+#### 缓存类型
 - 强缓存：浏览器直接从本地缓存中获取数据，不与服务器进行交互。
 - 协商缓存：浏览器发送请求到服务器，服务器判定是否可使用本地缓存。
 - 联系与区别：两种缓存方式最终使用的都是本地缓存；前者无需与服务器交互，后者需要。
 
 1. 强缓存，强缓存会触发from disk cache和from memory cache（关闭进程窗口就没了）,先去内存看，如果有，直接加载,如果内存没有，择取硬盘获取，如果有直接加载,如果硬盘也没有，那么就进行网络请求,加载到的资源缓存到硬盘和内存
-    强缓存是利用http的返回头中的Expires或者Cache-Control两个字段来控制的，用来表示资源的缓存时间。
-    cache-control的优先级更高，max-age 指定一个时间长度，在这个时间段内缓存是有效的，单位是s。
-    Cache-Control 可以由多个字段组合而成，（max-age）（s-maxage 同 max-age，覆盖 max-age、Expires，但仅适用于共享缓存，在私有缓存中被忽略。）
-    （public 表明响应可以被任何对象（发送请求的客户端、代理服务器等等）缓存。）
-    （private 表明响应只能被单个用户（可能是操作系统用户、浏览器用户）缓存，是非共享的，不能被代理服务器缓存。）
-    （no-cache 含义是不使用本地缓存，也就是先与服务器确认缓存是否可用。）
-    （no-store 禁止缓存，每次请求都要向服务器重新获取数据。）
-    （must-revalidate指定如果页面是过期的，则去服务器进行获取。）
+    - 强缓存是利用http的返回头中的Expires或者Cache-Control两个字段来控制的，用来表示资源的缓存时间。
+    - Cache-Control 可以由多个字段组合而成，（max-age）（s-maxage 同 max-age，覆盖 max-age、Expires，但仅适用于共享缓存，在私有缓存中被忽略。）
+    - Cache-Control 的优先级更高，max-age 指定一个时间长度，在这个时间段内缓存是有效的，单位是s。
+    - （public 表明响应可以被任何对象（发送请求的客户端、代理服务器等等）缓存。）
+    - （private 表明响应只能被单个用户（可能是操作系统用户、浏览器用户）缓存，是非共享的，不能被代理服务器缓存。）
+    - （no-cache 含义是不使用本地缓存，也就是先与服务器确认缓存是否可用。）
+    - （no-store 禁止缓存，每次请求都要向服务器重新获取数据。）
+    - （must-revalidate 指定如果页面是过期的，则去服务器进行获取。）
+    
 2. 协商缓存
-    协商缓存是利用http的返回头中的ETag或Last-Modified字段来控制的
-    ETag和If-None-Match，优先级更高【
-        强ETag表示形式："22FAA065-2664-4197-9C5E-C92EA03D0A16"。
-        弱ETag表现形式：w/"22FAA065-2664-4197-9C5E-C92EA03D0A16"。】
-    Last-Modified和If-Modified-Since
-    有ETag和Last-Modified字段，下次请求会带上这两个字段，名字分别If-None-Match和If-Modified-Since，
-    吻合，则返回304响应，使用协商缓存。
+    - 协商缓存是利用http的返回头中的ETag或Last-Modified字段来控制的
+    - ETag和If-None-Match，优先级更高
+        + 强ETag表示形式："22FAA065-2664-4197-9C5E-C92EA03D0A16"。
+        + 弱ETag表现形式：w/"22FAA065-2664-4197-9C5E-C92EA03D0A16"。
+    - Last-Modified和If-Modified-Since
+> 有ETag和Last-Modified字段，下次请求会带上这两个字段，名字分别If-None-Match和If-Modified-Since，吻合，则返回304响应，使用协商缓存。
     
 3. 启发式缓存
-如果Expires, Cache-Control: max-age, 或 Cache-Control:s-maxage 都没有在响应头中出现, 并且也没有其它缓存的设置, 
-那么浏览器默认会采用一个启发式的算法, RFC建议通常会取响应头的Date_value - Last-Modified_value值的10%作为缓存时间（Chrome，Webkit）。
+如果Expires, Cache-Control: max-age, 或 Cache-Control:s-maxage 都没有在响应头中出现, 并且也没有其它缓存的设置, 那么浏览器默认会采用一个启发式的算法, RFC建议通常会取响应头的Date_value - Last-Modified_value值的10%作为缓存时间（Chrome，Webkit）。
 Firefox是取的（10%和7天的最小值）
 
-![启发式缓存定义](前端基础面试_files/14.jpg)
-![启发式缓存浏览器算法](前端基础面试_files/15.jpg)
-
-当 ctrl+f5 强制刷新网页时，直接从服务器加载，跳过强缓存和协商缓存；
-当 f5 刷新网页时，跳过强缓存，但是会检查协商缓存；
+> 当 ctrl+f5 强制刷新网页时，直接从服务器加载，跳过强缓存和协商缓存；
+> 当 f5 刷新网页时，跳过强缓存，但是会检查协商缓存；
 
 4. Date和Age的区别，作用？
-作用：可以用来判断缓存是否命中，新鲜度
-Date比当前时间老，说明命中缓存
+作用：可以用来判断缓存是否命中，新鲜度。Date比当前时间老，说明命中缓存
 
-Date：Date头域表示报文创建的日期，比如请求一个图片，第一次获取到了，是a时间，然后被缓存，刷新当前页面，date仍然为a时
+- Date：Date头域表示报文创建的日期，比如请求一个图片，第一次获取到了，是a时间，然后被缓存，刷新当前页面，date仍然为a时
     时间的描述格式由rfc822定义。例如，Date: Mon, 04 Jul 2011 05:53:36 GMT。
-Age： 消息头里包含对象在缓存代理中存贮的时长，以秒为单位。
-    Age的值通常接近于0。表示此对象刚刚从原始服务器获取不久；其他的值则是表示代理服务器当前的系统时间与此应答中的通用头 Date 的值之差。
+- Age： 消息头里包含对象在缓存代理中存贮的时长，以秒为单位。Age的值通常接近于0。表示此对象刚刚从原始服务器获取不久；其他的值则是表示代理服务器当前的系统时间与此应答中的通用头 Date 的值之差。
 
 ```html
 <!-- 页面禁止缓存的方法 -->
@@ -397,39 +385,41 @@ Age： 消息头里包含对象在缓存代理中存贮的时长，以秒为单�
 
 5. Http 请求和响应的gzip压缩
 [gzip压缩详解](https://www.cnblogs.com/LO-ME/p/7377082.html)
-原理：
+- 原理：
     简单来说， Gzip压缩是在一个文本文件中找出类似的字符串， 并临时替换他们，使整个文件变小。
     这种形式的压缩对Web来说非常适合， 因为HTML和CSS文件通常包含大量的重复的字符串，例如空格，标签。
 
-优缺点：
+- 优缺点：
     优点是纯文本可以压缩至40%，缺点是增加服务器占用资源，对JPEG压缩不够好。
     
-使用方式：
+- 使用方式：
     服务器端进行配置，开始gzip，然后请求头增加Accept-Encoding: gzip即可，服务器会对它进行压缩
-```
-通过请求和响应头中增加
-Accept-Encoding: gzip
-Content-Encodin:gzip
-确定客户端或服务器端是否支持压缩
-```
 
-![控制缓存的请求头字段示例](前端基础面试_files/12.jpg)
+:::tip
+启用方法
+
+通过请求和响应头中增加  
+Accept-Encoding: gzip  
+Content-Encoding: gzip  
+确定客户端或服务器端是否支持压缩  
+:::
+
 [一张图解释缓存](https://segmentfault.com/a/1190000015816331)
 [图解强缓存和协商缓存](https://www.cnblogs.com/guwufeiyang/p/12868583.html)
     
-**encodeURI和encodeURIComponent的比较
-相同点：都可以对url进行一个编码；
-区别：encodeURI()不会对本身属于URI的特殊字符进行编码，例如冒号、下划线、问号和井字号；
+## encodeURI和encodeURIComponent的比较
+- 相同点：都可以对url进行一个编码；
+- 区别：encodeURI()不会对本身属于URI的特殊字符进行编码，例如冒号、下划线、问号和井字号；
     而encodeURIComponent()则会对它发现的任何非标准字符进行编码。
 
-适用场景：URL编码
-详细场景：
+- 适用场景：URL编码
 
-encodeURI：适用于url跳转时。
-encodeURIComponent：适用于url作为参数传递时。
-注意：当url作为参数传递时如果没有用encodeURIComponent进行编码，往往会造成传递时url中的特殊字符丢失。
+### 详细场景：
+- encodeURI：适用于url跳转时。
+- encodeURIComponent：适用于url作为参数传递时。
+> 注意：当url作为参数传递时如果没有用encodeURIComponent进行编码，往往会造成传递时url中的特殊字符丢失。
     
-**从浏览器地址栏输入URL后发生了什么？**
+## 从浏览器地址栏输入URL后发生了什么?
 [参考](https://segmentfault.com/a/1190000006879700?utm_source=sf-related)
 
 总体来说分为以下几个过程:
@@ -440,17 +430,18 @@ encodeURIComponent：适用于url作为参数传递时。
 4. 服务器处理请求并返回HTTP报文,（HTTP1.0返回了数据就会断开TCP连接，Http1.1不会，HTTP1.1的长连接非常easy在空暇后自己主动断开，一般来说这个时间是300s左右。）
 5. 浏览器解析渲染页面
 
-```
-DNS：域名系统，是一项互联网服务，域名和IP的分布式数据库
-扩展问题：
-为什么url要解析（也就是编码)？
-因为网络标准规定了URL只能是字母，数字，还有一些其它特殊符号（-_.~ ! * ' ( ) ; : @ & = + $ , / ? # [ ]，
-特殊符号是我下来查的资料，实在背不住这么多，比较常见的就是不包括百分号和双引号），而且如果不转义会出现歧义，
-比如http:www.baidu.com?key=value,
-假如我的key本身就包括等于=符号，比如ke=y=value，就会出现歧义，你不知道=到底是连接key和value的符号，还是说本身key里面就有=
+### DNS
+域名系统，是一项互联网服务，域名和IP的分布式数据库  
+
+:::tip
+扩展问题：  
+为什么url要解析（也就是编码)？  
+因为网络标准规定了URL只能是字母，数字，还有一些其它特殊符号（-_.~ ! * ' ( ) ; : @ & = + $ , / ? # [ ]，  
+特殊符号是我下来查的资料，实在背不住这么多，比较常见的就是不包括百分号和双引号），而且如果不转义会出现歧义，比如http:www.baidu.com?key=value,假如我的key本身就包括等于=符号，比如ke=y=value，就会出现歧义，你不知道=到底是连接key和value的符号，还是说本身key里面就有=。
 
 encodeURIComponent会对所有字符进行编码，而encodeURI会忽略特殊字符
-```
+:::
+
 1. 把输入的域名解析为IP地址
    [DNS解析过程](https://www.xuecaijie.com/it/157.html#1Q64p5DeC8dKFF)
    域名解析的过程是逐级查询的
