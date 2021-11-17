@@ -1,5 +1,5 @@
 ---
-title: JS基础
+title: 面试基础
 date: '2021-11-16'
 sidebar: 'auto'
 categories:
@@ -9,19 +9,17 @@ tags:
 publish: true
 ---
 
-## 前端基础面试
+## RN与小程序的区别
+[区别](https://blog.csdn.net/SemineLee/article/details/97621503)  
+RN是原生渲染  
+小程序是webview渲染  
 
-**RN与小程序的区别**
-[区别](https://blog.csdn.net/SemineLee/article/details/97621503)
-RN是原生渲染
-小程序是webview渲染
-
-**CSS中行内元素是否有margin和padding**
+## CSS中行内元素是否有margin和padding
 1. top, bottom无效
 2. left，right有效
 3. padding-top，padding-bottom内容范围是增大了，但是对其它元素没有效果
 
-**讲讲JS的数据类型？**
+## 讲讲JS的数据类型？
 最新的 ECMAScript 标准定义了 9种数据类型:
 
 7 种原始类型
@@ -29,83 +27,149 @@ RN是原生渲染
 - Undefined
 - Null
 - Number
-- BigInt
+- BigInt  11n,22n这就是这个类型的
 - String
-- Symbol
+- Symbol  let s = Symbol()
 
 2 种结构类型
 - Object
 - Function
 
-**css水平、垂直居中的写法，请至少写出4种？**
+## Symbol类型
+由于ES5中对象属性名都是字符串，有可能造成命名重复，所以ES6提出的Symbol类型解决这个问题。Symbol 值通过Symbol函数生成。
+```js
+let s = Symbol();
+window[s] = 1000;//第一种写法
+let a = {
+  [s]: 'Hello!'//第二种写法
+};
+Object.defineProperty(a, s, { value: 'Hello!' });//第三种写法
+console.log(window[s]);//1000
+window.s //这样不行，不能用点运算符。因为点运算符后面总是字符串
+
+typeof s
+// "symbol"
+```
+> 上面代码中，变量s就是一个独一无二的值。typeof运算符的结果，表明变量s是 Symbol 数据类型，而不是字符串之类的其他类型。
+:::danger
+注意，Symbol函数前不能使用new命令，否则会报错。这是因为生成的 Symbol 是一个原始类型的值，不是对象。也就是说，由于 Symbol 值不是对象，所以不能添加属性。基本上，它是一种类似于字符串的数据类型。
+:::
+
+### Symbol函数可以接受一个字符串作为参数
+表示对 Symbol 实例的描述，主要是为了在控制台显示，或者转为字符串时，比较容易区分。
+:::danger
+注意，Symbol函数的参数只是表示对当前 Symbol 值的描述，因此相同参数的Symbol函数的返回值是不相等的。
+:::
+```js
+let s1 = Symbol('foo');
+let s2 = Symbol('bar');
+
+s1 // Symbol(foo)
+s2 // Symbol(bar)
+
+s1.toString() // "Symbol(foo)"
+s2.toString() // "Symbol(bar)"
+
+//ES2019 提供description可以读取描述
+s1.description // "foo"
+
+// 有参数的情况
+let s1 = Symbol('foo');
+let s2 = Symbol('foo');
+
+s1 === s2 // false
+```
+
+### 如果 Symbol 的参数是一个对象
+就会调用该对象的toString方法，将其转为字符串，然后才生成一个 Symbol 值。
+```js
+const obj = {
+  toString() {
+    return 'abc';
+  }
+};
+const sym = Symbol(obj);
+sym // Symbol(abc)
+```
+
+### Symbol 类型转化
+Symbol 值不能与其他类型的值进行运算，会报错，但是可以转为字符串和布尔值，不能转为数值
+```js
+let s = Symbol();
+s + 'abc' //会报错
+s.toString() //可以
+String(s) //可以
+Boolean(s) //可以
+!s //可以
+```
+
+### Symbol作为属性名被遍历
+遍历对象的时候，该属性不会出现在for...in、for...of循环中，也不会被Object.keys()、Object.getOwnPropertyNames()、JSON.stringify()返回。
+
+但是，它也不是私有属性，有一个Object.getOwnPropertySymbols()方法，可以获取指定对象的所有 Symbol 属性名。该方法返回一个数组，成员是当前对象的所有用作属性名的 Symbol 值。
+```js
+const obj = {};
+let a = Symbol('a');
+let b = Symbol('b');
+
+obj[a] = 'Hello';
+obj[b] = 'World';
+
+const objectSymbols = Object.getOwnPropertySymbols(obj);
+
+objectSymbols
+// [Symbol(a), Symbol(b)]
+```
+
+## css水平、垂直居中的写法，请至少写出4种?
 
 >这题考查的是css的基础知识是否全面，所以平时一定要注意多积累
 
-**水平居中**
-
+### 水平居中
 - 行内元素: text-align: center
 - 块级元素: margin: 0 auto
 - position:absolute +left:50%+ transform:translateX(-50%)
 - display:flex + justify-content: center
 
-**垂直居中**
-
+### 垂直居中
 - 设置line-height 等于height
 - position：absolute +top:50%+ transform:translateY(-50%)
 - display:flex + align-items: center
 - display: table-cell;vertical-align: middle;
 
-**1rem、1em、1vh、1px各自代表的含义？**
+## 1rem、1em、1vh、1px各自代表的含义？
+### rem
+rem是全部的长度都相对于根元素html元素。通常做法是给html元素设置一个字体大小，然后其他元素的长度单位就为rem。
 
->rem
-
-rem是全部的长度都相对于根元素<html>元素。通常做法是给html元素设置一个字体大小，然后其他元素的长度单位就为rem。
-
->em
-
+### em
 - 子元素字体大小的em是相对于父元素字体大小
 - 元素的width/height/padding/margin用em的话是相对于该元素的font-size
 
->vw/vh
+### vw/vh
+全称是 Viewport Width 和 Viewport Height，视窗的宽度和高度，相当于 屏幕宽度和高度的 1%，不过，处理宽度的时候%单位更合适，处理高度的 话 vh 单位更好。
 
-全称是 Viewport Width 和 Viewport Height，视窗的宽度和高度，相当于 屏幕宽度和高度的 1%，
-不过，处理宽度的时候%单位更合适，处理高度的 话 vh 单位更好。
+### px
+px像素（Pixel）。相对长度单位。像素px是相对于显示器屏幕分辨率而言的。一般电脑的分辨率有1920*1024等不同的分辨率
+，前者是屏幕宽度总共有1920个像素, 后者则是高度为1024个像素
 
->px
-
-px像素（Pixel）。相对长度单位。像素px是相对于显示器屏幕分辨率而言的。
-一般电脑的分辨率有{1920*1024}等不同的分辨率
-1920*1024 前者是屏幕宽度总共有1920个像素,后者则是高度为1024个像素
-
-**画一条0.5px的直线？**
->考查的是css3的transform
+## 画一条0.5px的直线？
+> 考查的是css3的transform
 ```css
-height: 1px;
-transform: scaleY(0.5);
+.box {
+	height: 1px;
+	transform: scaleY(0.5);
+}
 ```
 
-**说一下盒模型？**
-
->盒模型是css中重要的基础知识，也是必考的基础知识
-
-1. 盒模型的组成
+## 说一下盒模型？
+> 盒模型是css中重要的基础知识，也是必考的基础知识
+1. 盒模型的组成  
     由里向外content,padding,border,margin.
+2. 盒模型分为两种  
+	- border-box: IE盒子模型中，width表示content+padding+border这三个部分的宽度
+    - content-box: 在标准的盒子模型中，width指content部分的宽度 (默认是这个)
 
-2. 盒模型分为两种
-    IE盒子模型中，width表示content+padding+border这三个部分的宽度
-    在标准的盒子模型中，width指content部分的宽度
-
-box-sizing的使用
-
-```css
-  box-sizing: content-box 是W3C盒子模型
-  box-sizing: border-box 是IE盒子模型
-```
-
-box-sizing的默认属性是content-box
-
-**画一个简单的三角形**
-
+## 画一个简单的三角形
 ```css
  .a{
     width: 0;
@@ -119,8 +183,7 @@ box-sizing的默认属性是content-box
 <div class="a"></div>
 ```
 
-**清除浮动的几种方式**
-
+## 清除浮动的几种方式
 - 父级div定义height [有效]
 - 父元素最后一个标签加空div标签 并添加样式clear:both。[有效]
 - 创建父级 BFC,(浮动,绝对和固定定位, 行内块儿元素/弹性盒子/表格单元，标题，滚动) [有效]
