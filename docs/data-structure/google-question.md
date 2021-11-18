@@ -75,3 +75,84 @@ var numIslands = function(grid) {
     }
 };
 ```
+
+## 扫地机器人问题
+题目描述：房间（用格栅表示）中有一个扫地机器人。格栅中的每一个格子有空和障碍物两种可能。扫地机器人提供4个API，可以向前进，向左转或者向右转。每次转弯90度。当扫地机器人试图进入障碍物格子时，它的碰撞传感器会探测出障碍物，使它停留在原地。.请利用提供的4个API编写让机器人清理整个房间的算法。
+```js
+interface Robot {
+  // 若下一个方格为空，则返回true，并移动至该方格
+  // 若下一个方格为障碍物，则返回false，并停留在原地
+  boolean move();
+
+  // 在调用turnLeft/turnRight后机器人会停留在原位置
+  // 每次转弯90度
+  void turnLeft();
+  void turnRight();
+
+  // 清理所在方格
+  void clean();
+}
+```
+- 扫地机器人的初始位置一定是空地
+- 扫地机器人的初始方向向上。
+- 所有可抵达的格子都是相连的，亦即所有标记为1的格子机器人都可以抵达。
+- 可以假定格栅的四周都被墙包围。
+
+> 思路分析，这道题和上一题有点像，范围都是二维数组，由0，1组成，不过本题的1肯定是连起来的，相当于上题的只有一块陆地。需要扫整个房间，所以需要用递归，判断每个格子。
+
+> 机器人运动由方向决定，四个方向，不同方向前进的格子不同，可以用循环完成
+
+```js
+function robotMove(robot) {
+	//用Set保存去过哪些格子，如果去过就跳过
+	const boxSet = new Set();
+	let dir = 0;
+	
+	dfs(robot, boxSet, 0, 0, 0);
+	
+	function dfs(robot, boxSet, i, j, dir) {
+		let box = i + '+' + j;
+		
+		if (boxSet.has(box)) {
+			return;
+		}
+		
+		robot.clean();
+		
+		boxSet.add(box);
+		
+		for (let k = 0; k < 4; k++) {
+			if (robot.move()) {//如果可以移动，计算下个格子坐标
+				let x = i, y = j;
+				switch (dir) {//顺时针角度，0度向上
+					case 0:
+						x = i - 1;
+						break;
+					case 90:
+						y = j + 1;
+						break;
+					case 180:
+						x = i + 1;
+						break;
+					case 270:
+						y = j - 1;
+						break;
+				}
+				dfs(robot, boxSet, x, y, dir);
+				
+				//递归碰到障碍物，返回上一格
+				robot.turnLeft();
+				robot.turnLeft();
+				robot.move();
+				robot.turnRight();
+				robot.turnRight();
+			}
+			
+			//如果移不动，或者移动完了返回了就换方向继续前进
+			robot.turnRight() 
+			dir += 90;
+			dir %= 360;
+		}
+	}
+}
+```
