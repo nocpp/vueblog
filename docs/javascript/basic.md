@@ -532,11 +532,8 @@ TCP 会精准记录哪些数据发送了，哪些数据被对方接收了，哪�
 面向字节流。UDP 的数据传输是基于数据报的，这是因为仅仅只是继承了 IP 层的特性，而 TCP 为了维护状态，将一个个 IP 包变成了字节流
 ```
 
-![TCP层数据](前端基础面试_files/1.jpg)、[详细请看](https://blog.csdn.net/skiwnc/article/details/86681950)
-
 3. 发送HTTP请求，有缓存则使用缓存，没有则请求
     与服务器建立TCP连接后，开始发送HTTP请求
-    ![什么是HTTP协议](前端基础面试_files/11.jpg)
     [HTTP原理](https://blog.csdn.net/weixin_42981419/article/details/86162244)
     3.1 http协议特点
         3.1.1 无状态
@@ -701,7 +698,7 @@ console.log('代码执行结束');
     ajax事件完成，回调函数success进入Event Queue。
     主线程从Event Queue读取回调函数success并执行。
     
-*宏任务与微任务*
+## 宏任务与微任务
 Event Loop中，每一次循环称为tick，每一次tick的任务如下：
 
 执行栈选择最先进入队列的宏任务（一般都是script），执行其同步代码直至结束；
@@ -787,7 +784,7 @@ HTML文档结构层次尽量少，最好不深于六层；
 但这两者是互斥的，也就是说js执行过程是无法构建DOM和渲染页面的。这是一种优化机制，由于js可能会对DOM及样式进行修改，
 如果解析js过程中同时构建DOM，就可能造成前后内容不一致或者重复构建。所以应该把script放在body中，使页面更快完成渲染。
 
-*async与defer*
+## async与defer
 现在大家习惯于在页面中引用各种的第三方脚本，如果第三方服务商出现了一些小问题，比如延迟之类的，就会使得页面白屏。
 好在script提供了两种方式来解决上述问题，async和defer，这两个属性使得script都不会阻塞DOM的渲染。
 但既然会存在两个属性，那么就说明，这两个属性之间肯定是有差异的。
@@ -799,7 +796,7 @@ defer脚本会在文档渲染完毕后，DOMContentLoaded事件调用前，按�
 
 async的执行是加载完成就会去执行，而不像defer那样要等待所有的脚本加载完后按照顺序执行。
           
-**HTML生命周期**
+## HTML生命周期
 HTML页面的生命周期有以下以下几个重要事件：
 
 DOMContentLoaded ：浏览器已经完全加载了 HTML，DOM 树已经构建完毕，但是像是<img>和样式表等外部资源可能并没有下载完毕。
@@ -812,21 +809,21 @@ readyState的改变会触发readystatechange事件。
     interactive 互动 ： 文档已经完成加载，文档已被解析，但是诸如图像，样式表和框架之类的子资源仍在加载。
     complete ：文档和所有子资源已完成加载。状态表示 load 事件即将被触发。
             
-**URL与URI的区别**
+## URL与URI的区别
 URI 是统一资源标识符，而 URL 是统一资源定位符，URL是URI的子集。
 
-**数据传输过程**
+## 数据传输过程
 [参考文章](https://blog.51cto.com/14557673/2440993)
 
-**说一下CORS？**
+## 说一下CORS？
 
 CORS是一种新标准，支持同源通信，也支持跨域通信。fetch是实现CORS通信的
 
-**如何中断ajax请求？**
+## 如何中断ajax请求？
 
 一种是设置超时时间让ajax自动断开，另一种是手动停止ajax请求，其核心是调用XML对象的abort方法，ajax.abort()
 
-**说一下事件代理？**
+## 说一下事件代理？
 
 事件委托是指将事件绑定到目标元素的父元素上，利用冒泡机制触发该事件
 ```js
@@ -838,24 +835,20 @@ ulEl.addEventListener('click', function(e){
 }, false);
 ```
 
-**target、currentTarget的区别？**
+## target、currentTarget的区别？
 
 currentTarget当前所绑定事件的元素
 
 target当前被点击的元素
 
-**说一下宏任务和微任务？**
+## 说一下宏任务和微任务？
 
 1. 宏任务：当前调用栈中执行的任务称为宏任务。（主代码块，定时器等等）。
 2. 微任务： 当前（此次事件循环中）宏任务执行完，在下一个宏任务开始之前需要执行的任务为微任务。（可以理解为回调事件，promise.then，proness.nextTick等等）。
 3. 宏任务中的事件放在callback queue中，由事件触发线程维护；微任务的事件放在微任务队列中，由js引擎线程维护。
 
-**绕不过去的闭包**
-闭包是指有权访问另一个函数作用域中变量的函数，创建闭包的最常见的方式就是在一个
-
-函数内创建另一个函数，通过另一个函数访问这个函数的局部变量,利用闭包可以突破作用链域
-
-闭包的实质是因为函数嵌套而形成的作用域链
+## 绕不过去的闭包
+闭包是指有权访问另一个函数作用域中变量的函数，创建闭包的最常见的方式就是在一个函数内创建另一个函数，通过另一个函数访问这个函数的局部变量,利用闭包可以突破作用链域,闭包的实质是因为函数嵌套而形成的作用域链
 
 特点：
 - 函数内再嵌套函数
@@ -866,14 +859,12 @@ target当前被点击的元素
 缺点：消耗内存、使用不当会内存溢出，
 解决方法：在退出函数之前，将不使用的局部变量全部删除
 
-**说说你对作用域链的理解**
-
+## 说说你对作用域链的理解
 作用域链的作用是保证执行环境里有权访问的变量和函数是有序的，作用域链的变量只能向上访问，
 变量访问到 window对象即被终止，作用域链向下访问变量是不被允许的。
 简单的说，作用域就是变量与函数的可访问范围，即作用域控制着变量与函数的可见性和生命周期。
 
-**说一下继承的几种方式及优缺点？**
-
+## 说一下继承的几种方式及优缺点？
 1. 原型链继承
 ```js
 function P() {}//父类
@@ -957,13 +948,13 @@ function object(o) {
  return new F(); 
 } ```
 
->构造函数中的共有属性无法做到数据共享，要做到数据共享，需要用到prototype
+> 构造函数中的共有属性无法做到数据共享，要做到数据共享，需要用到prototype
 
-**JavaScript原型，原型链 ? 有什么特点？**
+## JavaScript原型，原型链 ? 有什么特点？
 ![prototype是什么](前端基础面试_files/16.jpg)
 每个函数都有一个属性，叫prototype，它的值是一个对象，默认包含constructor，指向本身，在Object函数中，还包含toString, hasOwnProperty等方法
 
-关系： 每个对象都有一个隐藏的属性——“__proto__”，这个属性引用了创建这个对象的函数的prototype。即：fn.__proto__ === Fn.prototype
+关系： 每个对象都有一个隐藏的属性——“__proto__”，这个属性引用了创建这个对象的函数的prototype。即：fn.__proto__ === Fn.prototype（除了Object.create(null)没有）
 ![prototype与__proto__](前端基础面试_files/17.jpg)
 
 访问一个对象的属性时，先在基本属性中查找，如果没有，再沿着__proto__这条链向上找，这就是**原型链**。
@@ -971,7 +962,7 @@ function object(o) {
 那么我们在实际应用中如何区分一个属性到底是基本的还是从原型中找到的呢？大家可能都知道答案了——hasOwnProperty，
 特别是在for…in…循环(enumerable)中，一定要注意。
 
-Instanceof的判断队则是：沿着A的__proto__这条线来找，
+Instanceof的判断准则是：沿着A的__proto__这条线来找，
 同时沿着B的prototype这条线来找，如果两条线能找到同一个引用，即同一个对象，那么就返回true。如果找到终点还未重合，则返回false。
 ![instance的逻辑](前端基础面试_files/18.jpg)
 
@@ -979,7 +970,7 @@ Instanceof的判断队则是：沿着A的__proto__这条线来找，
 当我们修改原型时，与之相关的对象也会继承这一改变当我们需要一个属性的时， Javascript 引擎会先看当前对象中是否有这个属性，
  如果没有的,就会查找__proto__这条线来找
 
-**this的取值, 分五种情况**
+## this的取值, 分五种情况
 情况1：构造函数
     如果函数作为构造函数用，那么其中的this就代表它即将new出来的对象。
     例如：var foo = new Foo()
@@ -999,13 +990,12 @@ Instanceof的判断队则是：沿着A的__proto__这条线来找，
     
 情况5：监听事件回调函数中的this, 指向触发这个事件的对象，特殊的是， IE 中的 attachEvent 中的this 总是指向全局对象 Window
 
-**new操作符具体干了什么呢?**
-
-创建一个空对象，并且 this 变量引用该对象，同时还继承了该函数的原型
-属性和方法被加入到 this 引用的对象中
+## new操作符具体干了什么呢?
+创建一个空对象，并且 this 变量引用该对象，同时还继承了该函数的原型，
+属性和方法被加入到 this 引用的对象中，
 新创建的对象由 this 所引用，并且最后隐式的返回 this
 
-**跨域相关**
+## 跨域相关
 跨域问题来源于浏览器的同源策略，浏览器为了提高网站的安全性
 >同源是指"协议+域名+端口
 
@@ -1039,14 +1029,14 @@ server {
 add_header 'Access-Control-Allow-Origin' *;
 ```
 
-**commonjs 规范**
+## commonjs 规范
 exports = module.exports
 主要变量
 exports
 module
 require
 
-**export和export default的区别？**
+## export和export default的区别？
 ```js
 export default  xxx
 import xxx from './'
@@ -1055,32 +1045,32 @@ export xxx
 import {xxx} from './'
 ```
 
-**JS有哪些方法定义对象**
+## JS有哪些方法定义对象
 对象字面量： var obj = {};
 构造函数： var obj = new Object();
 Object.create(): var obj = Object.create(Object.prototype);
 
-**说一下自己常用的es6的功能？**
+## 说一下自己常用的es6的功能？
 
 >此题是一道开放题，可以自由回答。但要注意像let这种简单的用法就别说了，说一些经常用到并有一定高度的新功能
 
 像module、class、promise等，尽量讲的详细一点。
 
-**什么是会话cookie,什么是持久cookie?**
+## 什么是会话cookie,什么是持久cookie?
 
 cookie是服务器返回的，指定了expire time（有效期）的是持久cookie,没有指定的是会话cookie
 ![cookie其它字段](前端基础面试_files/21.jpg)
 
 name，value，domain，path，expires/Max-Age，Size，http，secure
 
-**如何通过JS判断一个数组**
-1. instanceof  (arr instanceof Array)
+## 如何通过JS判断一个数组
+1. instanceof  (arr instanceof Array)   ifrmae不行（iframe.createElement（'script'）instanceof Element）
 2. isArray (Array.isArray([]) //true)
 3. constructor (arr.constructor == Array; //true)
 4. Object.prototype  (Object.prototype.toString.call([]) == '[object Array]')
 5. Array.prototype.isPrototypeOf(obj)
 
-**sort 快速打乱数组**
+## sort 快速打乱数组
 ```js
 var arr = [1,2,3,4,5,6,7,8,9,10];
 arr.sort(()=> Math.random() - 0.5)
@@ -1088,7 +1078,7 @@ arr.sort(()=> Math.random() - 0.5)
 // [5, 8, 4, 3, 2, 9, 10, 6, 1, 7]
 ```
 
-**数组去重？**
+## 数组去重？
 
 ```js
 var arr=['12','32','89','12','12','78','12','32'];
@@ -1137,7 +1127,7 @@ function dedupe(array) {
 }
 ```
 
-**节流防抖**
+## 节流防抖
 节流：每隔一段时间执行一次，通常用在高频率触发的地方，降低频率。--如：鼠标滑动 拖拽
 ```js
 时间戳实现：
@@ -1189,7 +1179,7 @@ function debounce(fn, delay){
 }
 ```
 
-**get、post的区别**
+## get、post的区别
 
 1.get传参方式是通过地址栏URL传递，是可以直接看到get传递的参数，post传参方式参数URL不可见，get把请求的数据在URL后通过？连接，通过&进行参数分割。psot将参数存放在HTTP的包体内
 
@@ -1206,7 +1196,7 @@ function debounce(fn, delay){
 7.get只支持ASCII字符，post没有字符类型限制
 
 
-**常见的兼容性问题？**
+## 常见的兼容性问题？
 1. 不同浏览器的标签默认的margin和padding不一样。  
 *{margin:0;padding:0;}
 
@@ -1228,7 +1218,7 @@ _background-color:#1e0bd1;/*IE6识别*/
 
 6. 超链接访问过后hover样式就不出现了，被点击访问过的超链接样式不再具有hover和active了。解决方法是改变CSS属性的排列顺序:L-V-H-A ( love hate ): a:link {} a:visited {} a:hover {} a:active {}
 
-**display:none与visibility：hidden的区别？**
+## display:none与visibility：hidden的区别？
 
 display：none 不显示对应的元素，在文档布局中不再分配空间（回流+重绘）
 
@@ -1236,7 +1226,7 @@ visibility：hidden 隐藏对应元素，在文档布局中仍保留原来的空
 
 opacity: 0 也会被子元素继承，但是不能通过设置子元素opacity: 1 使其重新显示
 
-**CSS优化、提高性能的方法有哪些？**
+## CSS优化、提高性能的方法有哪些？
 
 1. 避免过度约束
 2. 避免后代选择符
@@ -1248,24 +1238,24 @@ opacity: 0 也会被子元素继承，但是不能通过设置子元素opacity: 
 8. 避免！important，可以选择其他选择器
 9. 尽可能的精简规则，你可以合并不同类里的重复规则
 
-**浏览器是怎样解析CSS选择器的？**
+## 浏览器是怎样解析CSS选择器的？
 
 CSS选择器的解析是从右向左解析的。若从左向右的匹配，发现不符合规则，需要进行回溯，会损失很多性能。若从右向左匹配，先找到所有的最右节点，对于每一个节点，向上寻找其父节点直到找到根元素或满足条件的匹配规则，则结束这个分支的遍历。两种匹配规则的性能差别很大，是因为从右向左的匹配在第一步就筛选掉了大量的不符合条件的最右节点（叶子节点），而从左向右的匹配规则的性能都浪费在了失败的查找上面。
 而在 CSS 解析完毕后，需要将解析的结果与 DOM Tree 的内容一起进行分析建立一棵 Render Tree，最终用来进行绘图。在建立 Render Tree 时（WebKit 中的「Attachment」过程），浏览器就要为每个 DOM Tree 中的元素根据 CSS 的解析结果（Style Rules）来确定生成怎样的 Render Tree。
 
-**全屏滚动的原理是什么？用到了CSS的哪些属性？**
+## 全屏滚动的原理是什么？用到了CSS的哪些属性？
 
 原理：有点类似于轮播，整体的元素一直排列下去，假设有5个需要展示的全屏页面，那么高度是500%，只是展示100%，剩下的可以通过transform进行y轴定位，也可以通过margin-top实现
 
 overflow：hidden；transition：all 1000ms ease；
 
-**什么是响应式设计？响应式设计的基本原理是什么？如何兼容低版本的IE？**
+## 什么是响应式设计？响应式设计的基本原理是什么？如何兼容低版本的IE？
 
 响应式网站设计(Responsive Web design)是一个网站能够兼容多个终端，而不是为每一个终端做一个特定的版本。  
 基本原理是通过媒体查询检测不同的设备屏幕尺寸做处理。  
 页面头部必须有meta声明的viewport。
 
-**视差滚动效果？**
+## 视差滚动效果？
 
 视差滚动（Parallax Scrolling）通过在网页向下滚动的时候，控制背景的移动速度比前景的移动速度慢来创建出令人惊叹的3D效果。
 
@@ -1285,32 +1275,33 @@ overflow：hidden；transition：all 1000ms ease；
 3. gif是一种位图文件格式，以8位色重现真色彩的图像。可以实现动画效果.
 4. webp格式是谷歌在2010年推出的图片格式，压缩率只有jpg的2/3，大小比png小了45%。缺点是压缩的时间更久了，兼容性不好，目前谷歌和opera支持。
 
-**style标签写在body后与body前有什么区别？**
+## style标签写在body后与body前有什么区别？
 
 页面加载自上而下 当然是先加载样式。
 写在body标签后由于浏览器以逐行方式对HTML文档进行解析，当解析到写在尾部的样式表（外联或写在style标签）会导致浏览器停止之前的渲染，等待加载且解析样式表完成之后重新渲染，在windows的IE下可能会出现FOUC现象（即样式失效导致的页面闪烁问题）
 
-**谈谈flex布局**
+## 谈谈flex布局
 
-*容器的属性*
-
+### 容器的属性
 - flex-direction
 - flex-wrap
 - flex-flow flex-direction属性和flex-wrap属性的简写形式，默认值为row nowrap
 - justify-content
-- align-items
-- align-content
+- align-items 将所有直接子节点上的align-self值设置为一个组。 align-self属性设置项目在其包含块中在交叉轴方向上的对齐方式。
+- align-content 属性设置了浏览器如何沿着弹性盒子布局的纵轴和网格布局的主轴在内容项之间和周围分配空间。（start，center等）
 
-*子元素属性*
-
+### 子元素属性
 - order  属性定义项目的排列顺序。数值越小，排列越靠前，默认为0。
 - flex-grow 定义项目的放大比例，默认为0，即如果存在剩余空间，也不放大。
 - flex-shrink 定义了项目的缩小比例，默认为1，即如果空间不足，该项目将缩小。
-- flex-basis 定义了在分配多余空间之前，项目占据的主轴空间（main size）。浏览器根据这个属性，计算主轴是否有多余空间。它的默认值为auto，即项目的本来大小。
-- flex
-- align-self
+- flex-basis 指定了 flex 元素在主轴方向上的初始大小。默认（auto）
+- flex 是（flex-grow，flex-shrink，flex-basis）的合写，可以使用一个，两个或三个值来指定 flex属性。
+	+ 一个无单位数代表（flex-grow 1 0） 一个有单位值会当作flex-basis的值
+	+ 第一个值必须为一个无单位数，当作flex-grow，第二个值根据有无单位来作为flex-basis或者shrink
+	+ 第一/二个值必须为一个无单位数，第三个值必须有单位
+- align-self 会对齐当前 grid 或 flex 行中的元素，并覆盖已有的 align-items 的值。
 
-**浅拷贝和深拷贝的区别**
+## 浅拷贝和深拷贝的区别
 - 浅拷贝：一般指的是把对象的第一层拷贝到一个新对象上去，比如
 ```js
 var a = { count: 1, deep: { count: 2 } }
@@ -1331,21 +1322,21 @@ var deepCopy = (obj) => {
 }
 ```
 
-**webpack的基础知识**
+## webpack的基础知识
 
-*webpack 是什么？*
+### webpack 是什么？
 
 webpack 是一个现代 JavaScript 应用程序的静态模块打包器，当 webpack 处理应用程序时，会递归构建一个依赖关系图，
 其中包含应用程序需要的每个模块，然后将这些模块打包成一个或多个 bundle。
 
-*webpack 的核心概念*
+### webpack 的核心概念
 
 - entry: 入口
 - output: 输出
 - loader: 模块转换器，用于把模块原内容按照需求转换成新内容
 - 插件(plugins): 扩展插件，在webpack构建流程中的特定时机注入扩展逻辑来改变构建结果或做你想要做的事情
 
-**css 2倍，3倍背景图使用**
+### css 2倍，3倍背景图使用
 ```css
   .star.star-36 .star-item.on {
      background-image: url("./images/stars/star36_on@2x.png");
@@ -1363,7 +1354,7 @@ webpack 是一个现代 JavaScript 应用程序的静态模块打包器，当 we
 ```
 
 
-**JS设计模式**
+## JS设计模式
 1. 工厂模式, new 实例
 ```js
 class Man {
