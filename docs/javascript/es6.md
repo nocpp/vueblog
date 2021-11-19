@@ -62,7 +62,7 @@ a[mySymbol] // "Hello!"
 ```
 
 ## 面试题
-1、es5和es6的区别，说一下你所知道的es6
+1. es5和es6的区别，说一下你所知道的es6
 ECMAScript5，即ES5，是ECMAScript的第五次修订，于2009年完成标准化
 ECMAScript6，即ES6，是ECMAScript的第六次修订，于2015年完成，
 也称ES6是继ES5之后的一次改进，相对于ES5更加简洁，提高了开发效率
@@ -85,7 +85,7 @@ ES5中是没有块级作用域的，并且var有变量提升，在let中，使�
 13）SymbolSymbol是一种基本类型。Symbol 通过调用symbol函数产生，它接收一个可选的名字参数，该函数返回的symbol是唯一的
 14）Proxy代理使用代理（Proxy）监听对象的操作，然后可以做一些相应事情
 
-2、var、let、const之间的区别
+2. var、let、const之间的区别
 var声明变量可以重复声明，而let不可以重复声明
 var是不受限于块级的，而let是受限于块级
 var会与window相映射（会挂一个属性），而let不与window相映射
@@ -94,13 +94,13 @@ const声明之后必须赋值，否则会报错
 const定义不可变的量，改变了就会报错
 const和let一样不会与window相映射、支持块级作用域、在声明的上面访问变量会报错
 
-3、使用箭头函数应注意什么？
+3. 使用箭头函数应注意什么？
 （1）用了箭头函数，this就不是指向window，而是父级（指向是可变的）
 （2）不能够使用arguments对象
 （3）不能用作构造函数，这就是说不能够使用new命令，否则会抛出一个错误
 （4）不可以使用yield命令，因此箭头函数不能用作 Generator 函数
 
-4、ES6的模板字符串有哪些新特性？并实现一个类模板字符串的功能
+4. ES6的模板字符串有哪些新特性？并实现一个类模板字符串的功能
 基本的字符串格式化。
 将表达式嵌入字符串中进行拼接。
 用${}来界定在ES5时我们通过反斜杠()来做多行字符串或者字符串一行行拼接。
@@ -113,7 +113,7 @@ str = str.replace(/\$\{([^}]*)\}/g,function(){
    })
 console.log(str);//你好，web 已经 10岁了
 
-5、介绍下 Set、Map的区别？
+5. 介绍下 Set、Map的区别？
 应用场景，Set类似于数组，只是不重复，Map类似于对象，只是key值可以非字符串：　
 （1）成员不能重复
 （2）只有键值没有键名，类似数组
@@ -122,7 +122,7 @@ Map:
 （1）本质上是健值对的集合，类似集合
 （2）可以遍历，可以跟各种数据格式转换
 
-6、ECMAScript 6 怎么写 class ，为何会出现 class？
+6. ECMAScript 6 怎么写 class ，为何会出现 class？
 ES6的class可以看作是一个语法糖，它的绝大部分功能ES5都可以做到，新的class写法只是让对象原型的写法更加清晰、更像面向对象编程的语法
 //定义类
 class Point { 
@@ -142,22 +142,22 @@ class Point {
 
 Point.age = 10; //静态属性
 
-7、Promise构造函数是同步执行还是异步执行，那么 then 方法呢？
+7. Promise构造函数是同步执行还是异步执行，那么 then 方法呢？
 promise构造函数是同步执行的，then方法是异步执行的
 
-8、setTimeout、Promise、Async/Await 的区别
+8. setTimeout、Promise、Async/Await 的区别
 事件循环中分为宏任务队列和微任务队列
 其中setTimeout的回调函数放到宏任务队列里，等到执行栈清空以后执行promise.then里的回调函数会放到相应宏任务的微任务队列里，等宏任务里面的同步代码执行完再执行
 async函数表示函数里面可能会有异步方法，await后面跟一个表达式
 async方法执行时，遇到await会立即执行表达式，然后把表达式后面的代码放到微任务队列里，让出执行栈让同步代码先执行
 
-9、promise有几种状态，什么时候会进入catch？
+9. promise有几种状态，什么时候会进入catch？
 三个状态：
 pending、fulfilled、rejectd
 两个过程：
 padding -> fulfilled、padding -> rejected当pending为rejectd时，会进入catch
 
-10、下面的输出结果是多少
+10. 下面的输出结果是多少
 const promise = new Promise((resolve, reject) => {
     console.log(1);
     resolve();
@@ -173,11 +173,11 @@ promise.then(() => {
 console.log(4);
 Promise 新建后立即执行，所以会先输出 1，2，而 Promise.then()内部的代码在 当次 事件循环的 结尾 立刻执行 ，所以会继续输出4，最后输出3
 
-11、使用结构赋值，实现两个变量的值的交换
+11. 使用结构赋值，实现两个变量的值的交换
 let a = 1;let b = 2;
 [a,b] = [b,a];
 
-12、设计一个对象，键名的类型至少包含一个symbol类型，并且实现遍历所有key
+12. 设计一个对象，键名的类型至少包含一个symbol类型，并且实现遍历所有key
 let name = Symbol('name');
  let product = {
     [name]:"洗衣机",    
@@ -185,20 +185,20 @@ let name = Symbol('name');
   };
   Reflect.ownKeys(product);
   
- 13、下面Set结构，打印出的size值是多少
+13. 下面Set结构，打印出的size值是多少
  let s = new Set();
  s.add([1]);s.add([1]);
  console.log(s.size);
  答案：2
  两个数组[1]并不是同一个值，它们分别定义的数组，在内存中分别对应着不同的存储地址，因此并不是相同的值都能存储到Set结构中，所以size为2
  
- 14、Promise 中reject 和 catch 处理上有什么区别
+14. Promise 中reject 和 catch 处理上有什么区别
  reject 是用来抛出异常，catch 是用来处理异常
  reject 是 Promise 的方法，而 catch 是 Promise 实例的方法
  reject后的东西，一定会进入then中的第二个回调，如果then中没有写第二个回调，则进入catch
  网络异常（比如断网），会直接进入catch而不会进入then的第二个回调
  
- 15、使用class 手写一个promise
+15. 使用class 手写一个promise
  //创建一个Promise的类
    class Promise{
      constructor(executer){//构造函数constructor里面是个执行器
@@ -239,12 +239,12 @@ let name = Symbol('name');
      }
    }
 
-16、如何使用Set去重
+16. 如何使用Set去重
 let arr = [12,43,23,43,68,12];
 let item = [...new Set(arr)];
 console.log(item);//[12, 43, 23, 68]
 
-17、将下面for循环改成for of形式
+17. 将下面for循环改成for of形式
 let arr = [11,22,33,44,55];
 let sum = 0;
 for(let i=0;i<arr.length;i++){
@@ -257,7 +257,7 @@ for(value of arr){
     sum += value;
 }
 
-18、理解 async/await以及对Generator的优势
+18. 理解 async/await以及对Generator的优势
 async await 是用来解决异步的，async函数是Generator函数的语法糖
 使用关键字async来表示，在函数内部使用 await 来表示异步
 async函数返回一个 Promise 对象，可以使用then方法添加回调函数
@@ -268,13 +268,13 @@ async较Generator的优势：
 （3）更广的适用性。yield命令后面只能是 Thunk 函数或 Promise对象，async函数的await后面可以是Promise也可以是原始类型的值
 （4）返回值是 Promise。async 函数返回的是 Promise 对象，比Generator函数返回的Iterator对象方便，可以直接使用 then() 方法进行调用
 
-19、forEach、for in、for of三者区别
+19. forEach、for in、for of三者区别
 forEach更多的用来遍历数组
 for in 一般常用来遍历对象或json
 for of数组对象都可以遍历，遍历对象需要通过和Object.keys()
 for in循环出的是key，for of循环出的是value
 
-20、说一下es6的导入导出模块
+20. 说一下es6的导入导出模块
 导入通过import关键字
 // 只导入一个
 import {sum} from "./example.js"

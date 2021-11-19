@@ -32,3 +32,12 @@ publish: true
 
 /[defg]*/ // *表示可以匹配空字符，包含一切
 ```
+
+## 变量声明
+以下输出的结果？
+```js
+var res = func();
+var func = function func() {};
+
+//会输出type error, 因为变量声明提升了，但是function func() {};不会执行，所以func是undefined
+```

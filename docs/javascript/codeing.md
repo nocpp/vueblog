@@ -134,7 +134,7 @@ Function.prototype.myCall = function(context, ...args) {
             }
             
             then(_resolve, _reject) {
-                _resolve = typeof _resolve === 'function' ? _resolve : _data => _date;
+                _resolve = typeof _resolve === 'function' ? _resolve : _data => _data;
                 _reject = typeof _reject === 'function' ? _reject : error => {throw error};
                 
                 let that = this;
@@ -376,7 +376,7 @@ sort方法在chrome的V8引擎里有两种排序方法：
 10. 数组扁平化
 ```js
 1. arr_flat = arr.flat(Infinity);
-2. ary = str.replace(/(\[\]))/g, '').split(',');
+2. ary = ary.toString().replace(/(\[\]))/g, '').split(',');
 3. let result = [];
 let fn = function(ary) {
     for(let i = 0; i < ary.length; i++) }{
