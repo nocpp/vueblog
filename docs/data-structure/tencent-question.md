@@ -75,8 +75,8 @@ nums2 = [3, 4]
 > 思路分析：由于时间复杂度限制了是log，所以要想到二分查找法
 1. 分别把两个数组各切一刀，分为两块儿，如下所示
 ```js
-[1, 2, 3, | 4, 5] //L1就是3, R1就是4；slice1就是R1的索引值，此时是3；slice1L是二分查找的的左侧值，slice1R是二分查找的右侧值
-[7, 8, | 9, 10, 11] //L2就是8, R2就是9，slice2就是R2的索引，此时是2
+[1, 2, ｜ 3, 4, 5] //L1就是2, R1就是3；slice1就是第一个数组“下刀”的位置的右侧第一个元素，也就是R1的索引，此时是2；slice1L是二分查找的的左侧值，slice1R是二分查找的右侧值
+[7, 8, 9, ｜ 10, 11] //L2就是9, R2就是10，slice2就是就是第二个数组“下刀”的位置的右侧第一个元素，也就是R2的索引，此时是3
 ```
 2. 满足slice1 + slice2 = Math.floor(len / 2), len是总长度
 3. 当满足L1 < R2 且 L2 < R1时，如果len是奇数，返回R1，R2中最小值，如果是偶数，就是L1,L2 最大值 加上 R1，R2最小值除以2
@@ -121,6 +121,44 @@ var findMedianSortedArrays = function(nums1, nums2) {
             } else {
                 const mediaVal = R1 > R2 ? R2 : R1;
                 return mediaVal;
+            }
+        }
+    }
+};
+```
+
+:::tip
+时间复杂度为O(m + n)版本
+:::
+```js
+/**
+ * @param {number[]} nums1
+ * @param {number[]} nums2
+ * @return {number}
+ */
+var findMedianSortedArrays = function(nums1, nums2) {
+    const len1 = nums1.length;
+    const len2 = nums2.length;
+    const len = len1 + len2;
+
+    if (len1 > len2) {
+        return findMedianSortedArrays(nums2, nums1);
+    }
+    
+    for (let i = 0; i <= len1; i++) {
+        let slice1 = i;
+        let slice2 = Math.floor(len / 2) - slice1;
+
+        let R1 = slice1 === len1 ? Infinity : nums1[slice1];
+        let R2 = slice2 === len2 ? Infinity : nums2[slice2];
+        let L1 = slice1 === 0 ? -Infinity : nums1[slice1 - 1];
+        let L2 = slice2 === 0 ? -Infinity : nums2[slice2 - 1];
+
+        if ((L1 <= R2) && (L2 <= R1)) {
+            if (len % 2 === 0) {
+                return (Math.max(L1, L2) + Math.min(R1, R2)) / 2;
+            } else {
+                return Math.min(R1, R2);
             }
         }
     }
