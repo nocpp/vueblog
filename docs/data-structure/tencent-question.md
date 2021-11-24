@@ -164,3 +164,79 @@ var findMedianSortedArrays = function(nums1, nums2) {
     }
 };
 ```
+
+## “粉刷房子”问题
+> 题目描述: 假如有一排房子，共 n 个，每个房子可以被粉刷成红色、蓝色或者绿色这三种颜色中的一种，你需要粉刷所有的房子并且使其相邻的两个房子颜色不能相同。
+:::tip
+当然，因为市场上不同颜色油漆的价格不同，所以房子粉刷成不同颜色的花费成本也是不同的。每个房子粉刷成不同颜色的花费是以一个 n x 3 的矩阵来表示的。  
+例如，costs[0][0] 表示第 0 号房子粉刷成红色的成本花费；costs[1][2] 表示第 1 号房子粉刷成绿色的花费，以此类推。请你计算出粉刷完所有房子最少的花费成本。
+
+注意：  
+所有花费均为正整数。
+
+示例：  
+输入: [[17,2,17],[16,16,5],[14,3,19]]  
+输出: 10  
+解释: 将 0 号房子粉刷成蓝色，1 号房子粉刷成绿色，2 号房子粉刷成蓝色。  
+最少花费: 2 + 5 + 3 = 10。 
+:::
+```js
+/**
+ * @param {number[][]} costs
+ * @return {number}
+ */
+var minCost = function(costs) {
+    //1. 二维数组，记录了每个房子粉刷三种颜色不同的价格
+    //2. 取值时要求相邻的颜色不同
+    //3. 求最小值
+    //动态规划，用倒推法推导转移方程： f(i)(x) = Math.min(f(i-1)(x以外), f(i-1)(x以外2)) + cost(i)(x)
+
+    //排除边界情况
+    if (!costs || !costs.length) {
+        return 0;
+    }
+
+    const len = costs.length;
+    let f = new Array(len);
+    for (let i = 0; i < len; i++) {
+        f[i] = new Array(3);
+    }
+
+    f[0][0] = costs[0][0];
+    f[0][1] = costs[0][1];
+    f[0][2] = costs[0][2];
+
+    for (let i = 1; i < len; i++) {
+        f[i][0] = Math.min(f[i - 1][1], (f[i - 1][2])) + costs[i][0];
+        f[i][1] = Math.min(f[i - 1][0], (f[i - 1][2])) + costs[i][1];
+        f[i][2] = Math.min(f[i - 1][0], (f[i - 1][1])) + costs[i][2];
+    }
+
+    return Math.min(f[len - 1][0], f[len - 1][1], f[len - 1][2]);
+};
+```
+> 利用滚动数组优化内存空间
+```js
+/**
+ * @param {number[][]} costs
+ * @return {number}
+ */
+var minCost = function(costs) {
+    //排除边界情况
+    if (!costs || !costs.length) {
+        return 0;
+    }
+
+    const len = costs.length;
+    for (let i = 1; i < len; i++) {
+        const now = costs[i];
+        const prev = costs[i - 1];
+
+        now[0] += Math.min(prev[1], prev[2]);
+        now[1] += Math.min(prev[0], prev[2]);
+        now[2] += Math.min(prev[0], prev[1]);
+    }
+
+    return Math.min(costs[len-1][0], costs[len-1][1], costs[len-1][2]);
+};
+```
