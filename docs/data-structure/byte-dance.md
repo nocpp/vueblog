@@ -56,3 +56,73 @@ var trap = function(height) {
     return res;
 };
 ```
+
+## 翻转k个数的链表
+> 思路分析，明确翻转连标的实质就是处理指针关系
+```js
+/**
+ * @param {ListNode} head
+ * @param {number} k
+ * @return {ListNode}
+ */
+var reverseKGroup = function(head, k) {
+    let cur = head, lastNode = null, prevEndNode = [], changedHead = null;
+
+    if (k === 1) {
+        return head;
+    }
+
+    while (cur) {
+        for (let i = 0; i < k; i++) {
+			let temp = cur.next;
+            if (i === 0) {
+                lastNode = cur;
+				
+				let p = cur, isEnough = true;
+				for (let j = 0; j < k - 1; j++) {
+				    if (p.next) {
+				        p = p.next;
+				    } else {
+				        isEnough = false;
+				        break;
+				    }
+				}
+
+                if (!isEnough) {
+					let q = changedHead;
+					while (q) {
+						if (q.next) {
+							q = q.next;
+						} else {
+							q.next = cur;
+							break;
+						}
+					}
+					
+                    return changedHead;
+                }
+				
+				cur.next = null;
+				prevEndNode.push(cur);
+            } else {
+                cur.next = lastNode;
+                lastNode = cur;
+				
+				if (i === k - 1) {
+					if (!changedHead) {
+						changedHead = cur;
+					}
+					
+					if (prevEndNode.length >= 2) {
+						const prevNode = prevEndNode.shift();
+						prevNode.next = cur;
+					}
+				}
+            }
+			cur = temp;
+        }
+    }
+
+    return changedHead;
+};
+```
