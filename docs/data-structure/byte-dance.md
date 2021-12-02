@@ -126,3 +126,33 @@ var reverseKGroup = function(head, k) {
     return changedHead;
 };
 ```
+
+## 求最大矩形
+> 题目描述：给定 n 个非负整数，用来表示柱状图中各个柱子的高度。每个柱子彼此相邻，且宽度为 1 。求在该柱状图中，能够勾勒出来的矩形的最大面积。
+```js
+/**
+ * @param {number[]} heights
+ * @return {number}
+ */
+var largestRectangleArea = function(heights) {
+    if (!heights || heights.length == 0) {
+        return 0;
+    }
+
+    let max = 0;
+    const len = heights.length;
+
+    for (let i = 0; i < len; i++) {
+        if (i === len - 1 || heights[i] > heights[i + 1]) {
+            let minHeight = heights[i];
+
+            for (let j = i; j >= 0; j--) {
+                minHeight = Math.min(minHeight, heights[j]);
+                max = Math.max(max, minHeight * (i - j + 1));
+            }
+        }
+    }
+
+    return max;
+};
+```
