@@ -168,3 +168,119 @@ function threeSum(_arr) {
 ```
 
 > 当想到“有序”和“数组”时，就应该想到对撞指针解法
+
+
+## 贪心算法
+K 次取反后最大化的数组和
+:::tip
+给你一个整数数组 nums 和一个整数 k ，按以下方法修改该数组：  
+
+选择某个下标 i 并将 nums[i] 替换为 -nums[i] 。  
+重复这个过程恰好 k 次。可以多次选择同一个下标 i 。  
+
+以这种方式修改数组后，返回数组 可能的最大和 。  
+
+输入：nums = [4,2,3], k = 1  
+输出：5  
+解释：选择下标 1 ，nums 变为 [4,-2,3] 。  
+
+输入：nums = [3,-1,0,2], k = 3  
+输出：6  
+解释：选择下标 (1, 2, 2) ，nums 变为 [3,1,0,2] 。  
+:::
+
+> 思路分析，暴力枚举法，把可能的情况枚举出来
+```js
+/**
+ * @param {number[]} nums
+ * @param {number} k
+ * @return {number}
+ */
+var largestSumAfterKNegations = function(nums, k) {
+    // 1. 根据k在数组中找到负数和0的，先对数组进行排序
+    // 2. 优先翻转负数，然后翻转0，然后再是正数
+    // 3. 最后求和
+
+    //1. 先对数组进行排序，增序
+    //2. 然后找到前k个数并分析
+
+    //3. 如果前k个都是负数，则全部翻转。如果k大于ken，则需要翻转全部负数后找到最小值进行翻转【解决】
+    //4. 如果前k个都是正数，则找到最小值进行k次翻转【解决】
+    //5. 如果前k个都是0，则直接求和【解决】
+    //6. 如果前k个有负有正，就对负数进行翻转，然后看剩下数量是否为偶数，是就直接就和，否则找到最小正数进行k次翻转【解决】
+    //7. 如果前k个是负数和0，对全部负数进行翻转，求和【解决】
+    //8. 如果前k个是正数和0，直接求和【解决】
+    //9. 如果前k个是正数，负数，和0，就直接把负数转正，然后求和【解决】
+
+    let maxSum = 0;
+    let sortedNum = [...nums].sort((a, b) => a - b);
+    let kNum = sortedNum.slice(0, k);
+    const len = nums.length;
+
+    const containZero = kNum.includes(0);
+    const containNegative = kNum.some(item => item < 0);
+    const everyNegative = kNum.every(item => item < 0);
+
+    if ((containZero || everyNegative) && len >= k) {
+        if (!containNegative) {
+            maxSum = sortedNum.reduce((sum, cur) => sum + cur, 0);
+        } else {
+            for (let i = 0; i < len; i++) {
+                if (i < k && sortedNum[i] < 0) {
+                    maxSum += -sortedNum[i];
+                } else {
+                    maxSum += sortedNum[i];
+                }
+            }
+        }
+    } else {
+        if (!containNegative) {
+            sortedNum[0] = Math.pow(-1, k) * sortedNum[0];
+        } else {
+            let remainNum = k;
+            for (let i = 0; i < k; i++) {
+                if (sortedNum[i] < 0) {
+                    sortedNum[i] = -sortedNum[i];
+                    remainNum--;
+                }
+            }
+
+            sortedNum = sortedNum.sort((a, b) => a - b);
+            sortedNum[0] = Math.pow(-1, remainNum) * sortedNum[0];
+        }
+        maxSum = sortedNum.reduce((sum, cur) => sum + cur, 0);
+    }
+
+    return maxSum;
+};
+```
+
+
+### 贪心算法解法
+1. 贪心的思路，局部最优：让绝对值大的负数变为正数，当前数值达到最大，整体最优：整个数组和达到最大。局部最优可以推出全局最优。
+2. 那么如果将负数都转变为正数了，K依然大于0，此时的问题是一个有序正整数序列，如何转变K次正负，让 数组和 达到最大。那么又是一个贪心：局部最优：只找数值最小的正整数进行反转，当前数值可以达到最大
+```js
+/**
+ * @param {number[]} nums
+ * @param {number} k
+ * @return {number}
+ */
+var largestSumAfterKNegations = function(nums, k) {
+    let sortedNums = nums.sort((a, b) => Math.abs(b) - Math.abs(a));
+
+    const len = sortedNums.length;
+
+    for (let i = 0; i < len && k > 0; i++) {
+        if (sortedNums[i] < 0) {
+            sortedNums[i] *= -1;
+            k--;
+        }
+    }
+
+    if (k % 2 === 1) {
+        sortedNums[len - 1] *= -1;
+    }
+
+    return sortedNums.reduce((sum, cur) => sum + cur, 0);
+};
+```
