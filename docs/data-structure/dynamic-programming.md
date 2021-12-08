@@ -1,5 +1,5 @@
 ---
-title: 动态规划
+title: 动态规划【Dynamic Programming】
 date: '2021-11-08'
 sidebar: 'auto'
 categories:
@@ -10,6 +10,7 @@ publish: true
 ---
 
 > 思想，所谓思想，就是非常好用，好用到爆的套路。
+> 动态规划：穷举 + 剪枝
 
 ## 爬楼梯问题
 题目描述：假设你正在爬楼梯。需要 n 阶你才能到达楼顶。每次你可以爬 1 或 2 个台阶。你有多少种不同的方法可以爬到楼顶呢？
@@ -160,4 +161,98 @@ function child(list) {
 	
 	return maxLen;
 }
+```
+
+## 判断子序列
+给定字符串 s 和 t ，判断 s 是否为 t 的子序列。
+
+字符串的一个子序列是原始字符串删除一些（也可以不删除）字符而不改变剩余字符相对位置形成的新字符串。（例如，"ace"是"abcde"的一个子序列，而"aec"不是）。
+
+> 用正则去test，会超时
+```js
+/**
+ * @param {string} s
+ * @param {string} t
+ * @return {boolean}
+ */
+var isSubsequence = function(s, t) {
+    const tLen = t.length;
+    const sLen = s.length;
+    let sIndex = 0;
+
+    if (sLen === 0) {
+        return true;
+    }
+
+    for (let i = 0; i < tLen; i++) {
+        if (t[i] === s[sIndex]) {
+            if (++sIndex === sLen) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+};
+```
+
+## 求最长公共子序列
+给定两个字符串 text1 和 text2，返回这两个字符串的最长 公共子序列 的长度。如果不存在 公共子序列 ，返回 0 。
+
+一个字符串的 子序列 是指这样一个新的字符串：它是由原字符串在不改变字符的相对顺序的情况下删除某些字符（也可以不删除任何字符）后组成的新字符串。
+
+- 例如，"ace" 是 "abcde" 的子序列，但 "aec" 不是 "abcde" 的子序列。
+两个字符串的 公共子序列 是这两个字符串所共同拥有的子序列。
+[最长公共子序列](https://www.sohu.com/a/339112354_818692)
+
+
+## 让字符串成为回文串的最少插入次数
+:::tip
+给你一个字符串 s ，每一次操作你都可以在字符串的任意位置插入任意字符。
+
+请你返回让 s 成为回文串的 最少操作次数 。
+
+「回文串」是正读和反读都相同的字符串
+:::
+
+### 示例 1：
+```
+输入：s = "zzazz"
+输出：0
+解释：字符串 "zzazz" 已经是回文串了，所以不需要做任何插入操作。
+```
+
+### 示例 2:
+```
+输入：s = "leetcode"
+输出：5
+解释：插入 5 个字符后字符串变为 "leetcodocteel" 。
+```
+
+```js
+/**
+ * @param {string} s
+ * @return {number}
+ */
+var minInsertions = function(s) {
+    const len = s.length;
+    const dp = new Array(len + 1);
+
+    for (let i = 0; i < len + 1; i++) {
+        dp[i] = new Array(len + 1).fill(0);
+    }
+
+    for (let i = len - 1; i >= 0; i--) {
+        dp[i][i] = 1;
+        for (let j = i + 1; j < len; j++) {
+            if (s[i] === s[j]) {
+                dp[i][j] = dp[i + 1][j - 1] + 2;
+            } else {
+                dp[i][j] = Math.max(dp[i + 1][j], Math.max(dp[i][j], dp[i][j - 1]));
+            }
+        }
+    }
+
+    return len - dp[0][len - 1];
+};
 ```
