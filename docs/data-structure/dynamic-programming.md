@@ -204,6 +204,39 @@ var isSubsequence = function(s, t) {
 - 例如，"ace" 是 "abcde" 的子序列，但 "aec" 不是 "abcde" 的子序列。
 两个字符串的 公共子序列 是这两个字符串所共同拥有的子序列。
 [最长公共子序列](https://www.sohu.com/a/339112354_818692)
+```js
+/**
+ * @param {string} text1
+ * @param {string} text2
+ * @return {number}
+ */
+var longestCommonSubsequence = function(text1, text2) {
+    //d[i][j]表示 text1.slice(0, i-1)和text2.slice(0,j-1)的最长公共子序列
+    //从0开始推导，其中观察得知,当i或j等于0时，d[i][j] = 0
+    //计算d[1][1]时，就是比较两个字符串第0个元素组成的子串的子序列
+    //只需要比较他们是否相等，相等则+1
+    
+    const len1 = text1.length;
+    const len2 = text2.length;
+    const dp = new Array(len1 + 1);
+
+    for (let i = 0; i < len1 + 1; i++) {
+        dp[i] = new Array(len2 + 1).fill(0);
+    }
+
+    for (let i = 1; i < len1 + 1; i++) {
+        for (let j = 1; j < len2 + 1; j++) {
+            if (text1[i - 1] === text2[j - 1]) {
+                dp[i][j] = dp[i - 1][j - 1] + 1;
+            } else {
+                dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+            }
+        }
+    }
+
+    return dp[len1][len2];
+};
+```
 
 
 ## 让字符串成为回文串的最少插入次数
