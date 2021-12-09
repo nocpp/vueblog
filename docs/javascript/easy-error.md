@@ -39,5 +39,11 @@ publish: true
 var res = func();
 var func = function func() {};
 
+//以上相当于
+var func;
+var res;
+res = func();
+func = function func() {};
+
 //会输出type error, 因为变量声明提升了，但是function func() {};不会执行，所以func是undefined
 ```
