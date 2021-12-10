@@ -262,6 +262,8 @@ var longestCommonSubsequence = function(text1, text2) {
 解释：插入 5 个字符后字符串变为 "leetcodocteel" 。
 ```
 
+> 算法是字符长度 - 字符和相反字符最长公共子序列，怎么分析出来的没搞清楚
+
 ```js
 /**
  * @param {string} s
@@ -269,23 +271,24 @@ var longestCommonSubsequence = function(text1, text2) {
  */
 var minInsertions = function(s) {
     const len = s.length;
-    const dp = new Array(len + 1);
+    let dp = new Array(len + 1);
 
     for (let i = 0; i < len + 1; i++) {
         dp[i] = new Array(len + 1).fill(0);
     }
 
-    for (let i = len - 1; i >= 0; i--) {
-        dp[i][i] = 1;
-        for (let j = i + 1; j < len; j++) {
-            if (s[i] === s[j]) {
-                dp[i][j] = dp[i + 1][j - 1] + 2;
+    const rS = s.split('').reverse().join('');
+
+    for (let i = 1; i < len + 1; i++) {
+        for (let j = 1; j < len + 1; j++) {
+            if (s[i - 1] === rS[j - 1]) {
+                dp[i][j] = dp[i - 1][j - 1] + 1;
             } else {
-                dp[i][j] = Math.max(dp[i + 1][j], Math.max(dp[i][j], dp[i][j - 1]));
+                dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
             }
         }
     }
 
-    return len - dp[0][len - 1];
+    return len - dp[len][len];
 };
 ```
