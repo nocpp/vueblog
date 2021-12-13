@@ -74,6 +74,29 @@ function run (n) {
 }
 ```
 
+```js
+//优化内存版
+/**
+ * @param {number} n
+ * @return {number}
+ */
+var climbStairs = function(n) {
+    if(n <= 1) {
+        return 1;
+    }
+
+    let n3 = 2, n2 = 2, n1 = 1;
+
+    for (let i = 3; i <= n; i++) {
+        n3 = n2 + n1;
+        n1 = n2;
+        n2 = n3;
+    }
+
+    return n3;
+};
+```
+
 ## 什么样的题应该用动态规划来做？我们要抓以下两个关键特征：
 - 最优子结构
 - 重叠子问题
