@@ -102,6 +102,56 @@ function combineListNode(l1, l2) {
 }
 ```
 
+## 合并两个链表，删除list1中下标从a到b的，把list2的元素插入进去
+[力扣地址](https://leetcode-cn.com/problems/merge-in-between-linked-lists/submissions/)
+```js
+/**
+ * Definition for singly-linked list.
+ * function ListNode(val, next) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.next = (next===undefined ? null : next)
+ * }
+ */
+/**
+ * @param {ListNode} list1
+ * @param {number} a
+ * @param {number} b
+ * @param {ListNode} list2
+ * @return {ListNode}
+ */
+var mergeInBetween = function(list1, a, b, list2) {
+    //找到关键节点，连接起来即可
+    //1. 要删除的结点是同一个，找到这个元素
+    //2. 不是同一个，在中间
+    //3. 不是同一个，在末尾
+
+    let leftNode, rightNode, index = 0, cur = list1;
+
+    while(cur && !rightNode) {
+        if (index === a - 1 && !leftNode) {
+            leftNode = cur;
+        }
+
+        if (index === b && !rightNode) {
+            rightNode = cur.next;
+        }
+
+        cur = cur.next;
+        index++;
+    }
+
+    leftNode.next = list2;
+    
+    cur = list2;
+    while(cur.next) {
+        cur = cur.next;
+    }
+    cur.next = rightNode;
+
+    return list1;
+};
+```
+
 ## 给定一个排序链表，删除所有重复的元素，使得每个元素只出现一次。
 示例：  
 输入: 1->1->2  
