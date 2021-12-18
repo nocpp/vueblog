@@ -53,6 +53,7 @@ publish: true
 <meta name="robots" content="index,follow">
 <meta http-equiv="x-ua-compatible" content="ie=edge">
 <meta name="format-detection" content="telphone=no, email=no" />
+<meta http-equiv="refresh" content="0;url=" />
 ```
 
 ## DOCTYPE的作用
@@ -77,12 +78,14 @@ href 标识超文本引用，用在 link 和 a 等元素上，href 是引用和�
 
 ```
 2. 然后 cache.manifest 文件的书写方式如下
+- CACHE:（必须） 标识出哪些文件需要缓存，可以是相对路径也可以是绝对路径。
+- NETWORK:（可选）这一部分是要绕过缓存直接读取的文件，可以使用通配符＊。
+- FALLBACK:（可选）指定了一个后备页面，当资源无法访问时，浏览器会使用该页面。
 ```html
 CACHE MANIFEST
 #v0.11
 
 CACHE:
-
 js/app.js
 css/style.css
 
@@ -90,7 +93,7 @@ NETWORK:
 resourse/logo.png
 
 FALLBACK:
-/ /offline.html
+*.html /404.html
 ```
 
 ## 页面可见性（Page Visibility）API 可以有哪些用途？
@@ -106,6 +109,13 @@ document.addEventListener("visibilitychange", function() {
   }
 });
 ```
+
+## script标签中defer和async的区别
+共同点：
+- 都是去异步加载外部的JS脚本文件，它们都不会阻塞页面的解析
+不同点：
+- 执行顺序不同,async【谁先加载完谁执行，不是按书写顺序执行】,defer【按书写顺序执行】
+- 执行时机不同,async【谁先加载完谁执行】,defer脚本会在文档渲染完毕后，DOMContentLoaded事件调用前执行
 
 
 ## HTML生命周期
@@ -147,3 +157,31 @@ document.addEventListener("visibilitychange", function() {
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)"; /_ for IE 8_/
 }
 ```
+
+##  渐进增强和优雅降级之间的区别
+- 渐进增强：主要是针对低版本的浏览器进行页面重构，保证基本的功能情况下，再针对高级浏览器进行效果、交互等方面的改进和追加功能，以达到更好的用户体验。
+- 优雅降级：一开始就构建完整的功能，然后再针对低版本的浏览器进行兼容。
+
+## 说一下 HTML5 drag API
+- dragstart：事件主体是被拖放元素，在开始拖放被拖放元素时触发。
+- darg：事件主体是被拖放元素，在正在拖放被拖放元素时触发。
+- dragenter：事件主体是目标元素，在被拖放元素进入某元素时触发。
+- dragover：事件主体是目标元素，在被拖放在某元素内移动时触发。
+- dragleave：事件主体是目标元素，在被拖放元素移出目标元素是触发。
+- drop：事件主体是目标元素，在目标元素完全接受被拖放元素时触发。
+- dragend：事件主体是被拖放元素，在整个拖放操作结束时触发。
+
+## localStorage 和 sessionStorage 和 cookie的区别
+- cookie 是网站为了标示用户身份而储存在用户本地终端上的数据（通常经过加密）
+- cookie数据始终在同源的http请求中携带（即使不需要），记会在浏览器和服务器间来回传递（优化点）
+- sessionStorage 和 localStorage 不会自动把数据发给服务器，仅在本地保存
+- cookie 数据大小不能超过4k
+- sessionStorage 和 localStorage 通常限制为5M
+- localStorage 存储持久数据，浏览器关闭后数据不丢失除非主动删除数据
+- sessionStorage 数据在当前浏览器窗口关闭后自动删除
+- cookie 设置的 cookie 过期时间之前一直有效，即使窗口或浏览器关闭
+
+## 参考其它的资料
+- [html常见面试题及答案](https://blog.csdn.net/weixin_45102270/article/details/113064446)
+- [掘金300题](https://juejin.cn/post/6914831351271292936#heading-1)
+- [掘金2021Html篇](https://juejin.cn/post/6905294475539513352#heading-12)
