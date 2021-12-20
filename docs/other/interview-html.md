@@ -28,15 +28,15 @@ publish: true
 <figcaption>这是一张图片</figcaption>
 </figure>
 ```
-- mark
-- progress 高亮的引用文字
+- mark 高亮的引用文字
+- progress
 
 ## iframe 框架有那些优缺点？
-优点
+### 优点
 - 展现出嵌入的网页
 - 常用于网站后台管理，可以复用菜单栏，导航栏，头部代码
 - 可以用来展示第三方广告之类的
-缺点
+### 缺点
 - 可能会出现滚动条
 - 会阻塞主页面load事件
 - 不利于SEO
@@ -54,6 +54,7 @@ publish: true
 <meta http-equiv="x-ua-compatible" content="ie=edge">
 <meta name="format-detection" content="telphone=no, email=no" />
 <meta http-equiv="refresh" content="0;url=" />
+<meta http-equiv="x-dns-prefetch-control" content="on" />
 ```
 
 ## DOCTYPE的作用
@@ -77,7 +78,7 @@ href 标识超文本引用，用在 link 和 a 等元素上，href 是引用和�
 </html>
 
 ```
-2. 然后 cache.manifest 文件的书写方式如下
+2. 然后再创建一个cache.manifest文件，它的书写方式如下
 - CACHE:（必须） 标识出哪些文件需要缓存，可以是相对路径也可以是绝对路径。
 - NETWORK:（可选）这一部分是要绕过缓存直接读取的文件，可以使用通配符＊。
 - FALLBACK:（可选）指定了一个后备页面，当资源无法访问时，浏览器会使用该页面。
@@ -98,7 +99,7 @@ FALLBACK:
 
 ## 页面可见性（Page Visibility）API 可以有哪些用途？
 作用
-> 动画，视频，音频都可以在页面显示时打开，在页面隐藏时关闭
+> 动画，视频，音频等耗费资源的都可以在页面显示时打开，在页面隐藏时关闭
 
 ```js
 document.addEventListener("visibilitychange", function() {
@@ -115,8 +116,7 @@ document.addEventListener("visibilitychange", function() {
 - 都是去异步加载外部的JS脚本文件，它们都不会阻塞页面的解析
 不同点：
 - 执行顺序不同,async【谁先加载完谁执行，不是按书写顺序执行】,defer【按书写顺序执行】
-- 执行时机不同,async【谁先加载完谁执行】,defer脚本会在文档渲染完毕后，DOMContentLoaded事件调用前执行
-
+- 执行时机不同,async【加载完就执行】,defer脚本会在文档渲染完毕后，DOMContentLoaded事件调用前执行
 
 ## HTML生命周期
 1. DOMContentLoaded，浏览器已经完全加载了 HTML，DOM 树已经构建完毕，但是像是img和样式表等外部资源可能并没有下载完毕；
@@ -128,7 +128,7 @@ document.addEventListener("visibilitychange", function() {
     - complete ：文档和所有子资源已完成加载。状态表示 load 事件即将被触发。
 
 ## html 常见兼容性问题？
-1. IE6中双边距Bug，float 引起的，解决办法: 使用 display解决
+1. IE6中双边距Bug
 - 发生场合：当给父元素内第一个浮动元素设置margin-left(元素float:left)或margin-right(元素float:right)时margin加倍。  
 - 解决方法：是给浮动元素加上display:inline;CSS属性;或者用padding-left代替margin-left。
 2. 3 像素问题
@@ -136,8 +136,8 @@ document.addEventListener("visibilitychange", function() {
 - img是行内元素，默认display：inline; 它与文本的默认行为类似，下边缘是与基线对齐，而不是贴紧容器下边缘，所以会有几像素的空白；
 - 解决办法，把img设置为display: block;
 3. 超链接 hover 点击后失效，解决办法: 使用正确的书写顺序 link visited hover active
-4. ie7 z-index 问题，解决办法: 给父级添加 position: relative;和 z-index
-5. 大家所说的IE6不支持png透明：这里所说的png的格式是png-24，png-8是让IE6支持的。或者使用gif 图片
+4. ie7 z-index 失效问题，解决办法: 给父级添加 position: relative;和 z-index
+5. 大家所说的IE6不支持png透明：这里所说的png的格式是png-24，png-8是让IE6支持的，或者使用gif 图片
 6. IE6 不支持 Min-height 最小高度 ，解决办法: 
 ```css
 .box{
@@ -157,6 +157,12 @@ document.addEventListener("visibilitychange", function() {
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)"; /_ for IE 8_/
 }
 ```
+10. 不同浏览器的标签默认的margin和padding不一样。  
+```css
+*{margin:0;padding:0;}
+```
+11. 设置较小高度标签（一般小于10px），在IE6，IE7中高度超出自己设置高度。hack：给超出高度的标签设置overflow:hidden;或者设置行高line-height 小于你设置的高度。
+12. Chrome 中文界面下默认会将小于 12px 的文本强制按照 12px 显示,可通过加入 CSS 属性 -webkit-text-size-adjust: none; 解决。
 
 ##  渐进增强和优雅降级之间的区别
 - 渐进增强：主要是针对低版本的浏览器进行页面重构，保证基本的功能情况下，再针对高级浏览器进行效果、交互等方面的改进和追加功能，以达到更好的用户体验。

@@ -3,7 +3,7 @@ title: Web安全
 date: '2021-11-16'
 sidebar: 'auto'
 categories:
- - javascript
+ - 杂项
 tags:
  - 安全
 publish: true

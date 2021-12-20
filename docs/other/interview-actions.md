@@ -1,13 +1,159 @@
 ---
-title: 手写代码题
-date: '2021-11-16'
+title: JS手写题
+date: '2021-12-20'
 sidebar: 'auto'
 categories:
- - javascript
+ - 杂项
 tags:
- - 手写
+ - 手写题
 publish: true
 ---
+
+## 用js递归的方式写1到100求和?
+> 思路分析：使用倒推法推导出递归式，然后找到递归边界，然后编码
+```js
+function sumNum (endNum) {
+    //求1+2+3...+99+100
+    
+    //递归式 f(n) = n + f(n-1)
+    //递归边界 n < 1
+    
+    if (endNum < 1) {
+        return 0;
+    }
+    
+    const sum = endNum + sumNum(endNum - 1);
+    
+    return sum;
+}
+```
+
+## sort 快速打乱数组
+```js
+var arr = [1,2,3,4,5,6,7,8,9,10];
+arr.sort(()=> Math.random() - 0.5)
+```
+
+## 数组去重？
+```js
+var arr=['12','32','89','12','12','78','12','32'];
+    // 最简单数组去重法
+    function unique1(array){
+        var n = []; //一个新的临时数组
+        for(var i = 0; i < array.length; i++){ //遍历当前数组
+            if (n.indexOf(array[i]) == -1) //或者用includes
+                n.push(array[i]);
+        }
+        return n;
+    }
+    arr=unique1(arr);
+    // 速度最快， 占空间最多（空间换时间），通过对象key不重复去重
+    function unique2(array){
+        var n = {}, r = [], type;
+        for (var i = 0; i < array.length; i++) {
+            type = typeof array[i];
+            if (!n[array[i]]) {
+                n[array[i]] = [type];
+                r.push(array[i]);
+            } else if (n[array[i]].indexOf(type) < 0) {
+                n[array[i]].push(type);
+                r.push(array[i]);
+            }
+        }
+        return r;
+    }
+    //数组下标判断法，从第二个开始提高性能
+    function unique3(array){
+        var n = [array[0]]; //结果数组
+        for(var i = 1; i < array.length; i++) { //从第二项开始遍历
+            if (array.indexOf(array[i]) == i) 
+                n.push(array[i]);
+        }
+        return n;
+    }
+```
+
+```js
+//es6方法数组去重
+arr=[...new Set(arr)];
+//es6方法数组去重，第二种方法
+function dedupe(array) {
+  return Array.from(new Set(array));       //Array.from()能把set结构转换为数组
+}
+```
+
+## 节流防抖
+- 节流：每隔一段时间执行一次，通常用在高频率触发的地方，降低频率。--如：鼠标滑动 拖拽
+```js
+时间戳实现：
+var throttle = function(func, delay){
+    var prev = Date.now();
+    return function(){
+        var context = this;
+        var args = arguments;
+        var now = Date.now();
+        if(now-prev >= delay){
+            func.apply(context,args);
+            prev = Date.now();
+        }
+    }
+}
+
+定时器实现：
+var throttle = function(func, delay){
+    var timer = null;
+    return function(){
+        var context = this;
+        var args = arguments;
+        if(!timer){
+            timer = setTimeout(function(){
+                func.apply(context, args);
+                timer = null;
+            }, delay);
+        }
+    }
+}
+```
+- 防抖：一段时间内连续触发，不执行，直到超出限定时间执行最后一次。--如：input 模糊搜索
+```js
+// debounce 函数接受一个函数和延迟执行的时间作为参数, 此函数用作监听回调函数
+function debounce(fn, delay){
+    // 维护一个 timer
+    let timer = null;
+    
+    return function() {
+        // 获取函数的作用域和变量
+        let context = this;
+        let args = arguments;
+        
+        clearTimeout(timer);
+        timer = setTimeout(function(){
+            fn.apply(context, args);
+        }, delay)
+    }
+}
+```
+
+## 浅拷贝和深拷贝的区别
+- 浅拷贝：一般指的是把对象的第一层拷贝到一个新对象上去，比如
+```js
+var a = { count: 1, deep: { count: 2 } }
+var b = Object.assign({}, a)
+// 或者
+var b = {...a}
+```
+
+- 深拷贝：一般需要借助递归实现，如果对象的值还是个对象，要进一步的深入拷贝，完全替换掉每一个复杂类型的引用。
+```js
+var deepCopy = (obj) => {
+    var ret = {}
+    for (var key in obj) {
+        var value = obj[key]
+        ret[key] = typeof value === 'object' ? deepCopy(value) : value
+    }
+    return ret
+}
+```
 
 ## 手写各种原生方法
 2. 如何模拟实现一个new的效果？
