@@ -1,5 +1,5 @@
 ---
-title: 面试之html
+title: html常见知识
 date: '2021-10-09'
 sidebar: 'auto'
 categories:
@@ -43,25 +43,44 @@ publish: true
 - 和主页面共享连接池，会影响页面并行加载
 
 ## 说说常用的meta标签
+> httpEquiv 属性把 content 属性连接到 HTTP 头部, 也就是http响应头
 ```html
-<meta charset="utf-8">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="author" content="author,email address">
 <meta name="Description" content=""/>
 <meta name="Keywords" content=""/>
 <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 <meta name="robots" content="index,follow">
-<meta http-equiv="x-ua-compatible" content="ie=edge">
 <meta name="format-detection" content="telphone=no, email=no" />
-<meta http-equiv="refresh" content="0;url=" />
+
+<!-- 适配IE最新版本 -->
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<!-- 多域名情况下，可以用DNS预获取 -->
 <meta http-equiv="x-dns-prefetch-control" content="on" />
+
+<!-- 可以用于设定网页的到期时间。一旦网页过期，必须到服务器上重新传输 -->
+<meta http-equiv="expires" content="Wed, 20 Jun 2007 22:33:00 GMT" />
+<!-- 是用于设定禁止浏览器从本地机的缓存中调阅页面内容，设定后一旦离开网页就无法从Cache中再调出 -->
+<meta http-equiv="Pragma" content="no-cache">  
+<!-- 清除缓存（再访问这个网站要重新下载！）  -->
+<meta http-equiv="cache-control" content="no-cache">  
+
+<!-- 自动刷新并重定向到新页面。  -->
+<meta http-equiv="Refresh" content="2；URL=http://www.net.cn/">  
+<!-- 每五秒刷新一次页面 -->
+<meta http-equiv="refresh" content="5" />
+<!-- 如果网页过期，那么存盘的cookie将被删除。  -->
+<meta http-equiv="Set-Cookie" content="cookievalue=xxx;expires=Wednesday, 20-Jun-2007 22:33:00 GMT； path=/"> 
+<!-- 设定页面使用的字符集。老写法   -->
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- 新写法 -->
+<meta charset="utf-8">
 ```
 
 ## DOCTYPE的作用
 1. 告诉浏览器使用哪种HTML或者XHTML规范
 2. 告诉浏览器按照何种规范解析页，如果不写，就会以怪异模式来解析页面
 3. HTML5为什么只需要写 !DOCTYPE HTML？
-因为HTML5不基于SGML，所以不需要引用DTD，而HTML4.01基于SGML，所以需要引用
+> 因为HTML5不基于SGML，所以不需要引用DTD，而HTML4.01基于SGML，所以需要引用
 
 ##  src和href的区别
 - src 用于引用资源，替换当前元素
@@ -70,7 +89,7 @@ src 表示引用资源，替换当前元素，用在 img，script，iframe 上�
 href 标识超文本引用，用在 link 和 a 等元素上，href 是引用和页面关联，是在当前元素和引用资源之间建立联系。若在文档中添加 href ，浏览器会识别该文档为 CSS 文件，就会并行下载资源并且不会停止对当前文档的处理。这也是为什么建议使用 link 方式加载 CSS，而不是使用 @import 方式。
 
 ## Html5 的离线储存资源进行管理和加载
-1. 在头部加一个 manifest 
+1. 在html标签中加一个**manifest**属性，然后指向一个配置文件
 ```html
 <!DOCTYPE html>
 <html manifest="cache.manifest">
@@ -82,7 +101,7 @@ href 标识超文本引用，用在 link 和 a 等元素上，href 是引用和�
 - CACHE:（必须） 标识出哪些文件需要缓存，可以是相对路径也可以是绝对路径。
 - NETWORK:（可选）这一部分是要绕过缓存直接读取的文件，可以使用通配符＊。
 - FALLBACK:（可选）指定了一个后备页面，当资源无法访问时，浏览器会使用该页面。
-```html
+```text
 CACHE MANIFEST
 #v0.11
 
@@ -112,9 +131,7 @@ document.addEventListener("visibilitychange", function() {
 ```
 
 ## script标签中defer和async的区别
-共同点：
 - 都是去异步加载外部的JS脚本文件，它们都不会阻塞页面的解析
-不同点：
 - 执行顺序不同,async【谁先加载完谁执行，不是按书写顺序执行】,defer【按书写顺序执行】
 - 执行时机不同,async【加载完就执行】,defer脚本会在文档渲染完毕后，DOMContentLoaded事件调用前执行
 
@@ -148,7 +165,7 @@ document.addEventListener("visibilitychange", function() {
 }
 ```
 7. select 在 ie6 下遮盖，解决办法: 利用iframe来遮挡select，再用div来遮挡iframe
-8. 为什么没有办法定义 1px 左右的宽度容器，解决办法: （IE6 默认的行高造成的，使用 over:hidden,zoom:0.08 line-height:1px）
+8. 为什么没有办法定义 1px 左右的宽度容器，解决办法: （IE6 默认的行高造成的，使用 overflow:hidden,zoom:0.08 line-height:1px）
 9. IE5-8 不支持 opacity，解决办法
 ```css
 .opacity {
@@ -161,8 +178,7 @@ document.addEventListener("visibilitychange", function() {
 ```css
 *{margin:0;padding:0;}
 ```
-11. 设置较小高度标签（一般小于10px），在IE6，IE7中高度超出自己设置高度。hack：给超出高度的标签设置overflow:hidden;或者设置行高line-height 小于你设置的高度。
-12. Chrome 中文界面下默认会将小于 12px 的文本强制按照 12px 显示,可通过加入 CSS 属性 -webkit-text-size-adjust: none; 解决。
+11. Chrome 中文界面下默认会将小于 12px 的文本强制按照 12px 显示,可通过加入 CSS 属性 -webkit-text-size-adjust: none; 解决。
 
 ##  渐进增强和优雅降级之间的区别
 - 渐进增强：主要是针对低版本的浏览器进行页面重构，保证基本的功能情况下，再针对高级浏览器进行效果、交互等方面的改进和追加功能，以达到更好的用户体验。
@@ -186,6 +202,11 @@ document.addEventListener("visibilitychange", function() {
 - localStorage 存储持久数据，浏览器关闭后数据不丢失除非主动删除数据
 - sessionStorage 数据在当前浏览器窗口关闭后自动删除
 - cookie 设置的 cookie 过期时间之前一直有效，即使窗口或浏览器关闭
+
+### 总结主要三点区别
+1. 是否会自动发给服务器
+2. 存储大小不同
+3. 存储有效期不同
 
 ## 参考其它的资料
 - [html常见面试题及答案](https://blog.csdn.net/weixin_45102270/article/details/113064446)

@@ -323,3 +323,6 @@ var minInsertions = function(s) {
     return len - dp[len][len];
 };
 ```
+
+
+## 补充回溯和动态规划
