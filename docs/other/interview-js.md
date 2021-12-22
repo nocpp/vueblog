@@ -1,5 +1,5 @@
 ---
-title: JS相关
+title: JS相关知识
 date: '2021-12-20'
 sidebar: 'auto'
 categories:
@@ -115,10 +115,10 @@ objectSymbols
 - 回调函数
 	+ 优点：简单、容易理解
 	+ 缺点：不利于维护，代码耦合高
-- 事件监听(采用时间驱动模式，取决于某个事件是否发生)
+- 事件监听(采用时间驱动模式，取决于某个事件是否发生)【Dom添加事件监听】
 	+ 优点：容易理解，可以绑定多个事件，每个事件可以指定多个回调函数
 	+ 缺点：事件驱动型，流程不够清晰
-- 发布/订阅(观察者模式)
+- 发布/订阅(观察者模式)【pubSub库】
 	+ 类似于事件监听，但是可以通过‘消息中心‘，了解现在有多少发布者，多少订阅者
 - Promise对象
 	+ 优点：可以利用then方法，进行链式写法；可以书写错误时的回调函数；
@@ -143,6 +143,8 @@ console.log(b)
 > 注意：当url作为参数传递时如果没有用encodeURIComponent进行编码，往往会造成传递时url中的特殊字符丢失。
 
 ## 事件循环【Event Loop】
+[什么是事件循环](http://www.ruanyifeng.com/blog/2013/10/event_loop.html)
+[Event Loop](https://segmentfault.com/a/1190000016278115)
 ### Event Loop是什么？
 事件循环是JS的执行机制。
 
@@ -279,10 +281,10 @@ C.prototype = new P();
 C.prototype.name = 'yes';
 let cItem = new C("pig");
 ```
-特点：
+- 特点：
 1. 可以继承父类原型上的属性，可以传参，可复用。
 2. 每个新实例引入的构造函数属性是私有的。
-缺点：
+- 缺点：
 1. 调用了两次父类构造函数（耗内存）
 2. 子类的构造函数会代替原型上的那个父类构造函数。
 
@@ -294,7 +296,7 @@ function createAnother(original){
  console.log("hi"); 
  }; 
  return clone; // 返回这个对象
-} ```
+} ```
 
 ### 寄生组合式继承（常用）
 ```js
@@ -303,7 +305,7 @@ function inheritPrototype(subType, superType) {
  prototype.constructor = subType; // 增强对象
  
  subType.prototype = prototype; // 赋值对象
-} 
+} 
 
 function SuperType(name) { 
  this.name = name; 
@@ -334,15 +336,17 @@ function object(o) {
  function F() {} 
  F.prototype = o; 
  return new F(); 
-} ```
+} 
+```
 - 构造函数中的共有属性无法做到数据共享，要做到数据共享，需要用到prototype
 
 ## JavaScript原型，原型链 ? 有什么特点？
 ### 原型prototype
-![prototype是什么](前端基础面试_files/16.jpg)
+> 原型就是，创建一个函数时，会同时创建一个对象，函数的prototype会指向这个对象，然后这个对象默认有个属性叫constructor，指向这个函数。prototype指向的对象就是函数的原型对象，简称函数的原型
+![prototype是什么](./img/16.jpg)
 - 每个函数都有一个属性，叫prototype，它的值是一个对象，默认包含constructor属性，constructor属性是指向自己（即构造函数）。在Object函数的prototype中，还包含toString, hasOwnProperty等方法，所以创建的对象可以直接使用toString等方法
 - 每个对象都有一个隐藏的属性——“__proto__”，这个属性指向创建这个对象的函数的prototype。即：fn.__proto__ === Fn.prototype（除了Object.create(null)没有），所以对象可以访问原型上的属性和方法
-![prototype与__proto__](前端基础面试_files/17.jpg)
+![prototype与__proto__](./img/17.jpg)
 
 ### 实例 
 > 通过构造函数和new创建出来的对象，便是实例。 实例通过__proto__指向它构造函数的原型，通过constructor指向构造函数。
@@ -355,7 +359,7 @@ function object(o) {
 
 ### instanceof原理
 Instanceof的判断准则是：沿着A的__proto__这条线来找，同时沿着B的prototype这条线来找，如果两条线能找到同一个引用，即同一个对象，那么就返回true。如果找到终点还未重合，则返回false。
-![instance的逻辑](前端基础面试_files/18.jpg)
+![instance的逻辑](./img/18.jpg)
 
 ### 特点
 JavaScript 对象是通过引用来传递的，我们创建的每个新对象实体中并没有一份属于自己的原型副本。当我们修改原型时，与之相关的对象也会继承这一改变当我们需要一个属性的时， Javascript 引擎会先看当前对象中是否有这个属性，如果没有的,就会查找__proto__这条线来找。
@@ -368,7 +372,7 @@ JavaScript 对象是通过引用来传递的，我们创建的每个新对象实
 - 由两部分组成:
 	+ [[scope]]属性: 指向父级变量对象和作用域链，也就是包含了父级的[[scope]]和AO
 	+ AO: 自身活动对象
-如此 [[scopr]]包含[[scope]]，便自上而下形成一条 链式作用域。
+如此 [[scope]]包含[[scope]]，便自上而下形成一条 链式作用域。
 ### 例子
 ```js
 var a = 1;
@@ -427,7 +431,7 @@ foo.[[Scope]] = {
 > 活动对象 (AO): 当变量对象所处的上下文为 active EC 时，称为活动对象。
 
 ### 作用域
-执行上下文中还包含作用域链。理解作用域之前，先介绍下作用域。作用域其实可理解为该上下文中声明的 变量和函数的作用范围。可分为 块级作用域 和 函数作用域。（js引擎根据名称查找变量的一套规则）
+执行上下文中还包含作用域链。理解作用域链之前，先介绍下作用域。作用域其实可理解为该上下文中声明的 变量和函数的作用范围。可分为 块级作用域 和 函数作用域。（js引擎根据名称查找变量的一套规则）
 - 特性:
 	+ 声明提前: 一个声明在函数体内都是可见的, 函数优先于变量
 	+ 非匿名自执行函数，函数变量为 只读 状态，无法修改
@@ -465,7 +469,7 @@ var obj = {
 ```
 3. 函数用call或者apply调用, 当一个函数被call和apply调用时，this的值就取传入的对象的值。
 4. 全局 & 调用普通函数, 在全局环境下，this永远是window
-![特例](前端基础面试_files/19.jpg)
+![特例](./img/19.jpg)
 5. 监听事件回调函数中的this, 指向触发这个事件的对象，特殊的是， IE 中的 attachEvent 中的this 总是指向全局对象 Window
 
 

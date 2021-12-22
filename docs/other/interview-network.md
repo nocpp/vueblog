@@ -319,17 +319,17 @@ Content-Encoding: gzip
 ```
 
 ### 建立TCP 连接
-   ![TCP报文首部格式](前端基础面试_files/3.jpg)
-   ![序号与确认号字段含义，seq，ack](前端基础面试_files/4.jpg)
-   ![六个控制位](前端基础面试_files/5.jpg)
-   ![六个控制位](前端基础面试_files/6.jpg)
-   ![连接图](前端基础面试_files/2.jpg)
-   ![三次握手详细描述](前端基础面试_files/7.jpg)
-   ![两次握手出现的问题](前端基础面试_files/8.jpg)
+   ![TCP报文首部格式](./img/3.jpg)
+   ![序号与确认号字段含义，seq，ack](./img/4.jpg)
+   ![六个控制位](./img/5.jpg)
+   ![六个控制位](./img/6.jpg)
+   ![连接图](./img/2.jpg)
+   ![三次握手详细描述](./img/7.jpg)
+   ![两次握手出现的问题](./img/8.jpg)
 
 ### TCP断开连接，四次握手
-   ![图1](前端基础面试_files/9.jpg)
-   ![图2](前端基础面试_files/10.jpg)
+   ![图1](./img/9.jpg)
+   ![图2](./img/10.jpg)
 
 [TCP三次握手，四次挥手详解](https://juejin.cn/post/6919056368250912782)
 
@@ -338,7 +338,7 @@ Content-Encoding: gzip
 > 有缓存则使用缓存，没有则请求
 
 ### 浏览器解析渲染页面
-![示意图](前端基础面试_files/13.jpg)
+![示意图](./img/13.jpg)
 [详细过程参考](https://blog.csdn.net/qq_41807645/article/details/80839757)
 
 1. 先构建DOM树：从上到下解析HTML文档生成DOM节点树（DOM tree），也叫内容树（content tree），遇见script标签和link css标签会开始下载执行，没加异步处理会阻塞渲染和解析，CSS只会阻塞渲染，执行完后再往下解析，所以JS文件不要放到head里，css文件尽量小，JS通过DOM API和CSSOM API来操作DOM树和CSS树；
