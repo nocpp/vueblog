@@ -85,6 +85,79 @@ px像素（Pixel）。相对长度单位。像素px是相对于显示器屏幕�
  }
 ```
 
+## 实现一个扇形(比三角形多了圆角)
+```css
+div{
+    border: 100px solid transparent;
+    width: 0;
+    heigt: 0;
+    border-radius: 100px;
+    border-top-color: red;
+}
+```
+
+## 实现一个宽高自适应的正方形
+- vw实现
+```css
+.square {
+  width: 10%;
+  height: 10vw;
+  background: tomato;
+}
+```
+- margin/padding百分比
+```css
+.square {
+  width: 20%;
+  height: 0;
+  padding-top: 20%;
+  background: orange;
+}
+```
+- 利用子元素的margin-top的值来实现：
+```css
+.square {
+  width: 30%;
+  overflow: hidden;
+  background: yellow;
+}
+.square::after {
+  content: '';
+  display: block;
+  margin-top: 100%;
+}
+```
+
+## 如何解决 1px 问题？
+- 直接写 0.5px, IOS 系统需要8及以上的版本，安卓系统则直接不兼容
+- 伪元素先放大后缩小
+```css
+#container[data-device="2"] {
+    position: relative;
+}
+#container[data-device="2"]::after{
+      position:absolute;
+      top: 0;
+      left: 0;
+      width: 200%;
+      height: 200%;
+      content:"";
+      transform: scale(0.5);
+      transform-origin: left top;
+      box-sizing: border-box;
+      border: 1px solid #333;
+    }
+}
+```
+
+## viewport 缩放来解决
+:::danger
+但这样做的副作用也很大，整个页面被缩放了
+:::
+```html
+<meta name="viewport" content="initial-scale=0.5, maximum-scale=0.5, minimum-scale=0.5, user-scalable=no">
+```
+
 ## 清除浮动的几种方式
 - 父级div定义height
 - 父元素最后一个标签加空div标签 并添加样式clear:both。
@@ -377,6 +450,6 @@ div {
 
 ## 参考的文章
 [300题](https://juejin.cn/post/6914831351271292936)
-[中高级](https://juejin.cn/post/6914831351271292936)
+[中高级](https://juejin.cn/post/6844903776512393224)
 [2021中高级](https://juejin.cn/post/6905539198107942919)
 [MDN](https://developer.mozilla.org/zh-CN/docs/Web/CSS/Reference)
