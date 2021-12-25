@@ -145,6 +145,7 @@ console.log(b)
 ## 事件循环【Event Loop】
 [什么是事件循环](http://www.ruanyifeng.com/blog/2013/10/event_loop.html)
 [Event Loop](https://segmentfault.com/a/1190000016278115)
+[视频讲解](https://www.ixigua.com/6806218718264164877?wid_try=1)
 ### Event Loop是什么？
 事件循环是JS的执行机制。
 
