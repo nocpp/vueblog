@@ -143,8 +143,11 @@ console.log(b)
 > 注意：当url作为参数传递时如果没有用encodeURIComponent进行编码，往往会造成传递时url中的特殊字符丢失。
 
 ## 事件循环【Event Loop】
+[讲的最好的](https://javascript.info/event-loop#macrotasks-and-microtasks)
 [什么是事件循环](http://www.ruanyifeng.com/blog/2013/10/event_loop.html)
 [Event Loop](https://segmentfault.com/a/1190000016278115)
+[视频讲解](https://www.ixigua.com/6806218718264164877?wid_try=1)
+[详解](https://www.cnblogs.com/mfyngu/p/11747533.html)
 ### Event Loop是什么？
 事件循环是JS的执行机制。
 
