@@ -196,7 +196,7 @@ div{
 <div style="width: 200px; height: 200px;background: #eee">我是一个没有设置浮动,也没有触发 BFC 元素, width: 200px; height:200px; background: #eee;</div>
 ```
 
-## position值有哪些？inherit什么时候会用到？可以用来制作列表的固定表头？父级固定定位，子元素继承
+## position值有哪些？
 - static 默认值
 - relative
 - absolute
@@ -236,8 +236,11 @@ div{
 
 [margin折叠的意义](https://medium.com/@joseph0crick/margin-collapse-in-css-what-why-and-how-328c10e37ca0)
 
-## 圣杯布局和双飞翼布局
+## CSS实现三栏布局，左右两栏固定宽度，中间自适应
 ### 圣杯布局
+1. 容器包含三块儿，顺序必须是中左右，中必须在最前面，左右是浮动
+2. 容器利用padding预留出左右栏空间
+3. 左右栏利用相对定位和负margin值移到正确位置
 ```html
 <div class="outer">
     <div class="center"></div>
@@ -286,6 +289,9 @@ div{
 ```
 
 ### 双飞翼布局
+1. 容器只包着中间
+2. 中间用margin给左右栏留出空间
+3. 左右栏利用负margin值移到正确位置
 ```html
 <div class="outer">
     <div class="center"></div>
@@ -329,7 +335,7 @@ div{
 ### flex-grow 与 flex的区别
 1. 剩余宽度计算方式不同, flex-grow的剩余宽度等于容器宽度减去所有项目宽度和, 而flex的剩余宽度等于容器宽度减去设置了flex属性的项的宽度和
 2. 计算宽度方式都是剩余宽度*设置比例/设置了项目个数
-3. flex是几个值的简写，flex-grow, flex-basis, flex-shrink
+3. flex是几个值的简写，flex-grow，flex-shrink，flex-basis
 
 ### 容器的属性
 - flex-direction
@@ -366,7 +372,6 @@ div{
 7. 最好使用表示语义的名字。一个好的类名应该是描述他是什么而不是像什么
 8. 避免！important，可以选择其他选择器
 9. 尽可能的精简规则，你可以合并不同类里的重复规则
-
 
 ## 浏览器是怎样解析CSS选择器的？
 - CSS选择器的解析是从右向左解析的。若从左向右的匹配，发现不符合规则，需要进行回溯，会损失很多性能。若从右向左匹配，先找到所有的最右节点，对于每一个节点，向上寻找其父节点直到找到根元素或满足条件的匹配规则，则结束这个分支的遍历。
@@ -446,6 +451,7 @@ div {
   grid-gap: 20px 20px; //为以上合写
 }
 ```
+> 可以做九宫格，图片墙。可以设置间距，flex不行
 [参考GRID详解](https://www.ruanyifeng.com/blog/2019/03/grid-layout-tutorial.html)
 
 ## 参考的文章

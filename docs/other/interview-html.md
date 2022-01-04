@@ -33,9 +33,8 @@ publish: true
 
 ## iframe 框架有那些优缺点？
 ### 优点
-- 展现出嵌入的网页
-- 常用于网站后台管理，可以复用菜单栏，导航栏，头部代码
-- 可以用来展示第三方广告之类的
+- 常用于网站后台框架，内容区域使用iframe，然后可以共用导航栏，侧边菜单栏
+- 插入第三方广告很方便
 ### 缺点
 - 可能会出现滚动条
 - 会阻塞主页面load事件
@@ -44,18 +43,24 @@ publish: true
 
 ## 说说常用的meta标签
 > httpEquiv 属性把 content 属性连接到 HTTP 头部, 也就是http响应头
+- name，content组成
+- http-equiv，content组成
+- charset组成
 ```html
 <meta name="author" content="author,email address">
 <meta name="Description" content=""/>
 <meta name="Keywords" content=""/>
-<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 <meta name="robots" content="index,follow">
+
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+
 <meta name="format-detection" content="telphone=no, email=no" />
 
 <!-- 适配IE最新版本 -->
 <meta http-equiv="x-ua-compatible" content="ie=edge">
-<!-- 多域名情况下，可以用DNS预获取 -->
+<!-- 用在首页可以提升整站性能，且不会影响首页加载，火狐是并行的 -->
 <meta http-equiv="x-dns-prefetch-control" content="on" />
+<link rel="dns-prefetch" href="http://www.spreadfirefox.com/">
 
 <!-- 可以用于设定网页的到期时间。一旦网页过期，必须到服务器上重新传输 -->
 <meta http-equiv="expires" content="Wed, 20 Jun 2007 22:33:00 GMT" />
@@ -84,9 +89,9 @@ publish: true
 
 ##  src和href的区别
 - src 用于引用资源，替换当前元素
-src 表示引用资源，替换当前元素，用在 img，script，iframe 上，src 是页面内容不可缺少的一部分。当浏览器解析到 src ，会暂停其他资源的下载和处理（图片不会暂停其他资源下载和处理），直到将该资源加载、编译、执行完毕，图片和框架等也如此，类似于将所指向资源应用到当前内容。这也是为什么建议把 js 脚本放在底部而不是头部的原因。
+	+ src 表示引用资源，替换当前元素，用在 img，script，iframe 上，src 是页面内容不可缺少的一部分。当浏览器解析到 src ，会暂停其他资源的下载和处理（图片不会暂停其他资源下载和处理），直到将该资源加载、编译、执行完毕，图片和框架等也如此，类似于将所指向资源应用到当前内容。这也是为什么建议把 js 脚本放在底部而不是头部的原因。
 - href 用于在当前文档和引用资源之间确立联系
-href 标识超文本引用，用在 link 和 a 等元素上，href 是引用和页面关联，是在当前元素和引用资源之间建立联系。若在文档中添加 href ，浏览器会识别该文档为 CSS 文件，就会并行下载资源并且不会停止对当前文档的处理。这也是为什么建议使用 link 方式加载 CSS，而不是使用 @import 方式。
+	+ href 标识超文本引用，用在 link 和 a 等元素上，href 是引用和页面关联，是在当前元素和引用资源之间建立联系。若在文档中添加 link css href ，浏览器会识别该文档为 CSS 文件，就会并行下载资源并且不会停止对当前文档的处理。这也是为什么建议使用 link 方式加载 CSS，而不是使用 @import 方式。
 
 ## Html5 的离线储存资源进行管理和加载
 1. 在html标签中加一个**manifest**属性，然后指向一个配置文件
@@ -117,8 +122,11 @@ FALLBACK:
 ```
 
 ## 页面可见性（Page Visibility）API 可以有哪些用途？
-作用
+### 作用
 > 动画，视频，音频等耗费资源的都可以在页面显示时打开，在页面隐藏时关闭
+### 主要属性
+- visibilitychange 事件
+- document.hidden 属性
 
 ```js
 document.addEventListener("visibilitychange", function() {
@@ -133,10 +141,16 @@ document.addEventListener("visibilitychange", function() {
 ## script标签中defer和async的区别
 - 都是去异步加载外部的JS脚本文件，它们都不会阻塞页面的解析
 - 执行顺序不同,async【谁先加载完谁执行，不是按书写顺序执行】,defer【按书写顺序执行】
-- 执行时机不同,async【加载完就执行】,defer脚本会在文档渲染完毕后，DOMContentLoaded事件调用前执行
+- 执行时机不同,async【加载完就执行】,defer脚本会在文档渲染完毕后，【DOMContentLoaded事件】调用前执行。
+> defer脚本执行完了才会触发DOMContentLoaded事件
 
 ## HTML生命周期
-1. DOMContentLoaded，浏览器已经完全加载了 HTML，DOM 树已经构建完毕，但是像是img和样式表等外部资源可能并没有下载完毕；
+1. DOMContentLoaded
+	- 当HTML文档被_加载_和_解析_完成
+	- DOMContentLoaded事件的触发时机为: HTML解析为DOM之后，如果有JS执行，要等到JS执行完毕之后
+	- Rener Tree之前
+	- 执行JS时会堵塞HTML解析
+	- [详细参考](https://blog.csdn.net/zyj0209/article/details/79698430)
 2. load，浏览器已经加载了所有的资源（图像，样式表等）；
 3. beforeunload/unload，当用户离开页面的时候触发；
 4. readyState，描述document的loading状态；
@@ -144,10 +158,19 @@ document.addEventListener("visibilitychange", function() {
     - interactive 互动 ： 文档已经完成加载，文档已被解析，但是诸如图像，样式表和框架之类的子资源仍在加载。
     - complete ：文档和所有子资源已完成加载。状态表示 load 事件即将被触发。
 
+## 关于首屏时间
+> “计算这个网页从空白到出现内容所花费的时间”。那怎么计算这段时间？这段时间其实就是HTML 文档加载和解析的时间。也就是DOMContentLoaded 事件触发之前所经历的时间。
+
+## 浏览器如何缺点资源加载的优先级
+- 对资源分类
+- 确定安全策略
+- 下载，图片默认为low，可视区域的图片为high
+[优先级详解](https://blog.csdn.net/hbiao68/article/details/119871598)
+
 ## html 常见兼容性问题？
 1. IE6中双边距Bug
-- 发生场合：当给父元素内第一个浮动元素设置margin-left(元素float:left)或margin-right(元素float:right)时margin加倍。  
-- 解决方法：是给浮动元素加上display:inline;CSS属性;或者用padding-left代替margin-left。
+- 发生场合：当给父元素内第一个浮动元素设置margin时margin长度会加倍（fl,ml或fr,mr）
+- 解决方法：是给浮动元素加上display:inline，或者用padding代替margin
 2. 3 像素问题
 - img标签渲染之后下方会出现几个像素（我用谷歌测试是4px, 火狐3.5px）的空白；
 - img是行内元素，默认display：inline; 它与文本的默认行为类似，下边缘是与基线对齐，而不是贴紧容器下边缘，所以会有几像素的空白；
@@ -165,7 +188,7 @@ document.addEventListener("visibilitychange", function() {
 }
 ```
 7. select 在 ie6 下遮盖，解决办法: 利用iframe来遮挡select，再用div来遮挡iframe
-8. 为什么没有办法定义 1px 左右的宽度容器，解决办法: （IE6 默认的行高造成的，使用 overflow:hidden,zoom:0.08 line-height:1px）
+8. 为什么没有办法定义 1px 左右的高度容器，解决办法: （IE6 默认的行高造成的，使用 overflow:hidden,zoom:0.08 line-height:1px）
 9. IE5-8 不支持 opacity，解决办法
 ```css
 .opacity {
@@ -207,6 +230,95 @@ document.addEventListener("visibilitychange", function() {
 1. 是否会自动发给服务器
 2. 存储大小不同
 3. 存储有效期不同
+
+## 会话 cookie和持久性 cookie
+- 如果 cookie 包含到期日期，则可视为持久性 cookie。 在指定的到期日期，cookie 将从磁盘中删除
+- 如果 cookie 不包含到期日期，则可视为会话 cookie。 会话 cookie 存储在内存中，决不会写入磁盘。 当浏览器关闭时，cookie 将从此永久丢失
+
+## WebWorker
+> JS是单线程，无法充分发挥多核CPU的能力。WebWorker为JS创造了多线程环境，允许主线程创建Worker线程，将一些任务分配给后者运行。在主线程运行的同时，Worker 线程在后台运行，两者互不干扰。等到 Worker 线程完成计算任务，再把结果返回给主线程。
+### Web Worker 有以下几个使用注意点
+- 同源限制
+- DOM 限制
+- 通信联系
+- 脚本限制
+- 文件限制
+
+### 基本用法
+```js
+//主线程执行代码
+var worker = new Worker('work.js');//这个脚本必须来自网络
+//发送参数
+worker.postMessage('Hello World');
+worker.postMessage({method: 'echo', args: ['Work']});
+//接收消息
+worker.onmessage = function (event) {
+  console.log('Received message ' + event.data);
+  doSomething();
+}
+
+function doSomething() {
+  // 执行任务
+  worker.postMessage('Work done!');
+}
+//关闭
+worker.terminate();
+
+//捕获异常
+worker.onerror(function (event) {
+  console.log([
+    'ERROR: Line ', e.lineno, ' in ', e.filename, ': ', e.message
+  ].join(''));
+});
+
+// 或者
+worker.addEventListener('error', function (event) {
+  // ...
+});
+```
+
+```js
+//Worker代码
+self.addEventListener('message', function (e) {
+  self.postMessage('You said: ' + e.data);
+}, false);
+
+//上面代码中，self代表子线程自身，即子线程的全局对象。因此，等同于下面两种写法。
+// 写法一
+this.addEventListener('message', function (e) {
+  this.postMessage('You said: ' + e.data);
+}, false);
+
+// 写法二
+addEventListener('message', function (e) {
+  postMessage('You said: ' + e.data);
+}, false);
+
+self.addEventListener('message', function (e) {
+  var data = e.data;
+  switch (data.cmd) {
+    case 'start':
+      self.postMessage('WORKER STARTED: ' + data.msg);
+      break;
+    case 'stop':
+      self.postMessage('WORKER STOPPED: ' + data.msg);
+      self.close(); // Terminates the worker.
+      break;
+    default:
+      self.postMessage('Unknown command: ' + data.msg);
+  };
+}, false);
+//上面代码中，self.close()用于在 Worker 内部关闭自身。
+```
+
+### Worker 加载脚本
+```js
+importScripts('script1.js');
+importScripts('script1.js', 'script2.js');//加载多个
+```
+
+### 参考
+[WebWorker详解](https://www.ruanyifeng.com/blog/2018/07/web-worker.html)
 
 ## 参考其它的资料
 - [html常见面试题及答案](https://blog.csdn.net/weixin_45102270/article/details/113064446)
