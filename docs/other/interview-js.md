@@ -143,20 +143,71 @@ console.log(b)
 > 注意：当url作为参数传递时如果没有用encodeURIComponent进行编码，往往会造成传递时url中的特殊字符丢失。
 
 ## 事件循环【Event Loop】
-[讲的最好的](https://javascript.info/event-loop#macrotasks-and-microtasks)
-[什么是事件循环](http://www.ruanyifeng.com/blog/2013/10/event_loop.html)
-[Event Loop](https://segmentfault.com/a/1190000016278115)
-[视频讲解](https://www.ixigua.com/6806218718264164877?wid_try=1)
-[详解](https://www.cnblogs.com/mfyngu/p/11747533.html)
 ### Event Loop是什么？
-事件循环是JS的执行机制。
+Event Loop即事件循环，是指浏览器或Node的一种解决javaScript单线程运行时不会阻塞的一种机制，也就是异步的原理
+- 事件指的是任务栈完成时，或者异步操作完成时的事件
+- 循环指的是，循环检查任务栈是否空，空了就执行任务队列，一直循环
+![event loop](./img/eventloop.png)
+![event loop2](./img/eventloop2.jpg)
+![event loop3](./img/eventloop3.jpeg)
+![event loop4](./img/event_loop4.jpg)
 
-### 为什么有Event Loop？
-因为JS是单线程的，如果没有Event Loop，在执行费时间的任务时，页面会卡顿，不会继续往下执行。
+### Event Loop执行流程
+1. 执行全局Script同步代码，这些同步代码有一些是同步语句，有一些是异步语句（比如setTimeout等）；
+2. 全局Script代码执行完毕后，调用栈Stack会清空；
+3. 从微队列microtask queue中取出位于队首的回调任务，放入调用栈Stack中执行，执行完后microtask queue长度减1；
+4. 继续取出位于队首的任务，放入调用栈Stack中执行，以此类推，直到直到把microtask queue中的所有任务都执行完毕。注意，如果在执行microtask的过程中，又产生了microtask，那么会加入到队列的末尾，也会在这个周期被调用执行；
+5. microtask queue中的所有任务都执行完毕，此时microtask queue为空队列，调用栈Stack也为空；
+6. 取出宏队列macrotask queue中位于队首的任务，放入Stack中执行；
+7. 执行完毕后，调用栈Stack为空；
+8. 重复第3-7个步骤；
+9. 重复第3-7个步骤；
+10. ......
+:::tip
+- 宏队列macrotask一次只从队列中取一个任务执行，执行完后就去执行微任务队列中的任务；
+- 微任务队列中所有的任务都会被依次取出来执行，直到microtask queue为空; 在 UI 重新渲染之前执行，避免了不必要的 UI 渲染。；
+- [参考文章](https://segmentfault.com/a/1190000016278115)
+- [腾讯云专栏](https://cloud.tencent.com/developer/article/1533889)
+:::
+### 什么是进程？
+> 在传统OS中，进程包含了系统资源和能够独立调度和分派，在创建，撤销和切换过程中要耗费很多时间，为了减少并发的时空开销，提升并发性，引入了线程。把进程分为了多个线程和资源。线程就成为了系统调度和分派的基本单位。（线程的切换代价更低）
+- 进程是程序的一次执行
+- 进程是具有独立功能的程序在一个数据集合上运行的过程，它是系统进行资源分配和调度的一个独立单位
+
+### 什么是线程？
+- 线程是CPU调度的最小单位，它是比进程更小的能独立运行的基本单位，由进程派生
+- 线程自己基本上不拥有系统资源，只拥有一点在运行中必不可少的资源(如程序计数器，一组寄存器和栈)，但它可与多个线程共享该进程的所拥有的资源
+
+### 什么是单线程？
+单线程是指JS引擎执行JS时只分了一个线程给他执行，也就是执行JS时是单线程的。因为JS是单线程，所以如果没有事件循环，JS中将都是同步代码。
+
+### 浏览器内核
+- [详解](https://blog.csdn.net/wu_xianqiang/article/details/105837869)
+![浏览器进程线程](./img/browser_kernel.jpeg)
+- V8引擎由许多子模块构成，其中这4个模块是最重要的
+	+ Parser：负责将JavaScript源码转换为Abstract Syntax Tree (AST)
+	+ Ignition：interpreter，即解释器，负责将AST转换为Bytecode，解释执行Bytecode；同时收集3. TurboFan优化编译所需的信息，比如函数参数的类型；
+	+ TurboFan：compiler，即编译器，利用Ignitio所收集的类型信息，将Bytecode转换为优化的汇编代码；
+	+ Orinoco：garbage collector，垃圾回收模块，负责将程序不再需要的内存空间回收；
+
+### 调用栈（Call Stack）
+调用栈它里面装的东西，是一个个待执行的函数。
+> Event Loop 会一直检查 Call Stack 中是否有函数需要执行，如果有，就从栈顶依次执行。同时，如果执行的过程中发现其他函数，继续入栈然后执行。
 
 ### 任务分为两类
-- 同步任务：按时间顺序执行，执行完上一个才能执行下一个，是否进入异步队列来判断【React中setState目前就是同步的】。
-- 异步任务：不按时间顺序执行，执行到异步任务时，进入Event Table并注册函数，然后往下执行，异步任务完成后，推入事件队列中。主线程执行完后，执行事件队列中函数（eg: setTimeout,setInterval,ajax,IO读写）
+- 同步任务：没有被引擎挂起、在主线程上排队执行的任务。只有前一个任务执行完毕，才能执行后一个任务。
+	+ 网页的渲染过程就是一大堆同步任务，比如页面骨架和页面元素的渲染
+- 异步任务：被引擎放在一边，不进入主线程、而进入任务队列的任务。只有引擎认为某个异步任务可以执行了（比如 Ajax 操作从服务器得到了结果），该任务的回调函数加入宏任务队列中，最后加入调用栈执行。排在异步任务后面的代码，不用等待异步任务结束会马上运行，也就是说，异步任务不具有“堵塞”效应。
+	+ 而像加载图片音乐之类占用资源大耗时久的任务，就是异步任务
+
+### 参考文章
+- [setTimeout在event中如何执行的](https://www.educative.io/edpresso/what-is-an-event-loop-in-javascript)
+- [事件循环](https://zhuanlan.zhihu.com/p/265349066)
+- [讲的最好的](https://javascript.info/event-loop#macrotasks-and-microtasks)
+- [什么是事件循环](http://www.ruanyifeng.com/blog/2013/10/event_loop.html)
+- [视频讲解](https://www.ixigua.com/6806218718264164877?wid_try=1)
+- [详解](https://www.cnblogs.com/mfyngu/p/11747533.html)
+- [面试](https://www.jianshu.com/p/bfc3e319a96b)
 
 ### 执行顺序测试题
 ```js
@@ -176,42 +227,23 @@ console.log(b)
     
     //结果script start, script end, promise1, promise2, setTimeout
 ```
-
-### 执行步骤：
-1. 同步和异步任务分别进入不同的执行"场所"，同步的进入主线程，异步的进入Event Table并注册函数
-2. 当指定的事情完成时，Event Table会将这个函数移入Event Queue。
-3. 主线程内的任务执行完毕为空，会去Event Queue读取对应的函数，进入主线程执行。
-4. 上述过程会不断重复，也就是常说的Event Loop(事件循环)。
-
-### 代码解析：
-```js
-/**
- * 1. ajax进入Event Table，注册回调函数success。
- * 2. 执行console.log('代码执行结束')。
- * 3. ajax事件完成，回调函数success进入Event Queue。
- * 4. 主线程从Event Queue读取回调函数success并执行。
- */
-let data = [];
-$.ajax({
-    url: 'www.javascript.com',
-    data:data,
-    success:() => {
-        console.log('发送成功!');
-    }
-})
-console.log('代码执行结束');
-```
     
 ### 那怎么知道主线程执行栈为空呢？
-js引擎存在monitoring process进程，会持续不断的检查主线程执行栈是否为空，一旦为空，就会去Event Queue那里检查是否有等待被调用的函数。
+js引擎存在monitoring process进程，会持续不断的检查主线程执行栈是否为空，一旦为空，就会去任务队列那里检查是否有等待被调用的函数。
 
 ### 加入async的执行顺序测试题
 [加入async看顺序](https://www.cnblogs.com/shaozhu520/p/11341030.html)
 - async执行返回值是一个promise，遇见promise会resolve它
     
-## 宏任务与微任务【异步任务】
-- 宏任务：当前调用栈中执行的任务称为宏任务。宏任务中的事件放在callback queue中，由事件触发线程维护；
-- 微任务：当前（此次事件循环中）宏任务执行完，在下一个宏任务开始之前需要执行的任务为微任务。微任务的事件放在微任务队列中，由js引擎线程维护。
+## 宏任务与微任务
+> 除了广义的同步任务和异步任务，JavaScript 单线程中的任务可以细分为宏任务和微任务。
+> 宏任务是由宿主发起的，而微任务由JavaScript自身发起
+- 宏任务：由标准机制执行的任何JavaScript代码，宏任务代表一些离散和独立的工作，宏任务中的事件放在macroqueue中，由事件触发线程维护；
+- 微任务：当前（此次事件循环中）宏任务执行完，在下一个宏任务开始之前需要执行的任务为微任务。微任务的事件放在microqueue中，由js引擎线程维护；
+
+### html规范定义
+[html规范](https://html.spec.whatwg.org/multipage/webappapis.html#event-loop-processing-model)
+[MDN定义](https://developer.mozilla.org/en-US/docs/Web/API/HTML_DOM_API/Microtask_guide)
 
 ### 在Event Loop中，每一次tick任务的执行顺序
 > Event Loop中，每一次循环称为tick
@@ -222,17 +254,18 @@ js引擎存在monitoring process进程，会持续不断的检查主线程执行
 4. 开始下一轮tick，执行宏任务中的异步代码（setTimeout等回调）;
 
 ### 有哪些是宏任务（macrotask queue）
+- event callback
 - 整体代码script
-- mousemove
-- setTimeout
-- setInterval
-- setImmediate
+- setTimeout/setInterval
+- setImmediate,I/O(Node)
+- UI rendering/UI事件（有相反意见的文章）
+- requestAnimationFrame
 
 ### 有哪些是微任务（microtask queue）
-- 原生Promise(有些实现的promise将then方法放到了宏任务中)
-- process.nextTick
-- Object.observe(已废弃)
-- MutationObserver
+- 原生Promise
+- process.nextTick(Node)
+- Object.observe(已废弃,Proxy 对象替代)
+- MutationObserver（监控某个 DOM 节点）
 
 
 ## repaint（重绘）和 reflow（回流）

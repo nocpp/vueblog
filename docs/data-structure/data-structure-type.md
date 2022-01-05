@@ -156,8 +156,8 @@ N 维数组需要 N 层循环来完成遍历。
 :::
 
 ## 栈--只用 pop 和 push 完成增删的“数组”
-栈是一种后进先出(LIFO，Last In First Out)的数据结构
-比如数组，只能由尾部添加元素，尾部取元素
+> 栈是一种后进先出(LIFO，Last In First Out)的数据结构,
+> 只能由尾部添加元素，尾部取元素
 ```js
 // 初始状态，栈空
 const stack = []  
@@ -182,7 +182,7 @@ stack // []
 ```
 
 ## 队列——只用 push 和 shift 完成增删的“数组”
-队列是一种先进先出（FIFO，First In First Out）的数据结构。
+> 队列是一种先进先出（FIFO，First In First Out）的数据结构。因为队列只允许在一端插入，在另一端删除
 ```js
 const queue = []  
 queue.push('小册一姐')

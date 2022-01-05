@@ -77,6 +77,11 @@ function isValid(str) {
 > 栈结构可以帮我们避免重复操作。避免重复操作的秘诀就是及时地将不必要的数据出栈，避免它对我们后续的遍历产生干扰。
 > 维护“递减栈”
 ```js
+/**
+ * @param {Object} arr
+ *  1. 栈中存的是索引，才能计算索引差
+ *  2. 用栈要想到及时出栈
+ */
 function testFn(arr) {
     const len = arr.length;
     let result = (new Array(len)).fill(0);
