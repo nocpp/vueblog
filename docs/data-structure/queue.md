@@ -72,7 +72,9 @@ MyQueue.prototype.empty = function() {
 
 ## 双端队列(滑动窗口问题)
 **双端队列就是允许在队列的两端进行插入和删除的队列。**
-体现在编码上，最常见的载体是既允许使用 pop、push 同时又允许使用 shift、unshift 的数组：
+:::tip
+具体来说，双端队列就是push,pop,shift,unshift都可以用的的队列，至少用到3个吧
+:::
 ```js
 const queue = [1,2,3,4] // 定义一个双端队列   
 queue.push(1) // 双端队列尾部入队 
@@ -122,16 +124,16 @@ function testFn(arr, num) {
     let dequee = [];
     for (let i = 0; i < arr.length; i++) {
         while (dequee.length && arr[dequee[dequee.length - 1]] < arr[i]) {
-            dequee.pop();
+            dequee.pop();//维护递减队列的核心方法，从尾部开始比较，把更小的都出队
         }
         
-        dequee.push(i);
+        dequee.push(i);//插入符合递减的索引
         
-        while (dequee.length && dequee[0] <= i - num) {
+        while (dequee.length && dequee[0] <= i - num) {//确定最大值在有效范围，如果不符合，出队，取更小的那个
             dequee.shift();
         }
         
-        if (i >= num - 1) {
+        if (i >= num - 1) {//到了需要取值的时候，把值推入result中
             res.push(arr[dequee[0]]);
         }
     }

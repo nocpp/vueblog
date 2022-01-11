@@ -288,6 +288,30 @@ js引擎存在monitoring process进程，会持续不断的检查主线程执行
 - 不使用table布局，因为一个微小的改变就可能引起整个table的重新布局,当我们不为表格td添加固定宽度时，一列的td的宽度会以最宽td的宽作为渲染标准，假设前几行td在渲染时都渲染好了，结果下面某行的一个td特别宽，table为了统一宽，前几行的td会回流重新计算宽度，这是个很耗时的事情。
 - 由于display为none的元素在页面不需要渲染，渲染树构建不会包括这些节点；但visibility为hidden的元素会在渲染树中。因为display为none会脱离文档流，visibility为hidden虽然看不到，但类似与透明度为0，其实还在文档流中，还是有渲染的过程。
 
+## JavaScript原型，原型链 ? 有什么特点？
+### 原型prototype
+> 原型就是，创建一个函数时，会同时创建一个对象，函数的prototype会指向这个对象，然后这个对象默认有个属性叫constructor，指向这个函数。prototype指向的对象就是函数的原型对象，简称函数的原型
+![prototype是什么](./img/16.jpg)
+- 每个函数都有一个属性，叫prototype，它的值是一个对象，默认包含constructor属性，constructor属性是指向自己（即构造函数）。在Object函数的prototype中，还包含toString, hasOwnProperty等方法，所以创建的对象可以直接使用toString等方法
+- 每个对象都有一个隐藏的属性——“__proto__”，这个属性指向创建这个对象的函数的prototype。即：fn.__proto__ === Fn.prototype（除了Object.create(null)没有），所以对象可以访问原型上的属性和方法
+![prototype与__proto__](./img/17.jpg)
+
+### 实例 
+> 通过构造函数和new创建出来的对象，便是实例。 实例通过__proto__指向它构造函数的原型，通过constructor指向构造函数。
+
+### 原型链
+访问一个对象的属性时，先在基本属性中查找，如果没有，再沿着__proto__这条链向上找，直至最顶级的原型对象Object.prototype，这就是**原型链**。
+
+### 如何区分一个属性到底是基本的还是从原型中找到的呢
+通过hasOwnProperty方法，特别是在for…in…循环(enumerable)中，一定要注意。
+
+### instanceof原理
+Instanceof的判断准则是：沿着A的__proto__这条线来找，同时沿着B的prototype这条线来找，如果两条线能找到同一个引用，即同一个对象，那么就返回true。如果找到终点还未重合，则返回false。
+![instance的逻辑](./img/18.jpg)
+
+### 特点
+JavaScript 对象是通过引用来传递的，我们创建的每个新对象实体中并没有一份属于自己的原型副本。当我们修改原型时，与之相关的对象也会继承这一改变当我们需要一个属性的时， Javascript 引擎会先看当前对象中是否有这个属性，如果没有的,就会查找__proto__这条线来找。
+
 ## 说一下继承的几种方式及优缺点？
 ### 原型链继承
 ```js
@@ -379,29 +403,63 @@ function object(o) {
 ```
 - 构造函数中的共有属性无法做到数据共享，要做到数据共享，需要用到prototype
 
-## JavaScript原型，原型链 ? 有什么特点？
-### 原型prototype
-> 原型就是，创建一个函数时，会同时创建一个对象，函数的prototype会指向这个对象，然后这个对象默认有个属性叫constructor，指向这个函数。prototype指向的对象就是函数的原型对象，简称函数的原型
-![prototype是什么](./img/16.jpg)
-- 每个函数都有一个属性，叫prototype，它的值是一个对象，默认包含constructor属性，constructor属性是指向自己（即构造函数）。在Object函数的prototype中，还包含toString, hasOwnProperty等方法，所以创建的对象可以直接使用toString等方法
-- 每个对象都有一个隐藏的属性——“__proto__”，这个属性指向创建这个对象的函数的prototype。即：fn.__proto__ === Fn.prototype（除了Object.create(null)没有），所以对象可以访问原型上的属性和方法
-![prototype与__proto__](./img/17.jpg)
+## 闭包
+:::tip
+当函数可以记住并访问所在的词法作用域，即使函数是在当前词法作用域之外执行，这时就产生了闭包。
+:::
+```js
+function wait(message) { 
+	setTimeout( 
+		function timer() { console.log( message ); }, 
+	1000 ); 
+}
+wait( "Hello, closure!" );
+//将一个内部函数（名为 timer）传递给 setTimeout(..)。timer 具有涵盖 wait(..) 作用域 的闭包，因此还保有对变量 message 的引用。wait(..) 执行 1000 毫秒后，它的内部作用域并不会消失，timer 函数依然保有 wait(..) 作用域的闭包。
+```
 
-### 实例 
-> 通过构造函数和new创建出来的对象，便是实例。 实例通过__proto__指向它构造函数的原型，通过constructor指向构造函数。
 
-### 原型链
-访问一个对象的属性时，先在基本属性中查找，如果没有，再沿着__proto__这条链向上找，直至最顶级的原型对象Object.prototype，这就是**原型链**。
+## 作用域
+> 作用域是一套规则，用于确定在何处以及如何查找变量（标识符）。
+- 如果是对变量进行赋值，使用LHS查询，非严格模式下，会创建全局变量，严格模式下，会报ReferenceError
+- 如果是取值，使用RHS查询, 如果失败，会报ReferenceError异常。如果对变量进行不合理操作，会报TypeError（比如对普通变量进行函数调用）
 
-### 如何区分一个属性到底是基本的还是从原型中找到的呢
-通过hasOwnProperty方法，特别是在for…in…循环(enumerable)中，一定要注意。
+### 作用域类型
+- 函数作用域，属于这个函数的全部变量都可以在整个函数的范围内使用及复用（事实上在嵌套的作用域中也可以使用）。
+- 块级作用域
+	+ with作用域，传入一个对象，在with中可以直接使用它的属性
+	+ try/catch
+	+ let 关键字可以将变量绑定到所在的任意作用域中（通常是 { .. } 内部）,let 循环，重新赋值。ES6规定块级作用域可以嵌套函数
+	+ const ，和let差不多，区别是不能改
 
-### instanceof原理
-Instanceof的判断准则是：沿着A的__proto__这条线来找，同时沿着B的prototype这条线来找，如果两条线能找到同一个引用，即同一个对象，那么就返回true。如果找到终点还未重合，则返回false。
-![instance的逻辑](./img/18.jpg)
+```js
+const obj = {
+	a: 10,
+	b: 100
+};
 
-### 特点
-JavaScript 对象是通过引用来传递的，我们创建的每个新对象实体中并没有一份属于自己的原型副本。当我们修改原型时，与之相关的对象也会继承这一改变当我们需要一个属性的时， Javascript 引擎会先看当前对象中是否有这个属性，如果没有的,就会查找__proto__这条线来找。
+with(obj) {
+	cossole.log(a)
+};
+
+try {
+	
+} catch (err) {
+	console.log(err);
+}
+```
+
+### 作用域共有两种主要的工作模型
+- 词法作用域,词法作用域就是定义在词法阶段的作用域
+> 词法作用域是由你在写代码时将变量和块作用域写在哪里来决定的，因此当词法分析器处理代码时会保持作用域 不变（大部分情况下是这样的）。除了(eval,with等欺骗词法作用域方法。)
+- 动态作用域
+
+### 作用域嵌套
+多个作用域可以相互嵌套，
+
+### 编译原理
+1. 分词/词法分析，把代码拆分成代码块，token
+2. 解析/语法分析，把词法单元流（数组）转为AST，抽象语法数
+3. 代码生成，把AST转为可执行代码
 
 ## 作用域链
 > 函数是特殊的可执行对象,函数中存在这一个内部属性[[Scope]]（我们不能使用，供js引擎使用）.
