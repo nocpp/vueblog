@@ -235,6 +235,123 @@ document.addEventListener("visibilitychange", function() {
 - 如果 cookie 包含到期日期，则可视为持久性 cookie。 在指定的到期日期，cookie 将从磁盘中删除
 - 如果 cookie 不包含到期日期，则可视为会话 cookie。 会话 cookie 存储在内存中，决不会写入磁盘。 当浏览器关闭时，cookie 将从此永久丢失
 
+## Service Worker
+Service Worker 是运行在浏览器背后的独立线程，一般可以用来实现缓存功能。但是不管开多少个页面都只有一个Worker在负责管理
+> 使用 Service Worker的话，传输协议必须为 HTTPS。因为 Service Worker 中涉及到请求拦截，所以必须使用 HTTPS 协议来保障安全。
+
+### 使用步骤
+1. 注册 Service Worker
+2. 监听到 install 事件
+3. 拦截请求
+4. 开启后，可与在开发者工具中Application面板中Service Workers面板看到。Cache 中也可以发现我们所需的文件已被缓存
+
+### 示例代码
+```js
+// index.js
+if (navigator.serviceWorker) {
+  navigator.serviceWorker
+    .register('sw.js')
+    .then(function(registration) {
+      console.log('service worker 注册成功')
+    })
+    .catch(function(err) {
+      console.log('servcie worker 注册失败')
+    })
+}
+// sw.js
+// 监听 `install` 事件，回调中缓存所需文件
+self.addEventListener('install', e => {
+  e.waitUntil(
+    caches.open('my-cache').then(function(cache) {
+      return cache.addAll(['./index.html', './index.js'])
+    })
+  )
+})
+
+// 拦截所有请求事件
+// 如果缓存中已经有请求的数据就直接用缓存，否则去请求数据
+self.addEventListener('fetch', e => {
+  e.respondWith(
+    caches.match(e.request).then(function(response) {
+      if (response) {
+        return response
+      }
+      console.log('fetch source')
+	  
+	return fetch(event.request).then(
+	  function(response) {
+		// Check if we received a valid response
+		if(!response || response.status !== 200 || response.type !== 'basic') {
+		  return response;
+		}
+
+		// IMPORTANT: Clone the response. A response is a stream
+		// and because we want the browser to consume the response
+		// as well as the cache consuming the response, we need
+		// to clone it so we have two streams.
+		var responseToCache = response.clone();
+
+		caches.open(CACHE_NAME)
+		  .then(function(cache) {
+			cache.put(event.request, responseToCache);
+		  });
+
+		return response;
+	  }
+	);
+    })
+  )
+})
+```
+
+### 利用Service Worker实现PWA应用
+Service Worker是谷歌发起的实现PWA（Progressive Web App）的一个关键角色，PWA是为了解决传统Web APP的缺点
+> PWA（Progressive web apps）也既渐进式Web应用。它不是特指某一项技术，而是一种理念。一种运用多种技术来增强web app的功能，可以让网站的体验变得更好的理念。比如模拟一些原生功能，通知推送、请求拦截、桌面图标。
+**传统PWA的缺点**
+1. 没有桌面入口
+2. 无法离线使用
+3. 没有Push推送
+
+> PWA 桌面入口解决办法，使用Maifest.json文件配置
+- 然后给页面添加一个link
+```html
+<link rel="manifest" href="/html/app-manifest/manifest.json">
+```
+- 以下是manifest.json
+```json
+{
+  "short_name": "人人FED",
+  "name": "人人网FED，专注于前端技术",
+  "icons": [
+    {
+      "src": "/html/app-manifest/logo_48.png",
+      "type": "image/png",
+      "sizes": "48x48"
+    },
+    {
+      "src": "/html/app-manifest/logo_96.png",
+      "type": "image/png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "/html/app-manifest/logo_192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/html/app-manifest/logo_512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/?launcher=true",
+  "display": "standalone",
+  "background_color": "#287fc5",
+  "theme_color": "#fff"
+}
+```
+> 把start_url指向的页面用Service Worker缓存起来，这样当用户用Chrome浏览器打开这个网页的时候，Chrome就会在底部弹一个提示，询问用户是否把这个网页添加到桌面，如果点“添加”就会生成一个桌面图标，从这个图标点进去就像打开一个App一样。
+
 ## WebWorker
 > JS是单线程，无法充分发挥多核CPU的能力。WebWorker为JS创造了多线程环境，允许主线程创建Worker线程，将一些任务分配给后者运行。在主线程运行的同时，Worker 线程在后台运行，两者互不干扰。等到 Worker 线程完成计算任务，再把结果返回给主线程。
 ### Web Worker 有以下几个使用注意点
@@ -319,6 +436,9 @@ importScripts('script1.js', 'script2.js');//加载多个
 
 ### 参考
 [WebWorker详解](https://www.ruanyifeng.com/blog/2018/07/web-worker.html)
+
+## MessageChannel
+可以通过MessageChannel解决父子页面通信问题
 
 ## 参考其它的资料
 - [html常见面试题及答案](https://blog.csdn.net/weixin_45102270/article/details/113064446)

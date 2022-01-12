@@ -16,7 +16,7 @@ publish: true
 ### 深度优先搜索的本质——栈结构
 深度优先搜索的过程可以转化为一系列的入栈、出栈操作。
 
-### DFC编码方法
+### DFS编码方法
 DFS 中，我们往往使用递归来模拟入栈、出栈的逻辑。和二叉树的先序遍历很像
 
 ## 广度优先搜索思想BFS
@@ -42,4 +42,37 @@ function cengFn(node) {
         }
     }
 }
+```
+> 力扣真题
+```js
+var levelOrder = function(root) {
+    const result = [];
+    let queue = [];
+
+    if (root) {
+        queue.push(root);
+    }
+
+    while (queue.length) {
+        const valList = [];
+        const nextQueue = [];
+
+        while (queue.length) {
+            const node = queue.shift();
+            if (node.left) {
+                nextQueue.push(node.left);
+            }
+
+            if (node.right) {
+                nextQueue.push(node.right);
+            }
+            valList.push(node.val);
+        }
+
+        result.push(valList);
+        queue = nextQueue;
+    }
+
+    return result;
+};
 ```

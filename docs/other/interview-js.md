@@ -265,7 +265,31 @@ js引擎存在monitoring process进程，会持续不断的检查主线程执行
 - 原生Promise
 - process.nextTick(Node)
 - Object.observe(已废弃,Proxy 对象替代)
-- MutationObserver（监控某个 DOM 节点）
+- MutationObserver（监控某个 DOM 节点, 替代Mutation Events）
+> MutationObserver用于，监听元素子项的删除，新增，修改(包括删除和新增），目标节点的属性节点变化，文本内容是否发生变化，属性节点变化
+:::tips
+MutationObserver比较于Mutation Events，提升了性能。
+- MutationObserver所有监听操作以及相应处理都是在其他脚本执行完成之后异步执行的，并且是所以变动触发之后，将变得记录在数组中，统一进行回调的，也就是说，当你使用observer监听多个DOM变化时，并且这若干个DOM发生了变化，那么observer会将变化记录到变化数组中，等待一起都结束了，然后一次性的从变化数组中执行其对应的回调函数。
+- Mutation Events是同步执行的，它的每次调用，都需要从事件队列中取出事件，执行，然后事件队列中移除，期间需要移动队列元素。并且Mutation Events是事件，所以捕获是采用的是事件冒泡的形式，如果冒泡捕获期间又触发了其他的MutationEvents的话，很有可能就会导致阻塞Javascript线程，甚至导致浏览器崩溃。
+:::
+```js
+// Firefox和Chrome早期版本中带有前缀
+var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver
+// 选择目标节点
+var target = document.querySelector('#some-id'); 
+// 创建观察者对象
+var observer = new MutationObserver(function(mutations) {  
+  mutations.forEach(function(mutation) { 
+    console.log(mutation.type); 
+  }); 
+}); 
+// 配置观察选项:
+var config = { attributes: true, childList: true, characterData: true } 
+// 传入目标节点和观察选项
+observer.observe(target, config); 
+// 随后,你还可以停止观察
+observer.disconnect();
+```
 
 
 ## repaint（重绘）和 reflow（回流）
