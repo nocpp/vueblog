@@ -9,6 +9,7 @@ tags:
  - 回溯
 publish: true
 ---
+> 分析题目时，把思考过程用注释写下来，比脑子空想更有效
 
 ## 全排列问题
 > 给定一个没有重复数字的序列，返回其所有可能的全排列。
@@ -25,6 +26,10 @@ publish: true
 ]
 :::
 
+### 递归两要素
+- 递归式，就是要重复的操作
+- 递归边界，就是重复到什么是否停止
+
 ### 思路分析
 此题可以把问题抽象成：每次从数组中拿出一个数字，放入一个坑位中，然后再去那个数组中，从剩下的数字中再拿一个出来，放入第二个坑位，然后重复，直到数组中数字被拿光为止，输出此时的结果。**发现有不断重复的操作，就要想到递归**
 ```js
@@ -33,25 +38,37 @@ publish: true
  * @return {number[][]}
  */
 var permute = function(nums) {
-    let result = [];
+    const res = [];
+    const basket = [];//存放每次选中的数字栈，当递归结束一次后，记得出栈当前数
 
-    function defFn(arr, res = []) {
-        if (!arr || !arr.length) {
-            result.push(res.slice());
+    if (nums.length === 1) {
+        return [nums];
+    }
+
+    function dfs(_nums) {
+        const len = _nums.length;
+
+        if (len === 1) {
+            basket.push(_nums[0]);
+            res.push(basket.slice());
+            basket.pop();
             return;
         }
 
-        for (let i = 0; i < arr.length; i++) {
-            res.push(arr[i]);
-            const tempArr = arr.filter((item, index) => index !== i);
-            defFn(tempArr, res);
-            res.pop();
+        for (let i = 0; i < len; i++) {
+            const chosedNum = _nums[i];
+            basket.push(chosedNum);
+
+            let remainNums = _nums.slice();//复制一个数组的方法，还可以用数组结构[...arr]
+            remainNums.splice(i, 1);
+            dfs(remainNums);
+            basket.pop();
         }
     }
 
-    defFn(nums);
+    dfs(nums);
 
-    return result;
+    return res;
 };
 ```
 
@@ -125,6 +142,7 @@ const permute = function(nums) {
 3. 然后每次取比自己少一个元素的子集，然后取子集的子集，直到空集
 4. **把数组转为字符串数组进行去重**
 ```js
+//解法1，最初解法
 var subsets = function(nums) {
     let result = new Map();
     nums.sort((a, b) => (a - b));
@@ -179,7 +197,40 @@ const subsets = function(nums) {
 };
 ```
 
-## 限定组合问题：及时回溯，即为“剪枝”  
+```js
+//解法3，同全排列思想差不多，此题是坑位数在变，子集就是坑位长度从0到len的排列
+var subsets = function(nums) {
+    const len = nums.length;
+    const result = [[], nums];
+    const curr = [];
+	//时间复杂度过高
+    for (let i = 1; i < len; i++) {
+        dfs(i, 0);
+    }
+
+    //_num是坑位数，_start用于防止重复，从哪个数开始取
+    function dfs(_num, _start) {
+        if (_num < 1) {
+            result.push(curr.slice());
+            return;
+        }
+
+        for (let i = _start; i < len; i++) {
+            if (_num - 1 > len - (i + 1)) {//剩余数量不足的就停止
+                return;
+            }
+            
+            curr.push(nums[i]);
+            dfs(_num - 1, i + 1);
+            curr.pop();
+        }
+    }
+
+    return result;
+};
+```
+
+## 限定组合问题：DFS就是回溯思想的体现，一直走一条路，找到答案了或者没有答案就往后退，走下一条路
 > 题目描述：给定两个整数 n 和 k，返回 1 ... n 中所有可能的 k 个数的组合。
 :::tip
 示例: 输入: n = 4, k = 2  
@@ -200,32 +251,32 @@ const subsets = function(nums) {
  * @param {number} k
  * @return {number[][]}
  */
-const combine = function(n, k) {
-   // 初始化结果数组
-    const res = []   
-    // 初始化组合数组
-    const subset = []
-    // 进入 dfs，起始数字是1
-    dfs(1)  
+var combine = function(n, k) {
+    const ret = [];
+    const cur = [];
 
-    // 定义 dfs 函数，入参是当前遍历到的数字
-    function dfs(index) {
-        if(subset.length === k) {
-            res.push(subset.slice())
-            return 
+    //[1,2,3,4] 2个数子集
+    function dfs(start) {
+		//提前剪枝，快很多
+        if (cur.length + (n - start) < k) {
+            return;
         }
-        // 从当前数字的值开始，遍历 index-n 之间的所有数字
-        for(let i=index;i<=n;i++) {
-            // 这是当前数字存在于组合中的情况
-            subset.push(i) 
-            // 基于当前数字存在于组合中的情况，进一步 dfs
-            dfs(i+1)
-            // 这是当前数字不存在与组合中的情况
-            subset.pop()
+
+        if (cur.length === k) {//1，2
+            ret.push(cur.slice());//[[1,2]]
+            return;
+        }
+
+        for (let i = start; i < n; i++) {//1
+            cur.push(i + 1);//[1,2]
+            dfs(i + 1);//df(2)
+            cur.pop();//[1]
         }
     }
-    // 返回结果数组
-    return res 
+
+    dfs(0);//0,1,3
+
+    return ret;
 };
 ```
 
