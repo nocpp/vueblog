@@ -25,28 +25,32 @@ publish: true
 
 > 递归和栈有着脱不开的干系。当一道本可以用递归做出来的题，突然不许你用递归了，此时我们本能的反应，就应该是往栈上想。  
 ```js
-const testFn = function (root) {
-	if (!root) return;
-	
-	let res = [];
-	let stack = [];
-	
-	stack.push(root);
-	
-	while(stack.length) {
-		const cur = stack.pop();
-		res.push(cur.val);
-		
-		if (cur.right) {//出栈顺序与入栈顺序相反，所以需要先右再左
-			stack.push(cur.right);
-		}
-		
-		if (cur.left) {
-			stack.push(cur.left);
-		}
-	}
-	
-	console.log(res);
+/**
+ * @param {TreeNode} root
+ * @return {number[]}
+ */
+var preorderTraversal = function(root) {
+    const stack = [];
+    const ret = [];
+
+    if (root) {
+        stack.push(root);
+    }
+
+    while (stack.length) {
+        const cur = stack.pop();
+        ret.push(cur.val);
+
+        if (cur.right) {
+            stack.push(cur.right);
+        }
+
+        if (cur.left) {
+            stack.push(cur.left);
+        }
+    }
+
+    return ret;
 };
 ```
 
