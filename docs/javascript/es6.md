@@ -9,128 +9,75 @@ tags:
 publish: true
 ---
 
-## Symbol的用法
-ES6 引入了一种新的原始数据类型Symbol，表示独一无二的值。
+## es5和es6的区别，说一下你所知道的es6
+- ECMAScript5，即ES5，是ECMAScript的第五次修订，于2009年完成标准化
+- ECMAScript6，即ES6，是ECMAScript的第六次修订，于2015年完成，也称ES6是继ES5之后的一次改进，相对于ES5更加简洁，提高了开发效率
 
-Symbol 值通过Symbol函数生成。这就是说，对象的属性名现在可以有两种类型，一种是原来就有的字符串，另一种就是新增的 Symbol 类型。
+### ES6新增的一些特性：
+1. let声明变量和const声明常量，两个都有块级作用域
+2. 箭头函数
+3. 模板字符串,模板字符串是增强版的字符串，用反引号（`）标识
+4. 解构赋值ES6, 允许按照一定模式，从数组和对象中提取值，对变量进行赋值
+5. for of循环, for...of循环可以遍历数组、Set和Map结构、某些类似数组的对象，以及字符串
+6. import、export导入导出ES6标准中，Js原生支持模块(module)。将JS代码分割成不同功能的小块进行模块化，将不同功能的代码分别写在不同文件中，各模块只需导出公共接口部分，然后通过模块的导入的方式可以在其他地方使用
+7. set数据结构Set数据结构，类似数组。所有的数据都是唯一的，没有重复的值。它本身是一个构造函数
+8. ... 展开运算符可以将数组或对象里面的值展开；还可以将多个值收集为一个变量
+9. 修饰器 @decorator是一个函数，用来修改类甚至于是方法的行为。修饰器本质就是编译时执行的函数
+10. class 类的继承ES6中不再像ES5一样使用原型链实现继承，而是引入Class这个概念
+11. async、await使用 async/await, 搭配promise,可以通过编写形似同步的代码来处理异步流程, 
+12. Promise是异步编程的一种解决方案，比传统的解决方案（回调函数和事件）更合理、强大
+13. Symbol,Symbol是一种基本类型。Symbol 通过调用symbol函数产生，它接收一个可选的名字参数，该函数返回的symbol是唯一的
+14. Proxy代理使用代理（Proxy）监听对象的操作，然后可以做一些相应事情
 
+### var、let、const之间的区别
+- var声明变量可以重复声明，而let不可以重复声明
+- var是不受限于块级的，而let是受限于块级
+- var会与window相映射（会挂一个属性），而let不与window相映射
+- var可以在声明的上面访问变量，而let有暂存死区，在声明的上面访问变量会报错
+- const声明之后必须赋值，否则会报错
+- const定义不可变的量，改变了就会报错
+- const和let一样不会与window相映射、支持块级作用域、在声明的上面访问变量会报错
+
+### 使用箭头函数应注意什么？
+1. 用了箭头函数，this就不是指向window，而是父级
+2. 不能够使用arguments对象
+3. 不能用作构造函数，这就是说不能够使用new命令，否则会抛出一个错误
+4. 不可以使用yield命令，因此箭头函数不能用作 Generator 函数
+
+### 实现一个类模板字符串的功能
 ```js
-let s = Symbol();
-
-typeof s
-// "symbol"
+window.name = 'web';
+window.age = 10;
+window.str = '你好，${name} 已经 ${age}岁了'
+window.str = window.str.replace(/\$\{(.*?)\}/g,function(){
+     return window[arguments[1]];
+})
 ```
 
-:::danger
-基本上，它是一种类似于字符串的数据类型。所以不能使用new来生成。
-:::
+### 介绍下 Set、Map的区别？
+> 应用场景，Set类似于数组，只是不重复，Map类似于对象，只是key值可以非字符串：　
+1. 成员不能重复
+2. 只有键值没有键名，类似数组
+3. 可以遍历，方法有add, delete,has
+> Map:
+1. 本质上是健值对的集合，类似集合
+2. 可以遍历，可以跟各种数据格式转换
 
-Symbol函数可以接受一个字符串作为参数，表示对 Symbol 实例的描述，主要是为了在控制台显示，或者转为字符串时，比较容易区分。
-
+### ECMAScript 6 怎么写 class ，为何会出现 class？
+> ES6的class可以看作是一个语法糖，它的绝大部分功能ES5都可以做到，新的class写法只是让对象原型的写法更加清晰、更像面向对象编程的语法
 ```js
-let s1 = Symbol('foo');
-let s2 = Symbol('bar');
-
-s1 // Symbol(foo)
-s2 // Symbol(bar)
-
-s1.toString() // "Symbol(foo)"
-s2.toString() // "Symbol(bar)"
-
-s1.description // "foo", ES2019 提供了一个实例属性description
-```
-
-### Symbol作为对象属性名的使用
-```js
-let mySymbol = Symbol();
-
-// 第一种写法
-let a = {};
-a[mySymbol] = 'Hello!';
-
-// 第二种写法
-let a = {
-  [mySymbol]: 'Hello!'
-};
-
-// 第三种写法
-let a = {};
-Object.defineProperty(a, mySymbol, { value: 'Hello!' });
-
-// 以上写法都得到同样结果
-a[mySymbol] // "Hello!"
-```
-
-## 面试题
-1. es5和es6的区别，说一下你所知道的es6
-ECMAScript5，即ES5，是ECMAScript的第五次修订，于2009年完成标准化
-ECMAScript6，即ES6，是ECMAScript的第六次修订，于2015年完成，
-也称ES6是继ES5之后的一次改进，相对于ES5更加简洁，提高了开发效率
-ES6新增的一些特性：
-1）let声明变量和const声明常量，两个都有块级作用域
-ES5中是没有块级作用域的，并且var有变量提升，在let中，使用的变量一定要进行声明
-2）箭头函数ES6中的函数定义不再使用关键字function()，而是利用了()=>来进行定义
-3）模板字符串模板字符串是增强版的字符串，用反引号（`）标识，可以当作普通字符串使用，也可以用来定义多行字符串
-4）解构赋值ES6 允许按照一定模式，从数组和对象中提取值，对变量进行赋值
-5）for of循环for...of循环可以遍历数组、Set和Map结构、某些类似数组的对象、对象，以及字符串
-6）import、export导入导出ES6标准中，Js原生支持模块(module)。将JS代码分割成不同功能的小块进行模块化，
-将不同功能的代码分别写在不同文件中，各模块只需导出公共接口部分，然后通过模块的导入的方式可以在其他地方使用
-7）set数据结构Set数据结构，类似数组。所有的数据都是唯一的，没有重复的值。它本身是一个构造函数
-8）... 展开运算符可以将数组或对象里面的值展开；还可以将多个值收集为一个变量
-9）修饰器 @decorator是一个函数，用来修改类甚至于是方法的行为。修饰器本质就是编译时执行的函数
-10）class 类的继承ES6中不再像ES5一样使用原型链实现继承，而是引入Class这个概念
-11）async、await使用 async/await, 搭配promise,可以通过编写形似同步的代码来处理异步流程, 
-提高代码的简洁性和可读性async 用于申明一个 function 是异步的，而 await 用于等待一个异步方法执行完成
-12）promisePromise是异步编程的一种解决方案，比传统的解决方案（回调函数和事件）更合理、强大
-13）SymbolSymbol是一种基本类型。Symbol 通过调用symbol函数产生，它接收一个可选的名字参数，该函数返回的symbol是唯一的
-14）Proxy代理使用代理（Proxy）监听对象的操作，然后可以做一些相应事情
-
-2. var、let、const之间的区别
-var声明变量可以重复声明，而let不可以重复声明
-var是不受限于块级的，而let是受限于块级
-var会与window相映射（会挂一个属性），而let不与window相映射
-var可以在声明的上面访问变量，而let有暂存死区，在声明的上面访问变量会报错
-const声明之后必须赋值，否则会报错
-const定义不可变的量，改变了就会报错
-const和let一样不会与window相映射、支持块级作用域、在声明的上面访问变量会报错
-
-3. 使用箭头函数应注意什么？
-（1）用了箭头函数，this就不是指向window，而是父级（指向是可变的）
-（2）不能够使用arguments对象
-（3）不能用作构造函数，这就是说不能够使用new命令，否则会抛出一个错误
-（4）不可以使用yield命令，因此箭头函数不能用作 Generator 函数
-
-4. ES6的模板字符串有哪些新特性？并实现一个类模板字符串的功能
-基本的字符串格式化。
-将表达式嵌入字符串中进行拼接。
-用${}来界定在ES5时我们通过反斜杠()来做多行字符串或者字符串一行行拼接。
-ES6反引号(``)就能解决类模板字符串的功能
-let name = 'web';
-let age = 10;
-let str = '你好，${name} 已经 ${age}岁了'
-str = str.replace(/\$\{([^}]*)\}/g,function(){
-     return eval(arguments[1]);
-   })
-console.log(str);//你好，web 已经 10岁了
-
-5. 介绍下 Set、Map的区别？
-应用场景，Set类似于数组，只是不重复，Map类似于对象，只是key值可以非字符串：　
-（1）成员不能重复
-（2）只有键值没有键名，类似数组
-（3）可以遍历，方法有add, delete,has
-Map:
-（1）本质上是健值对的集合，类似集合
-（2）可以遍历，可以跟各种数据格式转换
-
-6. ECMAScript 6 怎么写 class ，为何会出现 class？
-ES6的class可以看作是一个语法糖，它的绝大部分功能ES5都可以做到，新的class写法只是让对象原型的写法更加清晰、更像面向对象编程的语法
 //定义类
 class Point { 
   constructor(x,y) { 
       //构造方法
        this.x = x; //this关键字代表实例对象
        this.y = y; 
-  } toString() {
+  } 
+  
+  //静态属性
+  static name = 'age'
+  
+  toString() {
        return '(' + this.x + ',' + this.y + ')'; 
   }
   
@@ -141,179 +88,185 @@ class Point {
 }
 
 Point.age = 10; //静态属性
+Point.prototype.test = function(){};
+```
 
-7. Promise构造函数是同步执行还是异步执行，那么 then 方法呢？
-promise构造函数是同步执行的，then方法是异步执行的
+### Promise是什么？
+Promise 对象用于表示一个异步操作的最终完成 (或失败)及其结果值。
 
-8. setTimeout、Promise、Async/Await 的区别
-事件循环中分为宏任务队列和微任务队列
-其中setTimeout的回调函数放到宏任务队列里，等到执行栈清空以后执行promise.then里的回调函数会放到相应宏任务的微任务队列里，等宏任务里面的同步代码执行完再执行
-async函数表示函数里面可能会有异步方法，await后面跟一个表达式
-async方法执行时，遇到await会立即执行表达式，然后把表达式后面的代码放到微任务队列里，让出执行栈让同步代码先执行
+### Promise相关JS
+- Promise构造函数，用于生成Promise对象
+- Promise.all(iterable)，静态方法
+> 这个方法返回一个新的promise对象，该promise对象在iterable参数对象里所有的promise对象都成功的时候才会触发成功，一旦有任何一个iterable里面的promise对象失败则立即触发该promise对象的失败。这个新的promise对象在触发成功状态以后，会把一个包含iterable里所有promise返回值的数组作为成功回调的返回值，顺序跟iterable的顺序保持一致；如果这个新的promise对象触发了失败状态，它会把iterable里第一个触发失败的promise对象的错误信息作为它的失败错误信息。Promise.all方法常被用于处理多个promise对象的状态集合
+- Promise.allSettled(iterable)
+> 等到所有promises都已敲定（settled）（每个promise都已兑现（fulfilled）或已拒绝（rejected））。返回一个promise，该promise在所有promise完成后完成。并带有一个对象数组，每个对象对应每个promise的结果。
+- Promise.any(iterable)
+> 接收一个Promise对象的集合，当其中的一个 promise 成功，就返回那个成功的promise的值。
+- Promise.race(iterable)
+> 当iterable参数里的任意一个子promise被成功或失败后，父promise马上也会用子promise的成功返回值或失败详情作为参数调用父promise绑定的相应句柄，并返回该promise对象。
+- Promise.reject(reason)
+> 返回一个状态为失败的Promise对象，并将给定的失败信息传递给对应的处理方法
+- Promise.resolve(value)
+> 返回一个状态由给定value决定的Promise对象。如果该值是thenable(即，带有then方法的对象)，返回的Promise对象的最终状态由then方法执行决定；否则的话(该value为空，基本类型或者不带then方法的对象),返回的Promise对象状态为fulfilled，并且将该value传递给对应的then方法。通常而言，如果您不知道一个值是否是Promise对象，使用Promise.resolve(value) 来返回一个Promise对象,这样就能将该value以Promise对象形式使用。
 
-9. promise有几种状态，什么时候会进入catch？
-三个状态：
-pending、fulfilled、rejectd
-两个过程：
-padding -> fulfilled、padding -> rejected当pending为rejectd时，会进入catch
+### Promise构造函数是同步执行还是异步执行，那么 then 方法呢？
+- 构造函数是同步执行
+- then是异步，回调进入微任务队列
 
-10. 下面的输出结果是多少
-const promise = new Promise((resolve, reject) => {
-    console.log(1);
-    resolve();
-    console.log(2);
-})
+### promise有几种状态，什么时候会进入catch？
+> 三个状态：pending、fulfilled、rejectd
+> 两个过程：padding -> fulfilled、padding -> rejected当pending为rejectd时，会进入catch
 
-
-promise.then(() => {
-    console.log(3);
-})
-
-
-console.log(4);
-Promise 新建后立即执行，所以会先输出 1，2，而 Promise.then()内部的代码在 当次 事件循环的 结尾 立刻执行 ，所以会继续输出4，最后输出3
-
-11. 使用结构赋值，实现两个变量的值的交换
+### 使用结构赋值，实现两个变量的值的交换
+```js
 let a = 1;let b = 2;
 [a,b] = [b,a];
+```
 
-12. 设计一个对象，键名的类型至少包含一个symbol类型，并且实现遍历所有key
+
+### 设计一个对象，键名的类型至少包含一个symbol类型，并且实现遍历所有key
+```js
 let name = Symbol('name');
  let product = {
     [name]:"洗衣机",    
     "price":799
   };
   Reflect.ownKeys(product);
+```
   
-13. 下面Set结构，打印出的size值是多少
+### 下面Set结构，打印出的size值是多少
+```js
  let s = new Set();
  s.add([1]);s.add([1]);
  console.log(s.size);
- 答案：2
- 两个数组[1]并不是同一个值，它们分别定义的数组，在内存中分别对应着不同的存储地址，因此并不是相同的值都能存储到Set结构中，所以size为2
+```
+> 答案：2, 两个数组[1]并不是同一个值，它们分别定义的数组，在内存中分别对应着不同的存储地址，因此并不是相同的值都能存储到Set结构中，所以size为2
  
-14. Promise 中reject 和 catch 处理上有什么区别
- reject 是用来抛出异常，catch 是用来处理异常
- reject 是 Promise 的方法，而 catch 是 Promise 实例的方法
- reject后的东西，一定会进入then中的第二个回调，如果then中没有写第二个回调，则进入catch
- 网络异常（比如断网），会直接进入catch而不会进入then的第二个回调
- 
-15. 使用class 手写一个promise
- //创建一个Promise的类
-   class Promise{
-     constructor(executer){//构造函数constructor里面是个执行器
-       this.status = 'pending';//默认的状态 pending
-       this.value = undefined//成功的值默认undefined
-       this.reason = undefined//失败的值默认undefined
-       //状态只有在pending时候才能改变
-       let resolveFn = value =>{
-         //判断只有等待时才能resolve成功
-         if(this.status == pending){
-           this.status = 'resolve';
-           this.value = value;
-         }
-       }
-       //判断只有等待时才能reject失败
-       let rejectFn = reason =>{
-         if(this.status == pending){
-           this.status = 'reject';
-           this.reason = reason;
-         }
-       }    
-       try{
-         //把resolve和reject两个函数传给执行器executer
-         executer(resolve,reject);
-       }catch(e){
-         reject(e);//失败的话进catch
-       }
-     }
-     then(onFufilled,onReject){
-       //如果状态成功调用onFufilled
-       if(this.status = 'resolve'){
-         onFufilled(this.value);
-       }
-       //如果状态失败调用onReject
-       if(this.status = 'reject'){
-         onReject(this.reason);
-       }
-     }
-   }
+### Promise 中 reject 和 catch 处理上有什么区别
+- reject 是用来抛出异常，catch 是用来处理异常
+- reject 是 Promise 的方法，而 catch 是 Promise 实例的方法
+- reject后的东西，一定会进入then中的第二个回调，如果then中没有写第二个回调，则进入catch
+- 网络异常（比如断网），会直接进入catch而不会进入then的第二个回调
 
-16. 如何使用Set去重
+### 如何使用Set去重
+```js
 let arr = [12,43,23,43,68,12];
 let item = [...new Set(arr)];
 console.log(item);//[12, 43, 23, 68]
+```
 
-17. 将下面for循环改成for of形式
-let arr = [11,22,33,44,55];
-let sum = 0;
-for(let i=0;i<arr.length;i++){
-    sum += arr[i];
+### forEach、map、for in、for of三者区别
+- forEach更多的用来遍历数组
+- map遍历后返回新数组
+- for in 一般常用来遍历对象或json
+- for of数组对象都可以遍历，遍历对象需要通过和Object.keys()
+- for in循环出的是key，for of循环出的是value
+
+### ES6模块和CommonJS的区别
+- CommonJS 模块输出的是一个值的拷贝（一旦输出一个值，模块内部的变化就影响不到这个值），ES6 模块输出的是值的引用
+- CommonJS 模块是运行时加载，ES6 模块是编译时输出接口
+- CommonJS 模块的require()是同步加载模块，ES6 模块的import命令是异步加载，有一个独立的模块依赖的解析阶段
+- CommonJS 模块就是对象，输入时必须查找对象属性，这种加载称为“运行时加载”,浏览器不支持
+```js
+// CommonJS模块
+let { stat, exists, readfile } = require('fs');
+
+// 等同于, 实质是整体加载fs模块生成一个对象（_fs），然后再从这个对象上面读取 3 个方法
+let _fs = require('fs');
+let stat = _fs.stat;
+let exists = _fs.exists;
+let readfile = _fs.readfile;
+```
+- ES6属于“编译时加载”或者静态加载
+- ES6 模块不是对象，而是通过export命令显式指定输出的代码，再通过import命令输入
+- ES6 可以在编译时就完成模块加载，效率要比 CommonJS 模块的加载方式高
+- 没法引用 ES6 模块本身，因为它不是对象
+- ES6 的模块自动采用严格模式
+```js
+// ES6模块
+import { stat, exists, readFile } from 'fs';
+```
+
+### ES6 export通过接口，输出的是同一个值，不同的脚本加载这个接口，得到的都是同样的实例。
+```js
+// mod.js
+function C() {
+  this.sum = 0;
+  this.add = function () {
+    this.sum += 1;
+  };
+  this.show = function () {
+    console.log(this.sum);
+  };
 }
-答案：
-let arr = [11,22,33,44,55];
-let sum = 0;
-for(value of arr){
-    sum += value;
-}
 
-18. 理解 async/await以及对Generator的优势
-async await 是用来解决异步的，async函数是Generator函数的语法糖
-使用关键字async来表示，在函数内部使用 await 来表示异步
-async函数返回一个 Promise 对象，可以使用then方法添加回调函数
-当函数执行的时候，一旦遇到await就会先返回，等到异步操作完成，再接着执行函数体内后面的语句
-async较Generator的优势：
-（1）内置执行器。Generator 函数的执行必须依靠执行器，而 Aysnc 函数自带执行器，调用方式跟普通函数的调用一样
-（2）更好的语义。async 和 await 相较于 * 和 yield 更加语义化　　
-（3）更广的适用性。yield命令后面只能是 Thunk 函数或 Promise对象，async函数的await后面可以是Promise也可以是原始类型的值
-（4）返回值是 Promise。async 函数返回的是 Promise 对象，比Generator函数返回的Iterator对象方便，可以直接使用 then() 方法进行调用
+export let c = new C();
+```
+> 不同模块加载mod.js模块，都是同一个实例，所以EventBus和PubSub库可以跨组件使用
+```js
+// x.js
+import {c} from './mod';
+c.add();
 
-19. forEach、for in、for of三者区别
-forEach更多的用来遍历数组
-for in 一般常用来遍历对象或json
-for of数组对象都可以遍历，遍历对象需要通过和Object.keys()
-for in循环出的是key，for of循环出的是value
+// y.js
+import {c} from './mod';
+c.show();
 
-20. 说一下es6的导入导出模块
-导入通过import关键字
+// main.js
+import './x';
+import './y';
+```
+
+### 说一下es6的导入导出模块
+- 导入通过import关键字
+```js
 // 只导入一个
 import {sum} from "./example.js"
 // 导入多个
 import {sum,multiply,time} from "./exportExample.js"
-// 导入一整个模块
+// 导入一整个模块， 整体加载
 import * as example from "./exportExample.js"
-
-导出通过export关键字
+// 导入default
+import a from 'example';
+```
+- 导出通过export关键字
+```js
 //可以将export放在任何变量,函数或类声明的前面
 export var firstName = 'Michael';
-export var lastName = 'Jackson';
-export var year = 1958;
 //也可以使用大括号指定所要输出的一组变量
 var firstName = 'Michael';
 var lastName = 'Jackson';
-var year = 1958;
-export {firstName, lastName, year};
+export {firstName, lastName};
 //使用export default时，对应的import语句不需要使用大括号
 let bosh = function crs(){}
+//为了给用户提供方便，让他们不用阅读文档就能加载模块，就要用到export default命令，为模块指定默认输出。
 export default bosh;
-import crc from 'crc';
-//不使用export default时，对应的import语句需要使用大括号
-let bosh = function crs(){}
-export bosh;
-import {crc} from 'crc';
-
-21. 扩展运算符
+//把default用sss别名导出，和export {a}原理一样
+export {default as sss} from 'example';
+//把模块导出为default
+export {aa as default} from 'example'
+```
+- export 复合写法
 ```js
-1. 复制数组
+export { foo, bar } from 'my_module';
+
+// 可以简单理解为
+import { foo, bar } from 'my_module';
+export { foo, bar };
+```
+
+### 扩展运算符
+```js
+//1. 复制数组
 let arr1 = [1,2,3];
 let arr2 = [...arr1];
 
-2. 合并数组
+//2. 合并数组
 let arr1 = [1,2,3];
 let arr2 = [4,5,6];
 let arr3 = [...arr1, ...arr2];
 
-3. 应用于对象
+//3. 应用于对象
 let { x, y, ...z } = { x: 1, y: 2, a: 3, b: 4 };
 x // 1
 y // 2
@@ -326,19 +279,17 @@ n // { a: 3, b: 4 }
 let foo = { ...['a', 'b', 'c'] };
 foo
 // {0: "a", 1: "b", 2: "c"}
-```
 
 // 去除数组的重复成员
 [...new Set(array)]
-上面的方法也可以用于，去除字符串里面的重复字符。
+//上面的方法也可以用于，去除字符串里面的重复字符。
 [...new Set('ababbc')].join('')
+```
 
-22. Generator
+### Generator
+> Generator 函数是协程在 ES6 的实现，最大特点就是可以交出函数的执行权（即暂停执行）。整个 Generator 函数就是一个封装的异步任务，或者说是异步任务的容器。异步操作需要暂停的地方，都用yield语句注明。Generator 函数的执行方法如下。next传递的参数会被当做上一次yield的返回值
+> Generator 函数返回的是生成器对象
 ```js
-Generator 函数是协程在 ES6 的实现，最大特点就是可以交出函数的执行权（即暂停执行）。
-整个 Generator 函数就是一个封装的异步任务，或者说是异步任务的容器。异步操作需要暂停的地方，都用yield语句注明。Generator 函数的执行方法如下。
-next传递的参数会被当做上一次yield的返回值
-
 function* gen(x) {
   var y = yield x + 2;
   return y;
@@ -349,7 +300,7 @@ g.next() // { value: 3, done: false }
 g.next() // { value: undefined, done: true }
 ```
 
-23. fetch与Generator结合
+### fetch与Generator结合
 ```js
 function* gen(){
   var url = 'https://api.github.com/users/github';
@@ -367,8 +318,7 @@ result.value.then(function(data){
 });
 ```
 
-24. Thunk 函数是自动执行 Generator 函数的一种方法。
-传值调用和传名调用，哪一种比较好？
+### Thunk 函数是自动执行 Generator 函数的一种方法。
+- 传值调用和传名调用，哪一种比较好？  
 回答是各有利弊。传值调用比较简单，但是对参数求值的时候，实际上还没用到这个参数，有可能造成性能损失。
-
-编译器的“传名调用”实现，往往是将参数放到一个临时函数之中，再将这个临时函数传入函数体。这个临时函数就叫做 Thunk 函数。
+- 编译器的“传名调用”实现，往往是将参数放到一个临时函数之中，再将这个临时函数传入函数体。这个临时函数就叫做 Thunk 函数。

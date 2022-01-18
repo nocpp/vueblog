@@ -142,6 +142,10 @@ document.addEventListener("visibilitychange", function() {
 - 都是去异步加载外部的JS脚本文件，它们都不会阻塞页面的解析
 - 执行顺序不同,async【谁先加载完谁执行，不是按书写顺序执行】,defer【按书写顺序执行】
 - 执行时机不同,async【加载完就执行】,defer脚本会在文档渲染完毕后，【DOMContentLoaded事件】调用前执行。
+- module等同于defer，是浏览器加载ES6模块的方法
+```html
+<script type="module">
+```
 > defer脚本执行完了才会触发DOMContentLoaded事件
 
 ## HTML生命周期
@@ -439,6 +443,10 @@ importScripts('script1.js', 'script2.js');//加载多个
 
 ## MessageChannel
 可以通过MessageChannel解决父子页面通信问题
+
+## Web Components
+> Web Components是一系列可以用来定义自己的组件的API，比如user-card.
+[Web Components 入门实例教程](https://www.ruanyifeng.com/blog/2019/08/web_components.html)
 
 ## 参考其它的资料
 - [html常见面试题及答案](https://blog.csdn.net/weixin_45102270/article/details/113064446)
