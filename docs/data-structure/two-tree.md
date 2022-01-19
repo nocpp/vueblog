@@ -107,6 +107,47 @@ const testFn = function (root) {
 };
 ```
 
+```js
+//思路二
+/**
+ * @param {TreeNode} root
+ * @return {number[]}
+ */
+var inorderTraversal = function(root) {
+    const ret = [];
+    const stack = [];
+
+    if (root) {
+        stack.push(root);
+    }
+
+    while (stack && stack.length) {
+        const stackTop = stack[stack.length - 1];
+
+        if (stackTop.left) {
+            stack.push({...stackTop.left});
+            stackTop.left = null;
+            continue;
+        }
+
+        const curNode = stack.pop();
+        ret.push(curNode.val);
+
+        if (curNode.right) {
+            stack.push({...curNode.right});
+            curNode.right = null;
+        }
+    }
+
+    //  1
+    // 2 3
+    //4 5
+    // 6 7
+
+    return ret;
+};
+```
+
 ## 层序遍历的衍生问题    
 ### 题目描述：给你一个二叉树，请你返回其按 层序遍历 得到的节点值。 （即逐层地，从左到右访问所有节点）。
 > 示例：

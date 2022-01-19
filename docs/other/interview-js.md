@@ -631,6 +631,9 @@ import {xxx} from './'
 - cors
 > 参考掘金收藏文章，完善
 
+## ES6相关
+> 看javascript中ES6部分
+
 ## 参考文章
 [中高级](https://juejin.cn/post/6844903776512393224#heading-20)
 [2021](https://juejin.cn/post/6940945178899251230)

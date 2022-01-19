@@ -96,7 +96,7 @@ Promise 对象用于表示一个异步操作的最终完成 (或失败)及其结
 
 ### Promise相关JS
 - Promise构造函数，用于生成Promise对象
-- Promise.all(iterable)，静态方法
+- Promise.all(iterable)，静态方法，如果有Promise失败，返回的是失败的那个Promise的错误信息，成功的话返回的是有顺序的结果数组，与Promise顺序一致
 > 这个方法返回一个新的promise对象，该promise对象在iterable参数对象里所有的promise对象都成功的时候才会触发成功，一旦有任何一个iterable里面的promise对象失败则立即触发该promise对象的失败。这个新的promise对象在触发成功状态以后，会把一个包含iterable里所有promise返回值的数组作为成功回调的返回值，顺序跟iterable的顺序保持一致；如果这个新的promise对象触发了失败状态，它会把iterable里第一个触发失败的promise对象的错误信息作为它的失败错误信息。Promise.all方法常被用于处理多个promise对象的状态集合
 - Promise.allSettled(iterable)
 > 等到所有promises都已敲定（settled）（每个promise都已兑现（fulfilled）或已拒绝（rejected））。返回一个promise，该promise在所有promise完成后完成。并带有一个对象数组，每个对象对应每个promise的结果。
