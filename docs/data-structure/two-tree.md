@@ -169,36 +169,31 @@ var inorderTraversal = function(root) {
 ```
 > 思路分析：想到层次遍历二叉树，就要想到队列
 ```js
-const testFn = function (root) {
-	let res = [];
-	
-	if (!root) return res;
-	
-	let queen = [root];
-	
-	while (queen.length) {
-		const curRes = [];
-		const len = queen.length;
-		
-		for (let i = 0; i < len; i++) {
-			const top = queen.shift();
-			
-			curRes.push(top.val);
-			
-			if (top.left) {
-				queen.push(top.left);
-			}
-			
-			if (top.right) {
-				queen.push(top.right);
-			}
-		}
-		
-		res.push(curRes);
-	}
-	
-	console.log(res);
-	return res;
+var levelOrder = function(root) {
+    let queue = [];
+    const ret = [];
+
+    if (root) {
+        queue.push(root);
+    }
+
+    while (queue.length) {
+        const tempRet = [];
+        const nextQueue = [];
+        while (queue.length) {
+            const top = queue.shift();
+            tempRet.push(top.val);
+
+            top.left && nextQueue.push(top.left);
+            top.right && nextQueue.push(top.right);
+        }
+
+        ret.push(tempRet);
+
+        queue = nextQueue;
+    }
+
+    return ret;
 };
 ```
 
@@ -239,7 +234,23 @@ const testFn = function (root) {
 	return root;
 };
 ```
+> 思路2
+```js
+var invertTree = function(root) {
+    function dfs(node) {
+        if (!node) return;
 
+        [node.left, node.right] = [node.right, node.left];
+        dfs(node.left);
+        dfs(node.right);
+    }
+
+    dfs(root);
+
+    return root;
+};
+```
+> 先交换最深处的子节点
 ```js
 //参考答案
 /**
