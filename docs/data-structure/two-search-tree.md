@@ -116,14 +116,14 @@ const deleteFn = function (root, n) {
 	
 	if (root.val === n) {
 		if (!root.left && !root.right) {
-			root = null;
+			root = null;//实际作用就是删除了这个结点
 		} else if (root.left) {
 			const maxLeft = findMax(root.left);
-			root.val = maxLeft.val;
-			root.left = deleteFn(root.left, maxLeft.val);
+			root.val = maxLeft.val;//把左子树最大的值赋值给该结点，就相当于把这个结点删除了
+			root.left = deleteFn(root.left, maxLeft.val);//把赋值的这个子结点删除，置为null
 		} else {
 			const minRight = findMin(root.right);
-			root.val = minRight.val;
+			root.val = minRight.val;//与上面相同
 			root.right = deleteFn(roo.right, minRight.val);
 		}
 	} else if (root.val > n) {
@@ -151,6 +151,9 @@ const findMin = function(root) {
 	return root;
 }
 ```
+
+### 二叉搜索树的特性
+> 二叉搜索树的中序遍历是有序的
 
 ### 给定一个二叉树，判断其是否是一个有效的二叉搜索树。
 假设一个二叉搜索树具有如下特征：  
