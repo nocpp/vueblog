@@ -227,6 +227,35 @@ Event Loop即事件循环，是指浏览器或Node的一种解决javaScript单�
     
     //结果script start, script end, promise1, promise2, setTimeout
 ```
+> await后面的就相当于放在Promise的then里面
+```js
+async function testFn() {
+	new Promise((resolve) => {
+		console.log('promise resolve: ', 1111);
+		resolve();
+	}).then(() => {
+		console.log('promise then: ', 222222);
+	});
+	
+	console.log('await before: ', 1);
+	const rep = await Promise.resolve(1);
+	console.log('await after: ', rep);
+	
+	
+	new Promise((resolve) => {
+		console.log('promise resolve: ', 3333);
+		resolve();
+	}).then(() => {
+		console.log('promise then: ', 444);
+	});
+}
+//promise resolve:  1111
+//await before:  1
+//promise then:  222222
+//await after:  1
+//promise resolve:  3333
+//promise then:  444
+```
     
 ### 那怎么知道主线程执行栈为空呢？
 js引擎存在monitoring process进程，会持续不断的检查主线程执行栈是否为空，一旦为空，就会去任务队列那里检查是否有等待被调用的函数。

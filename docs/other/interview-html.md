@@ -441,12 +441,195 @@ importScripts('script1.js', 'script2.js');//加载多个
 ### 参考
 [WebWorker详解](https://www.ruanyifeng.com/blog/2018/07/web-worker.html)
 
-## MessageChannel
-可以通过MessageChannel解决父子页面通信问题
-
 ## Web Components
 > Web Components是一系列可以用来定义自己的组件的API，比如user-card.
 [Web Components 入门实例教程](https://www.ruanyifeng.com/blog/2019/08/web_components.html)
+
+## Iframe父子通信方式
+### 同域下父子页面的通信
+- 父页面调用子iframe页面
+- 子iframe页面调用父页面
+- 主页面内兄弟iframe页面之间相互调用
+```js
+<iframe name="iframeName" id="iframeId" src="child.html"></iframe>
+
+/**
+* 父传子，通过iframe的id拿到dom，然后通过contentWindow属性调用
+*1、通过iframe的ID获取子页面的dom，然后通过内置属性contentWindow取得子窗口的window对象
+*   此方法兼容各个浏览器
+*/
+document.getElementById('iframeId').contentWindow.func(); 
+document.getElementById('iframeId').contentWindow.document.getElementById('子页面中的元素ID');
+
+/**
+* 父传子，通过iframe的name，然后通过它的window调用子窗口对象
+*2、通过iframe的name（名字）直接获取子窗口的window对象
+*/
+iframeName.window.func(); 
+iframeName.window.document.getElementById('子页面中的元素ID'); 
+
+/**
+* 父传子，通过framewindow的frame数组调用
+*3、通过window对象的frames[]数组对象直接获取子frame对象
+*/
+window.frames[0].func();
+window.frames[0].document.getElementById('子页面中的元素ID');
+//或
+window.frames["iframeName"].func();
+window.frames["iframeName"].document.getElementById('子页面中的元素ID');
+
+
+/**
+ * 子传父，使用parent，或者top对象来调用父级的window
+*通过parent或top对象获取父页面的window对象内元素及方法
+*/
+parent.window.func(); 
+parent.window.document.getElementById('父页面中的元素ID');
+//同理
+top.window.func(); 
+top.window.document.getElementById('父页面中的元素ID');
+
+/**
+ * 兄弟通信，组合上面方法
+ */
+```
+
+### 跨域下父子页面的通信
+- hash方式传递，通过在父页面设置iframe的src后面多加个data字符串，然后子页面监听url变化，（父传子）
+- 使用代理iframe，在子页面中嵌入一个和父级页面同域的iframe，这样子页面就可以通过嵌入的iframe使用同域的方法通信
+- 使用MessageChannel，先在父页面通过子window postMessage，把port2发给子页面，然后子页面通过addEventListener监听message方法，拿到port2，然后就可以给父页面发消息.【总结，父传子就是window收发，子传父就是port收发】。还可以用作深拷贝
+```html
+<!-- 父页面 -->
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>test</title>
+		<style type="text/css">
+			* {
+				margin: 0;
+				padding: 0;
+			}
+
+			.main-box {
+				width: 100vw;
+				height: 100vh;
+				background-color: #eee;
+			}
+
+			.child-frame {
+				margin: 0 auto;
+				display: block;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="main-box">
+			<h1>我是主页面</h1>
+			<button type="button" onclick="clickFn(1)">我是父按钮1</button>
+			<button type="button" onclick="clickFn(2)">我是父按钮2</button>
+			<iframe class="child-frame" src="http://localhost:5000/test2" width="90%" height="800"></iframe>
+		</div>
+	</body>
+	<script type="text/javascript">
+		var channel = new MessageChannel();
+		var ifr = document.querySelector('.child-frame');
+
+		ifr.addEventListener("load", function() {
+			sendMessageToChild();
+		}, false);
+
+		channel.port1.onmessage = (e) => {
+			const { data } = e;
+			console.log('data from child: ', data);
+		}
+		
+		function sendMessageToChild(message) {
+			if (message) {
+				ifr.contentWindow.postMessage(message, '*');
+			} else {
+				ifr.contentWindow.postMessage('messageInit', '*', [channel.port2]);
+			}
+		}
+		
+		function clickFn(type) {
+			if (type === 1) {
+				sendMessageToChild('父按钮1');
+			} else {
+				sendMessageToChild('父按钮2');
+			}
+		}
+	</script>
+</html>
+```
+```html
+<!-- 子页面 -->
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<style type="text/css">
+			* {
+				margin: 0;
+				padding: 0;
+			}
+			
+			.child-box {
+				width: 100vw;
+				height: 100vh;
+				background-color: yellowgreen;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="child-box">
+			<h1>我是子页面</h1>
+			<button type="button" onclick="handleClick(1)">父级button1</button>
+			<button type="button" onclick="handleClick(2)">父级button2</button>
+		</div>
+	</body>
+	<script type="text/javascript">
+		let portObj;
+		 
+		function handleClick(type) {
+			if (type === 1) {
+				portObj.postMessage('我是按钮1');
+			} else {
+				portObj.postMessage('我是按钮2');
+			}
+		}
+		
+		  window.addEventListener('message', onMessage);
+		  
+		  function onMessage(e) {
+			  const { data, origin, ports} = e;
+			  if (ports[0]) {
+				  portObj = ports[0];
+			  }
+		      console.log('data from father: ', data, origin);
+		  }
+	</script>
+</html>
+```
+
+### MessageChannel实现深拷贝
+使用JSON.parse(JSON.stringify)方法有以下问题
+- 会忽略 undefined
+- 不能序列化函数
+- 不能解决循环引用的对象
+> 使用MessageChannel可以解决undefined和循环引用的问题，但是函数的还是不能解决
+```js
+//深拷贝
+function deepClone(obj) {
+	return new Promise((resolve) => {
+		const channel = new MessageChannel();
+		channel.port1.onmessage = (e) => {
+			resolve(e.data);
+		};
+		channel.port2.postMessage(obj);
+	})
+}
+```
 
 ## 参考其它的资料
 - [html常见面试题及答案](https://blog.csdn.net/weixin_45102270/article/details/113064446)

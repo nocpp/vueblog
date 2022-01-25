@@ -230,3 +230,23 @@ var sortedArrayToBST = function(nums) {
     return root;
 };
 ```
+### 执行用时：64 ms，击败了100%用户的答案，哈哈哈哈哈哈
+```js
+/**
+ * @param {number[]} nums
+ * @return {TreeNode}
+ */
+var sortedArrayToBST = function(nums) {
+    if (!nums.length) {
+        return null;
+    }
+    
+    const middleIndex = Math.floor(nums.length / 2);
+    const root = new TreeNode(nums[middleIndex]);
+
+    root.left = sortedArrayToBST(nums.slice(0, middleIndex));
+    root.right = sortedArrayToBST(nums.slice(middleIndex + 1));
+
+    return root;
+};
+```
