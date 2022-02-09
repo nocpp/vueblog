@@ -54,7 +54,7 @@ publish: true
 
 <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 
-<meta name="format-detection" content="telphone=no, email=no" />
+<meta name="format-detection" content="telephone=no, email=no" />
 
 <!-- 适配IE最新版本 -->
 <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -150,14 +150,14 @@ document.addEventListener("visibilitychange", function() {
 
 ## HTML生命周期
 1. DOMContentLoaded
-	- 当HTML文档被_加载_和_解析_完成
+	- 当HTML文档被__加载__和__解析__完成
 	- DOMContentLoaded事件的触发时机为: HTML解析为DOM之后，如果有JS执行，要等到JS执行完毕之后
-	- Rener Tree之前
+	- Render Tree之前
 	- 执行JS时会堵塞HTML解析
 	- [详细参考](https://blog.csdn.net/zyj0209/article/details/79698430)
 2. load，浏览器已经加载了所有的资源（图像，样式表等）；
 3. beforeunload/unload，当用户离开页面的时候触发；
-4. readyState，描述document的loading状态；
+4. document.readyState属性，描述document的loading状态；
     - loading 加载：document仍在加载。
     - interactive 互动 ： 文档已经完成加载，文档已被解析，但是诸如图像，样式表和框架之类的子资源仍在加载。
     - complete ：文档和所有子资源已完成加载。状态表示 load 事件即将被触发。
