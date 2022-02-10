@@ -34,7 +34,7 @@ publish: true
 ## iframe 框架有那些优缺点？
 ### 优点
 - 常用于网站后台框架，内容区域使用iframe，然后可以共用导航栏，侧边菜单栏
-- 插入第三方广告很方便
+- 插入第三方内容很方便
 ### 缺点
 - 可能会出现滚动条
 - 会阻塞主页面load事件
@@ -43,6 +43,7 @@ publish: true
 
 ## 说说常用的meta标签
 > httpEquiv 属性把 content 属性连接到 HTTP 头部, 也就是http响应头
+> 用来设置SEO，适配移动端，字符集，http响应头
 - name，content组成
 - http-equiv，content组成
 - charset组成

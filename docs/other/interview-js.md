@@ -230,6 +230,9 @@ Event Loop即事件循环，是指浏览器或Node的一种解决javaScript单�
 > await后面的就相当于放在Promise的then里面
 ```js
 async function testFn() {
+	setTimeout(() => {
+		console.log('timeout');
+	});
 	new Promise((resolve) => {
 		console.log('promise resolve: ', 1111);
 		resolve();
@@ -255,6 +258,7 @@ async function testFn() {
 //await after:  1
 //promise resolve:  3333
 //promise then:  444
+//timeout
 ```
     
 ### 那怎么知道主线程执行栈为空呢？
@@ -519,7 +523,7 @@ try {
 
 ### 编译原理
 1. 分词/词法分析，把代码拆分成代码块，token
-2. 解析/语法分析，把词法单元流（数组）转为AST，抽象语法数
+2. 解析/语法分析，把词法单元流（数组）转为AST，抽象语法树
 3. 代码生成，把AST转为可执行代码
 
 ## 作用域链

@@ -26,8 +26,8 @@ publish: true
 ```
 
 ## CSS中行内元素是否有margin和padding
-- marinTop, marinBottom无效
-- marinLeft，marinRight有效
+- marginTop, marginBottom无效
+- marginLeft，marginRight有效
 - padding-top，padding-bottom内容范围是增大了，但是对其它元素没有效果
 
 ## css水平、垂直居中的写法，请至少写出4种?
@@ -105,7 +105,7 @@ div{
   background: tomato;
 }
 ```
-- margin/padding百分比
+- padding百分比
 ```css
 .square {
   width: 20%;
@@ -333,7 +333,7 @@ div{
 
 ## flex属性
 ### flex-grow 与 flex的区别
-1. 剩余宽度计算方式不同, flex-grow的剩余宽度等于容器宽度减去所有项目宽度和, 而flex的剩余宽度等于容器宽度减去设置了flex属性的项的宽度和
+1. 剩余宽度计算方式不同, flex-grow的剩余宽度等于容器宽度减去所有项目宽度和, 而flex的剩余宽度等于flex-grow的剩余宽度加上设置了flex属性的项的宽度和
 2. 计算宽度方式都是剩余宽度*设置比例/设置了项目个数
 3. flex是几个值的简写，flex-grow，flex-shrink，flex-basis
 
