@@ -243,6 +243,15 @@ ajax轮询 的原理非常简单，让浏览器隔个几秒就发送一次请求
 ## http缓存/浏览器缓存
 > 浏览器第一次向一个web服务器发起http请求后，服务器会返回请求的资源，并且在响应头中添加一些有关缓存的字段如：Cache-Control、Expires、Last-Modified、ETag、Date等等, 之后浏览器再向该服务器请求该资源就可以视情况使用强缓存和协商缓存。
 
+### 缓存控制
+在http中，控制缓存开关的字段有两个：Pragma 和 Cache-Control。
+
+### Pragma
+Pragma有两个字段Pragma和Expires。Pragma的值为no-cache时，表示禁用缓存，Expires的值是一个GMT时间，表示该缓存的有效时间。
+
+### 优先级
+Pragma -> Cache-Control -> Expires
+
 ### 缓存类型
 - 强缓存：浏览器直接从本地缓存中获取数据，不与服务器进行交互;
 - 协商缓存：浏览器发送请求到服务器，服务器判定是否可使用本地缓存;
@@ -258,7 +267,8 @@ ajax轮询 的原理非常简单，让浏览器隔个几秒就发送一次请求
 - （no-cache 含义是不使用本地缓存，也就是先与服务器确认缓存是否可用。）
 - （no-store 禁止缓存，每次请求都要向服务器重新获取数据。）
 - （must-revalidate 指定如果页面是过期的，则去服务器进行获取。）
-    
+- [详解](https://blog.csdn.net/u012375924/article/details/82806617)
+
 ### 协商缓存
 - 协商缓存是利用http的返回头中的ETag或Last-Modified字段来控制的
 - ETag和If-None-Match，优先级更高
@@ -356,7 +366,6 @@ Content-Encoding: gzip
    ![图2](./img/10.jpg)
 
 [TCP三次握手，四次挥手详解](https://juejin.cn/post/6919056368250912782)
-
 
 ### 发送HTTP请求
 > 有缓存则使用缓存，没有则请求
