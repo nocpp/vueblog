@@ -102,6 +102,7 @@ function select(arr) {
 ```
 
 ## 插入排序
+> 遍历数组，把数组元素和有序的数组比较，然后插入，如果前面更大，就往后挪
 - 当前元素前面的那个序列是有序的
 - “正确的位置”如何定义——所有在当前元素前面的数都不大于它，所有在当前元素后面的数都不小于它
 - 在有序序列里定位元素位置的时候，是从后往前定位的。只要发现一个比当前元素大的值，就需要为当前元素腾出一个新的坑位。
@@ -124,6 +125,29 @@ function insertFn(arr) {
 	
 	return arr;
 }
+```
+```js
+function insertSort(arr) {
+	const len = arr.length;
+	
+	let sortedIndex = 0;
+	for (let i = 1; i < len; i++) {
+		const current = arr[i];
+		let sIndex = sortedIndex;
+		
+		while (sIndex >= 0 && arr[sIndex] > current) {
+			arr[sIndex + 1] = arr[sIndex];
+			sIndex--;
+		}
+		
+		sIndex++;
+		arr[sIndex] = current;
+		sortedIndex++;
+	}
+	
+	return arr;
+}
+
 ```
 
 > 最好时间复杂度：O(n)，最坏O(n^2)，平均O(n^2)

@@ -823,6 +823,25 @@ import {xxx} from './'
 4. Object.prototype  (Object.prototype.toString.call([]) == '[object Array]')
 5. Array.prototype.isPrototypeOf(obj)
 
+## bind函数
+- 无论bind几次，fn 中的 this 永远由第一次 bind 决定
+```js
+let a = {}
+let fn = function () { console.log(this) }
+fn.bind().bind(a)() // => ? window
+```
+- 箭头函数中的 this 只取决包裹箭头函数的第一个普通函数的 this
+```js
+function a() {
+  return () => {
+    return () => {
+      console.log(this)
+    }
+  }
+}
+console.log(a()()()) //window
+```
+
 ## 跨域
 - jsonp
 - cors

@@ -322,3 +322,22 @@ FancyInput = forwardRef(FancyInput);
 ```
 - useLayoutEffect,其函数签名与 useEffect 相同，但它会在所有的 DOM 变更之后同步调用 effect,可以使用它来读取 DOM 布局并同步触发重渲染
 - useDebugValue,可用于在 React 开发者工具中显示自定义 hook 的标签
+
+## Ref的使用
+### 获取Dom或者子组件实例的方式
+- ref传入字符串，可以通过this.refs获取对应的
+- ref传入函数，可以通过函数参数获取实例
+- ref传入变量，通过ref.current获取
+
+### forwardRef
+解决ref不能跨层级捕获和传递的问题
+
+### 父子通信
+通过ref获取组件实例，调用对应方法
+
+## 组件通信的方法
+- props，父传子，子传父调用父方法
+- bus通信
+- redux
+- ref
+- Context
