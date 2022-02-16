@@ -212,7 +212,15 @@ function meargeSorted(arr1, arr2) {
 > 时间复杂度，其中分割子数组需要logn次，然后加上合并就是O(nlogn)
 
 ## 快速排序
-快速排序的基本思想和归并排序相同，区别在于快排不会真的把数组拆开合并到一个新数组，而是直接在数组内部排序
+> 快速排序的基本思想和归并排序相同，区别在于快排不会真的把数组拆开合并到一个新数组，而是直接在数组内部排序
+:::tip
+快排思想
+1. 选基准值，一般选中间
+2. 根据基准值，把数组分为左右子数组
+3. 使用left，right指针进行移动排序，使得左子数组元素都比基准值小，右子数组元素都比基准值大
+4. 排序过程中遇见不符合的元素，则左右交换，左右指针共同前进
+5. 左右子数组排序完成后，再递归排序左右子数组
+:::
 ```js
 function quickFn(arr, left = 0, right = arr.length - 1) {
 	//递归边界
@@ -248,18 +256,12 @@ function priFn(arr, low, high) {
 		};
 		
 		if (i <= j) {
-			swap(arr, i, j);
+			[arr[i], arr[j]] = [arr[j], arr[i]];
 			i++;
 			j--;
 		}
 	}
 	
 	return i;
-}
-
-function swap(arr, left, right) {
-	const temp = arr[left];
-	arr[left] = arr[right];
-	arr[right] = temp;
 }
 ```

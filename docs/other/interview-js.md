@@ -158,6 +158,15 @@ Event Loop即事件循环，是指浏览器或Node的一种解决javaScript单�
 3. 从微队列microtask queue中取出位于队首的回调任务，放入调用栈Stack中执行，执行完后microtask queue长度减1；
 4. 继续取出位于队首的任务，放入调用栈Stack中执行，以此类推，直到直到把microtask queue中的所有任务都执行完毕。注意，如果在执行microtask的过程中，又产生了microtask，那么会加入到队列的末尾，也会在这个周期被调用执行；
 5. microtask queue中的所有任务都执行完毕，此时microtask queue为空队列，调用栈Stack也为空；
+	+ 1.当 Eventloop 执行完 Microtasks 后，会判断 document 是否需要更新，因为浏览器是 60Hz 的刷新率，每 16.6ms 才会更新一次。
+	+ 2.然后判断是否有 resize 或者 scroll 事件，有的话会去触发事件，所以 resize 和 scroll 事件也是至少 16ms 才会触发一次，并且自带节流功能。
+	+ 3.判断是否触发了 media query
+	+ 4.更新动画并且发送事件
+	+ 5.判断是否有全屏操作事件
+	+ 6.执行 requestAnimationFrame 回调
+	+ 7.执行 IntersectionObserver 回调，该方法用于判断元素是否可见，可以用于懒加载上，但是兼容性不好
+	+ 8.更新界面
+	+ 9.以上就是一帧中可能会做的事情。如果在一帧中有空闲时间，就会去执行 requestIdleCallback 回调。
 6. 取出宏队列macrotask queue中位于队首的任务，放入Stack中执行；
 7. 执行完毕后，调用栈Stack为空；
 8. 重复第3-7个步骤；
@@ -333,17 +342,19 @@ observer.disconnect();
 - 网页初始化
 - DOM的增删
 - 某些元素的尺寸改变，最好放在一个class中修改
+- display: none
 - 元素位置的变化，元素的左右margin，padding，所以使用定位或者transform性能更好
 - 获取元素的偏移量属性，scrollTop、scrollLeft、scrollWidth、offsetTop、offsetLeft、offsetWidth、offsetHeight，浏览器为了保证值的正确也会回流取得最新的值，所以如果你要多次操作，最取完做个缓存
 - 浏览器窗口尺寸改变，resize事件发生也会引起回流
 
 ### reflow影响性能，优化方法如下
+- 移动位置的时候使用transform而不是position
 - 修改样式不要逐条修改，建议定义CSS样式的class，然后直接修改元素的className
 - 不要将DOM节点的属性值放在循环中当成循环的变量
 - 为动画的 HTML 元素使用 fixed 或 absoult 的 position，那么修改他们的 CSS 是不会 reflow 的
 - 把DOM离线后修改。如设置DOM的display：none，然后进行你需要的多次修改，然后再显示出来，或者clone一个节点到内存中，然后随意修改，修改完成后再与在线的交换【虚拟Dom，Diff算法就是这么优化的】
 - 不使用table布局，因为一个微小的改变就可能引起整个table的重新布局,当我们不为表格td添加固定宽度时，一列的td的宽度会以最宽td的宽作为渲染标准，假设前几行td在渲染时都渲染好了，结果下面某行的一个td特别宽，table为了统一宽，前几行的td会回流重新计算宽度，这是个很耗时的事情。
-- 由于display为none的元素在页面不需要渲染，渲染树构建不会包括这些节点；但visibility为hidden的元素会在渲染树中。因为display为none会脱离文档流，visibility为hidden虽然看不到，但类似与透明度为0，其实还在文档流中，还是有渲染的过程。
+- 使用visibility替代display: none。由于display为none的元素在页面不需要渲染，渲染树构建不会包括这些节点；但visibility为hidden的元素会在渲染树中。因为display为none会脱离文档流，visibility为hidden虽然看不到，但类似与透明度为0，其实还在文档流中，还是有渲染的过程。
 
 ## JavaScript原型，原型链 ? 有什么特点？
 ### 原型prototype

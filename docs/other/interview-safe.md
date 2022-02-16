@@ -73,7 +73,14 @@ Samesite=Strict
 Samesite=Strict 被称为是严格模式,表明这个 Cookie 在任何情况都不可能作为第三方的 Cookie，有能力阻止所有CSRF攻击。此时，我们在B站点下发起对A站点的任何请求，A站点的 Cookie 都不会包含在cookie请求头中。
 
 ## 3. 点击劫持
+> 是视觉欺骗，把需要骗取的网站放到自己网站的iframe中，弄个透明的遮罩之类的盖住它，然后诱导用户点击
 点击劫持是指在一个Web页面中隐藏了一个透明的iframe，用外层假页面诱导用户点击，实际上是在隐藏的frame上触发了点击事件进行一些用户不知情的操作。
+:::tip
+使用X-FRAME-OPTIONS响应头解决
+- DENY，表示页面不允许通过 iframe 的方式展示
+- SAMEORIGIN，表示页面可以在相同域名下通过 iframe 的方式展示
+- ALLOW-FROM，表示页面可以在指定来源的 iframe 中展示
+:::
 
 ## 4. 安全扫描工具
 1. Arachni

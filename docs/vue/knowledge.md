@@ -57,7 +57,7 @@ React 和 Vue 有许多相似之处，它们都有：
 **组件间通信方法**
 - 父子间通过props，$on, $emit方式，$parent, $children(这是个数组)方式
 - Pub Sub方式
-- Event Bus，空Vue对象的$on, $emit方式
+- Event Bus，空Vue实例的$on, $emit方式
 - Vuex的方式，创建Vue对象，把数据放在之前创建的Vue的data中
 - Vue.observable Vue2.6新增的，简略版Vuex
 - 父组件provide, 子组件inject方式
