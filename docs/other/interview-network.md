@@ -117,11 +117,27 @@ SSL(Secure Socket Layer 安全套接层)是基于HTTPS下的一个协议加密�
 - HTTPS效率低,HTTP效率高
 
 ### HTTPS传输过程?
-1. 客户端发起 HTTPS 请求，协议版本和加密方式（发送随机数1）；
-2. 服务端返回证书（发送随机数2）；
-3. 客户端对证书验证,验证通过后本地生成用于改造对称加密算法的随机数（发送随机数3)，通过证书中的公钥对随机数进行加密传输到服务端；
-4. 服务端接收后通过私钥解密得到随机数3，之后的数据交互通过（随机数1，2，3）生成对话密钥；
-5. 然后用密钥进行对称加密算法进行加解密。（因为非对称加密比较复杂，耗时更长，所以要换成对称加密）
+1. 首先进行TCP三次握手连接
+2. 然后进行TLS握手，客户端发送clientHello: 支持的版本信息，加密套件候选列表，压缩算法候选列表，随机数random_C，扩展字段
+3. 服务端返回
+	- serverHello: 使用的协议版本 version，选择的加密套件 cipher suite，选择的压缩算法 compression method、随机数 random_S;
+	- server_certificate: 返回证书
+	- serverHelloDone
+4. 客户端对证书验证,验证通过
+	- clientKeyExchange，合法性验证通过之后，客户端计算产生随机数字 Pre-master，并用证书公钥加密，发送给服务器
+	- 计算得到协商密钥,encKey=Fuc(randomC, randomS, Pre-Master)
+	- changeCipherSpec，客户端通知服务器后续的通信都采用协商的通信密钥和加密算法进行加密通信
+	- encryptedHandshakeMessage，结合之前所有通信参数的 hash 值与其它相关信息生成一段数据，采用协商密钥 session secret 与算法进行加密，然后发送给服务器用于数据与握手验证;
+5. 服务端接收后
+	- 服务器用私钥解密加密的 Pre-master 数据，基于之前交换的两个明文随机数 randomC 和 randomS，计算得到协商密钥:enckey=Fuc(randomC, randomS, Pre-Master);
+	- 计算之前所有接收信息的 hash 值，然后解密客户端发送的 encryptedHandShakeMessage，验证数据和密钥正确性;
+	- changeCipherSpec, 验证通过之后，服务器同样发送 changeCipherSpec 以告知客户端后续的通信都采用协商的密钥与算法进行加密通信;
+	- encryptedHandshakeMessage, 服务器也结合所有当前的通信参数信息生成一段数据并采用协商密钥 session secret 与算法加密并发送到客户端;
+6. 客户端接收后，进行解密然后验证，验证通过，握手结束
+7. 然后用密钥进行对称加密算法进行加解密。（因为非对称加密比较复杂，耗时更长，所以要换成对称加密）
+
+### tls握手详解
+- [https握手](https://www.cnblogs.com/barrywxx/p/8570715.html)
 
 ### 为什么需要证书?
 防止中间人攻击,验证服务器身份

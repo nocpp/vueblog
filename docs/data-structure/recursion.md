@@ -333,3 +333,64 @@ function xxx(入参) {
 }
 ```
 > 在面试中，如果你隐约觉得这道题用递归回溯来解可能有戏，却一时间没办法明确具体的解法，那么不妨尝试把这段伪代码记在脑子里。
+
+
+## 将对象flatten
+```js
+//输入
+const obj = {
+  a: {
+    b: 1,
+    c: 2,
+    d: {
+      e: 5
+    }
+  },
+  b: [1, 3, {a: 2, b: 3}],
+  c: 3
+}
+
+//输出
+// {
+//   'a.b': 1,
+//   'a.c': 2,
+//   'a.d.e': 5,
+//   'b[0]': 1,
+//   'b[1]': 3,
+//   'b[2].a': 2,
+//   'b[2].b': 3
+//    c: 3
+// }
+```
+/**
+ * 思路：重复把每个属性取出来，首选递归。每个元素大概三种类型，数组，对象，基本。分别处理
+ */
+```js
+function flatten(obj) {
+	const ret = {};
+	
+	for (let key in obj) {
+		if (Array.isArray(obj[key])) {
+			obj[key].forEach((item, index) => {
+				if (typeof item === 'object') {
+					const tempRet = flatten(item);
+					for (let k in tempRet) {
+						ret[`${key}[${index}].${k}`] = tempRet[k];
+					}
+				} else {
+					ret[`${key}[${index}]`] = item;
+				}
+			});
+		} else if (typeof obj[key] === 'object') {
+			const tempRet = flatten(obj[key]);
+			for (let k in tempRet) {
+				ret[`${key}.${k}`] = tempRet[k];
+			}
+		} else {
+			ret[key] = obj[key];
+		}
+	}
+	
+	return ret;
+}
+```
