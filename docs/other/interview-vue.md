@@ -329,6 +329,10 @@ Dep.target = null
 ```
 
 ### Watcher观察
+ Watcher（订阅者） : Watcher订阅者作为Observer和Compile之间通信的桥梁，主要做的事情是：
+- 在自身实例化时往属性订阅器(dep)里面添加自己
+- 自身必须有一个update()方法
+- 待属性变动dep.notice()通知时，能调用自身的update()方法，并触发Compile中绑定的回调
 ```js
 class Watcher {
   constructor(obj, key, cb) {
@@ -461,6 +465,12 @@ nextTick 可以让我们在下次 DOM 更新循环结束之后执行延迟回调
 
 在 Vue 2.4 之前都是使用的 microtasks，但是 microtasks 的优先级过高，在某些情况下可能会出现比事件冒泡更快的情况，但如果都使用 macrotasks 又可能会出现渲染的性能问题。所以在新版本中，会默认使用 microtasks，但在特殊情况下会使用 macrotasks，比如 v-on。
 
+### 微任务
+- Promise
+- MutationObserver
+- setImmediate
+- setTimeout
+
 对于实现 macrotasks ，会先判断是否能使用 setImmediate ，不能的话降级为 MessageChannel ，以上都不行的话就使用 setTimeout
 
 ```js
@@ -487,6 +497,14 @@ if (typeof setImmediate !== 'undefined' && isNative(setImmediate)) {
 }
 ```
 
+### Vue更新原理
+- 当数据变化得时候，会促发它得set方法中得派发更新 notify()
+- 遍历触发当前Dep中存放得watche
+- 因为vue数据变化得时候不会马上更新页面需要做些去重等事情，所以它走得是queueWatcher
+- nextTick这个方法来触发watcher中得run
+- 所以nextTick中回调是能拿到更新后的Dom，因为是两个微任务，先更新Dom，再执行nextTick回调
+[Vue更新原理](https://blog.csdn.net/qq_38935512/article/details/121228903)
+
 ## 异步更新队列方法
 Vue 实现响应式并不是数据发生变化之后 DOM 立即变化，而是按一定的策略进行 DOM 的更新。
 - Promise.then
@@ -495,4 +513,10 @@ Vue 实现响应式并不是数据发生变化之后 DOM 立即变化，而是�
 - 如果执行环境不支持，则会采用 setTimeout(fn, 0)
 
 ### 事件循环说明
-简单来说，Vue在修改数据后，视图不会立刻更新，而是等同一事件循环中的所有数据变化完成之后，再统一进行视图更新
+vue得数据更新，会开启一个异步队列，将所有得数据变化缓存进去，这里面会做一个去重处理，比如重复得watcher最后都只会执行1个，避免重复得DOM计算消耗性能。
+
+
+## 组成部分
+- Observer, Observer的核心是通过Object.defineProprtty()来监听数据的变动，这个函数内部可以定义setter和getter，每当数据发生变化，就会触发setter。这时候Observer就要通知订阅者，订阅者就是Watch
+- Watcher, Watcher订阅者作为Observer和Compile之间通信的桥梁
+- Compile, Compile主要做的事情是解析模板指令，将模板中变量替换成数据，然后初始化渲染页面视图，并将每个指令对应的节点绑定更新函数，添加鉴定数据的订阅者，一旦数据有变动，收到通知，更新试图
