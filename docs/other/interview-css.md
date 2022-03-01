@@ -188,8 +188,8 @@ div{
 > IE下为 Layout，可通过 zoom:1 触发
 
 ### 解决问题
-- margin重合问题【“为首个子元素添加20px的上边距，父元素竟跟着子元素下沉了”】
-- 高度塌陷问题，（包含浮动元素，高度塌陷问题：在通常情况下父元素的高度会被子元素撑开，而在这里因为其子元素为浮动元素所以父元素发生了高度坍塌，上下边界重合。这时就可以用bfc来清除浮动了。）
+- margin重合问题【“给首个子元素添加20px的上边距，父元素竟跟着子元素下沉了”】
+- 高度塌陷问题，清除浮动
 - 阻止元素被浮动元素覆盖，做2栏布局，流式布局
 ```html
 <div style="height: 100px;width: 100px;float: left;background: lightblue">我是一个左浮动的元素</div>
@@ -397,7 +397,7 @@ will-change: transform, opacity;
 
 ## 视差滚动效果？
 视差滚动（Parallax Scrolling）通过在网页向下滚动的时候，控制背景的移动速度比前景的移动速度慢来创建出令人惊叹的3D效果。
--  CSS3实现
+- CSS3实现
 - jQuery实现
 - 插件实现方式,例如：parallax-scrolling，兼容性十分好
 

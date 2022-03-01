@@ -49,7 +49,7 @@ p.a // 'a' = 2
 
 ## 生命周期钩子函数
 - beforeCreate, 获取不到 props 或者 data 中的数据
-- created, 组件还没被挂载
+- created, 创建了Vue实例，组件还没被挂载
 - beforeMount, 开始创建 VDOM
 - mounted, 并将 VDOM 渲染为真实 DOM 并且渲染数据。组件中如果有子组件的话，会递归挂载子组件
 - beforeUpdate
@@ -58,6 +58,84 @@ p.a // 'a' = 2
 - deactivated,keep-alive
 - beforeDestroy
 - destroyed
+
+## Vue父子组件生命周期调用顺序
+### 挂载阶段
+父beforeCreate->父created->父beforeMount->子beforeCreate->子created->子beforeMount->子mounted->父mounted
+
+### 更新阶段
+父beforeUpdate->子beforeUpdate->子updated->父updated
+
+### 卸载阶段
+父beforeDestroy->子beforeDestroy->子destroyed->父destroyed
+
+## 自定义Model
+```js
+Vue.component('base-checkbox', {
+  model: {
+    prop: 'checked',
+    event: 'change'
+  },
+  props: {
+    checked: Boolean
+  },
+  template: `
+    <input
+      type="checkbox"
+      v-bind:checked="checked"
+      v-on:change="$emit('change', $event.target.checked)"
+    >
+  `
+})
+
+<base-checkbox v-model="lovingVue"></base-checkbox>
+```
+
+## slot 插槽
+- 匿名插槽
+- 具名插槽
+- 作用域插槽，让插槽内容可以访问子组件属性
+```html
+<span>
+  <slot v-bind:user="user">
+    {{ user.lastName }}
+  </slot>
+    <footer>
+      <slot name="footer"></slot>
+    </footer>
+</span>
+
+<current-user>
+  <template v-slot:default="slotProps">
+    {{ slotProps.user.firstName }}
+  </template>
+  
+<template v-slot:footer>
+  <p>Here's some contact info</p>
+</template>
+</current-user>
+```
+
+## 动态组件
+不确定的组件可以使用动态组件
+```js
+<component :is="dyCom" />
+```
+
+## 异步加载组件
+当遇到某个组件很大，但不会立刻用到时，可以使用异步加载优化
+```js
+components: [com1: () => import('../../com1')]
+```
+
+## 缓存组件
+当处理类似Tab页面时，可以使用keep-alive提升性能，与v-if和v-show不同，触发activated与deactivated生命周期
+```html
+<keep-alive>
+	<com1 v-if="state === 1" />
+	<com2 v-if="state === 2" />
+</keep-alive>
+```
 
 ## 组件通信
 ### 父子通信
@@ -183,7 +261,7 @@ export default {
 
 ### 任意组件
 - Vuex
-- Event Bus,使用Vue的实例，实现事件的监听和发布，实现组件之间的传递。
+- Event Bus/也叫自定义事件,使用Vue的实例，实现事件的监听和发布，实现组件之间的传递。
 
 ## extend 能做什么
 这个 API 很少用到，作用是扩展组件生成一个构造器，通常会与 $mount 一起使用。
@@ -199,7 +277,7 @@ Vue.mixin({
 })
 ```
 
-### mixins
+### mixins，抽离组件公共逻辑
 mixins 应该是我们最常使用的扩展组件的方式了。如果多个组件中有相同的业务逻辑，就可以将这些逻辑剥离出来，通过 mixins 混入代码，比如上拉下拉加载数据这种逻辑等等。
 ```js
 // 定义一个混入对象
@@ -520,3 +598,15 @@ vue得数据更新，会开启一个异步队列，将所有得数据变化缓�
 - Observer, Observer的核心是通过Object.defineProprtty()来监听数据的变动，这个函数内部可以定义setter和getter，每当数据发生变化，就会触发setter。这时候Observer就要通知订阅者，订阅者就是Watch
 - Watcher, Watcher订阅者作为Observer和Compile之间通信的桥梁
 - Compile, Compile主要做的事情是解析模板指令，将模板中变量替换成数据，然后初始化渲染页面视图，并将每个指令对应的节点绑定更新函数，添加鉴定数据的订阅者，一旦数据有变动，收到通知，更新试图
+
+## VueX，待完善
+- state
+- getter
+- action
+- mutation
+- mapGetter
+- ...
+
+## VueRouter，待完善
+- hash模式
+- history模式

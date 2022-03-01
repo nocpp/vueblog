@@ -196,7 +196,7 @@ Event Loop即事件循环，是指浏览器或Node的一种解决javaScript单�
 - V8引擎由许多子模块构成，其中这4个模块是最重要的
 	+ Parser：负责将JavaScript源码转换为Abstract Syntax Tree (AST)
 	+ Ignition：interpreter，即解释器，负责将AST转换为Bytecode，解释执行Bytecode；同时收集3. TurboFan优化编译所需的信息，比如函数参数的类型；
-	+ TurboFan：compiler，即编译器，利用Ignitio所收集的类型信息，将Bytecode转换为优化的汇编代码；
+	+ TurboFan：compiler，即编译器，利用Ignition所收集的类型信息，将Bytecode转换为优化的汇编代码；
 	+ Orinoco：garbage collector，垃圾回收模块，负责将程序不再需要的内存空间回收；
 
 ### 调用栈（Call Stack）
@@ -287,28 +287,20 @@ js引擎存在monitoring process进程，会持续不断的检查主线程执行
 [html规范](https://html.spec.whatwg.org/multipage/webappapis.html#event-loop-processing-model)
 [MDN定义](https://developer.mozilla.org/en-US/docs/Web/API/HTML_DOM_API/Microtask_guide)
 
-### 在Event Loop中，每一次tick任务的执行顺序
-> Event Loop中，每一次循环称为tick
-
-1. 执行栈选择最先进入队列的宏任务（一般都是script），执行其同步代码直至结束；
-2. 检查是否存在微任务，有则会执行至微任务队列为空；
-3. 如果宿主为浏览器，可能会渲染页面；
-4. 开始下一轮tick，执行宏任务中的异步代码（setTimeout等回调）;
-
 ### 有哪些是宏任务（macrotask queue）
 - event callback
 - 整体代码script
 - setTimeout/setInterval
 - setImmediate,I/O(Node)
-- UI rendering/UI事件（有相反意见的文章）
 - requestAnimationFrame
 
 ### 有哪些是微任务（microtask queue）
-- 原生Promise
+- 原生Promise.then
 - process.nextTick(Node)
 - Object.observe(已废弃,Proxy 对象替代)
 - MutationObserver（监控某个 DOM 节点, 替代Mutation Events）
-> MutationObserver用于，监听元素子项的删除，新增，修改(包括删除和新增），目标节点的属性节点变化，文本内容是否发生变化，属性节点变化
+> MutationObserver用于，监听元素子项的删除，新增，修改(包括删除和新增），目标节点的属性节点变化，文本内容是否发生变化，属性节点变化。
+> 用于模拟微任务
 :::tips
 MutationObserver比较于Mutation Events，提升了性能。
 - MutationObserver所有监听操作以及相应处理都是在其他脚本执行完成之后异步执行的，并且是所以变动触发之后，将变得记录在数组中，统一进行回调的，也就是说，当你使用observer监听多个DOM变化时，并且这若干个DOM发生了变化，那么observer会将变化记录到变化数组中，等待一起都结束了，然后一次性的从变化数组中执行其对应的回调函数。
@@ -351,7 +343,7 @@ observer.disconnect();
 - 移动位置的时候使用transform而不是position
 - 修改样式不要逐条修改，建议定义CSS样式的class，然后直接修改元素的className
 - 不要将DOM节点的属性值放在循环中当成循环的变量
-- 为动画的 HTML 元素使用 fixed 或 absoult 的 position，那么修改他们的 CSS 是不会 reflow 的
+- 为动画的 HTML 元素使用 fixed 或 absoulte 的 position，那么修改他们的 CSS 是不会 reflow 的
 - 把DOM离线后修改。如设置DOM的display：none，然后进行你需要的多次修改，然后再显示出来，或者clone一个节点到内存中，然后随意修改，修改完成后再与在线的交换【虚拟Dom，Diff算法就是这么优化的】
 - 不使用table布局，因为一个微小的改变就可能引起整个table的重新布局,当我们不为表格td添加固定宽度时，一列的td的宽度会以最宽td的宽作为渲染标准，假设前几行td在渲染时都渲染好了，结果下面某行的一个td特别宽，table为了统一宽，前几行的td会回流重新计算宽度，这是个很耗时的事情。
 - 使用visibility替代display: none。由于display为none的元素在页面不需要渲染，渲染树构建不会包括这些节点；但visibility为hidden的元素会在渲染树中。因为display为none会脱离文档流，visibility为hidden虽然看不到，但类似与透明度为0，其实还在文档流中，还是有渲染的过程。
@@ -587,7 +579,7 @@ function bar(f) {
     f();//输出10
 }
 
-bar(fn)l
+bar(fn);
 ```
 
 ### 参考文章

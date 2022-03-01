@@ -88,7 +88,7 @@ publish: true
 3. HTML5为什么只需要写 !DOCTYPE HTML？
 > 因为HTML5不基于SGML，所以不需要引用DTD，而HTML4.01基于SGML，所以需要引用
 
-##  src和href的区别
+## src和href的区别
 - src 用于引用资源，替换当前元素
 	+ src 表示引用资源，替换当前元素，用在 img，script，iframe 上，src 是页面内容不可缺少的一部分。当浏览器解析到 src ，会暂停其他资源的下载和处理（图片不会暂停其他资源下载和处理），直到将该资源加载、编译、执行完毕，图片和框架等也如此，类似于将所指向资源应用到当前内容。这也是为什么建议把 js 脚本放在底部而不是头部的原因。
 - href 用于在当前文档和引用资源之间确立联系
@@ -101,7 +101,6 @@ publish: true
 <html manifest="cache.manifest">
   ...
 </html>
-
 ```
 2. 然后再创建一个cache.manifest文件，它的书写方式如下
 - CACHE:（必须） 标识出哪些文件需要缓存，可以是相对路径也可以是绝对路径。
@@ -166,7 +165,7 @@ document.addEventListener("visibilitychange", function() {
 ## 关于首屏时间
 > “计算这个网页从空白到出现内容所花费的时间”。那怎么计算这段时间？这段时间其实就是HTML 文档加载和解析的时间。也就是DOMContentLoaded 事件触发之前所经历的时间。
 
-## 浏览器如何缺点资源加载的优先级
+## 浏览器如何确定资源加载的优先级
 - 对资源分类
 - 确定安全策略
 - 下载，图片默认为low，可视区域的图片为high
