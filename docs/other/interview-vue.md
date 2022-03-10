@@ -477,6 +477,7 @@ data.name = 'yyy'
 通过Vue.set解决
 
 ### 对于数组而言，Vue 内部重写了以下函数实现派发更新
+> 使用Object.create(Array.prototype)来复制数组原型方法，对其进行扩展，并且不会改变Array的原型
 ```js
 this.list[1] = 'x'; //不是响应式
 this.items.length = 2; //不是响应式
@@ -595,9 +596,47 @@ vue得数据更新，会开启一个异步队列，将所有得数据变化缓�
 
 
 ## 组成部分
-- Observer, Observer的核心是通过Object.defineProprtty()来监听数据的变动，这个函数内部可以定义setter和getter，每当数据发生变化，就会触发setter。这时候Observer就要通知订阅者，订阅者就是Watch
+- Observer, Observer的核心是通过Object.defineProperties()来监听数据的变动，这个函数内部可以定义setter和getter，每当数据发生变化，就会触发setter。这时候Observer就要通知订阅者，订阅者就是Watch
 - Watcher, Watcher订阅者作为Observer和Compile之间通信的桥梁
 - Compile, Compile主要做的事情是解析模板指令，将模板中变量替换成数据，然后初始化渲染页面视图，并将每个指令对应的节点绑定更新函数，添加鉴定数据的订阅者，一旦数据有变动，收到通知，更新试图
+
+## Vue响应式原理
+### 核心API，Object.defineProperties()来监听数据的变动，监听对象的某个属性的变更
+- Vue3.0使用proxy取代，但是有兼容问题，IE11不支持
+- 如何监听对象，复杂对象，还有数组
+- 几个缺点
+
+### 监听深层次对象属性，通过递归实现
+### 监听数组
+- 复制数组原型
+- 扩展原型方法，比如调用push后，更新视图
+
+## DIFF算法
+- 只比较同级VNODE
+- 判断是否是相同VNODE，即tag/ele/sel和key是不是相同，都相等才是，sameVnode
+- 如果不同，就销毁旧的，创建新的
+
+### patchVnode方法
+- 两者都有children时，对比children
+- Och有 Nch无，移除
+- OCh无，新Ch有，增加
+- 有text时，类似上面
+
+### UpdateChildren
+- oldCh: a  b  c  d,   a(oldStartIdx)0, b(oldEndIdx)3
+- newCh: e  f  g  h,   e(newStartIdx)0, b(newEndIdx)3
+- 四个指针往中间移动，对比
+- else if 开始和开始对比，sameVnode，命中之后，指针移动
+- else if 最后和最后对比，sameVnode
+- else if 旧开始和新结束做对比，sameVnode
+- else if 就结束和新开始做对比，sameVnode
+- 如果都没有命中，拿新节点key能否对应上oldCh key，就是对比看看处一生四种情况外是否有key相同的节点
+- 如果没对应上，就是创建元素，插入
+- 对应上了，判断sel是否相等，不等就插入，等的话就patchVnode
+
+### 不使用key和使用key的区别
+在diff过程中，如果没有key，就会之间销毁，重建，有key就会判断key是否相等，满足条件的话可以重用节点
+
 
 ## VueX，待完善
 - state

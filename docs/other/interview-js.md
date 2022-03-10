@@ -853,6 +853,28 @@ console.log(a()()()) //window
 ## ES6相关
 > 看javascript中ES6部分
 
+## 事件取消冒泡
+- stopImmediatePropagation
+stopImmediatePropagation 同样也能实现阻止事件，但是还能阻止该事件目标执行别的注册事件
+```js
+node.addEventListener(
+  'click',
+  event => {
+    event.stopImmediatePropagation()
+    console.log('冒泡')
+  },
+  false
+)
+// 点击 node 只会执行上面的函数，该函数不会执行
+node.addEventListener(
+  'click',
+  event => {
+    console.log('捕获 ')
+  },
+  true
+)
+```
+- stopPropagation, 通常我们认为 stopPropagation 是用来阻止事件冒泡的，其实该函数也可以阻止捕获事件
 ## 参考文章
 [中高级](https://juejin.cn/post/6844903776512393224#heading-20)
 [2021](https://juejin.cn/post/6940945178899251230)

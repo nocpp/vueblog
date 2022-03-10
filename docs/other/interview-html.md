@@ -358,6 +358,10 @@ Service Worker是谷歌发起的实现PWA（Progressive Web App）的一个关�
 
 ## WebWorker
 > JS是单线程，无法充分发挥多核CPU的能力。WebWorker为JS创造了多线程环境，允许主线程创建Worker线程，将一些任务分配给后者运行。在主线程运行的同时，Worker 线程在后台运行，两者互不干扰。等到 Worker 线程完成计算任务，再把结果返回给主线程。
+
+### 应用
+- 可以用于视频解码，比如一个线程获取，另一个线程解码，传给JS主线程播放
+
 ### Web Worker 有以下几个使用注意点
 - 同源限制
 - DOM 限制

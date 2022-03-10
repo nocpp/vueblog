@@ -20,8 +20,29 @@ webpack 是一个现代 JavaScript 应用程序的静态模块打包器，当 we
 - loader: 模块转换器，用于把模块原内容按照需求转换成新内容
 - 插件(plugins): 扩展插件，在webpack构建流程中的特定时机注入扩展逻辑来改变构建结果或做你想要做的事情
 
-## 配置优化
+## Webpack优化方面
+### 提升打包速度
+- 缩小loader范围，include和exclude，添加编译缓存
+- happyPack插件，可以多线程打包
+- webpack.DllPlugin，把公共类库提前打包
+- 代码压缩，UglifyJS或者Webpack4的把mode=production
+- resolve.extensions：用来表明文件后缀列表，默认查找顺序是 ['.js', '.json']
+- resolve.alias，可以通过别名的方式来映射一个路径
+- module.noParse，如果你确定一个文件下没有其他依赖，就可以使用该属性让 Webpack 不扫描该文件，这种方式对于大型的类库很有帮助
+### 减小打包体积
+- 按需加载，路由可以按需加载，大型类库同样
+- Scope Hoisting，代码就会尽可能的合并到一个函数中去
+```js
+module.exports = {
+  optimization: {
+    concatenateModules: true
+  }
+}
+```
+- Tree Shaking 可以实现删除项目中未被引用的代码,如果你使用 Webpack 4 的话，开启生产环境就会自动启动
 
+
+## 配置优化
 - 减少 resolve 的解析
 - 把 loader 应用的文件范围缩小
 - 减少 plugin 的消耗 区分mode
