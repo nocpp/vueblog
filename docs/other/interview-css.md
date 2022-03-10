@@ -90,7 +90,7 @@ px像素（Pixel）。相对长度单位。像素px是相对于显示器屏幕�
 div{
     border: 100px solid transparent;
     width: 0;
-    heigt: 0;
+    height: 0;
     border-radius: 100px;
     border-top-color: red;
 }
