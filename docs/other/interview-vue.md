@@ -11,7 +11,7 @@ publish: true
 
 ## Vue3为什么用proxy？
 -  Vue3.0 要使用 Proxy 替换原本的 API 原因在于 Proxy 无需一层层递归为每个属性添加代理，一次即可完成以上操作，性能上更好
--  并且原本的实现有一些数据更新不能监听到，但是 Proxy 可以完美监听到任何方式的数据改变
+-  Proxy支持监听数组改变，defineProperties不支持
 
 ```js
 let onWatch = (obj, setBind, getLogger) => {
@@ -530,14 +530,16 @@ methodsToPatch.forEach(function (method) {
 })
 ```
 
-## 编译过程
-- 编译器将模板通过几个阶段最终编译为 render 函数
+## 模版编译过程
+- compiler 将 模版生成 with(this) {}语句
+- 然后编译为 render 函数
 - 执行 render 函数生成 Virtual DOM 最终映射为真实 DOM
+- 访问到变量时，绑定Watcher，添加依赖
 
 ### 三个阶段
 - 将模板解析为 AST，用正则表达式去匹配模板中的内容
 - 优化 AST
-- 将 AST 转换为 render 函数
+- 将 AST 转换为 render 函数(最终也是调用createElement生成vNode)
 
 ## NextTick 原理分析
 nextTick 可以让我们在下次 DOM 更新循环结束之后执行延迟回调，用于获得更新后的 DOM。
@@ -578,11 +580,13 @@ if (typeof setImmediate !== 'undefined' && isNative(setImmediate)) {
 
 ### Vue更新原理
 - 当数据变化得时候，会促发它得set方法中得派发更新 notify()
-- 遍历触发当前Dep中存放得watche
+- 遍历触发当前Dep中存放得watchr
 - 因为vue数据变化得时候不会马上更新页面需要做些去重等事情，所以它走得是queueWatcher
-- nextTick这个方法来触发watcher中得run
+- 而queueWatcher处理后，把更新Dom放入nextTick这个方法中，触发watcher中的run
 - 所以nextTick中回调是能拿到更新后的Dom，因为是两个微任务，先更新Dom，再执行nextTick回调
 [Vue更新原理](https://blog.csdn.net/qq_38935512/article/details/121228903)
+
+> vue的数据更新，会开启一个异步队列，将所有得数据变化缓存进去，这里面会做一个去重处理，比如重复的watcher最后都只会执行1个，避免重复得DOM计算消耗性能
 
 ## 异步更新队列方法
 Vue 实现响应式并不是数据发生变化之后 DOM 立即变化，而是按一定的策略进行 DOM 的更新。
@@ -600,6 +604,13 @@ vue得数据更新，会开启一个异步队列，将所有得数据变化缓�
 - Watcher, Watcher订阅者作为Observer和Compile之间通信的桥梁
 - Compile, Compile主要做的事情是解析模板指令，将模板中变量替换成数据，然后初始化渲染页面视图，并将每个指令对应的节点绑定更新函数，添加鉴定数据的订阅者，一旦数据有变动，收到通知，更新试图
 
+## 虚拟Dom
+虚拟Dom是使用JS对象来表示Dom的一种方式，一般由Tag标签，属性值，和children组成，
+
+### 使用VDom好处
+- 通过虚拟Dom，可以提升性能，当数据变化引起视图变化时，生成新的VDom，对比旧的VDom，找出patch，只更新变更的部分
+- 可以跨平台开发，通过VDom把视图呈现在不同的平台
+
 ## Vue响应式原理
 ### 核心API，Object.defineProperties()来监听数据的变动，监听对象的某个属性的变更
 - Vue3.0使用proxy取代，但是有兼容问题，IE11不支持
@@ -609,23 +620,27 @@ vue得数据更新，会开启一个异步队列，将所有得数据变化缓�
 ### 监听深层次对象属性，通过递归实现
 ### 监听数组
 - 复制数组原型
-- 扩展原型方法，比如调用push后，更新视图
+- 扩展原型方法，比如调用push后，触发notify
 
 ## DIFF算法
 - 只比较同级VNODE
 - 判断是否是相同VNODE，即tag/ele/sel和key是不是相同，都相等才是，sameVnode
 - 如果不同，就销毁旧的，创建新的
 
-### patchVnode方法
-- 两者都有children时，对比children
-- Och有 Nch无，移除
+### patch方法
+- （Ele，newVNode）第一个参数不是VNode时，会创建一个空的vNode，关联那个Dom元素
+- （oldVNode，newVNode）
+
+### patchVnode方法，当新旧vNode一样时，比较他们的children
+- 两者都有children时，UpdateChildren
+- Och有， Nch无，移除
 - OCh无，新Ch有，增加
 - 有text时，类似上面
 
 ### UpdateChildren
 - oldCh: a  b  c  d,   a(oldStartIdx)0, b(oldEndIdx)3
 - newCh: e  f  g  h,   e(newStartIdx)0, b(newEndIdx)3
-- 四个指针往中间移动，对比
+- 四个指针往中间移动，对比，当startIdx > oldEndIdx时，结束对比
 - else if 开始和开始对比，sameVnode，命中之后，指针移动
 - else if 最后和最后对比，sameVnode
 - else if 旧开始和新结束做对比，sameVnode
@@ -646,6 +661,14 @@ vue得数据更新，会开启一个异步队列，将所有得数据变化缓�
 - mapGetter
 - ...
 
-## VueRouter，待完善
-- hash模式
-- history模式
+## VueRouter
+### 路由原理
+利用url变化来加载不同页面或者组件
+
+### hash模式
+- 使用location.href, location.hash更改
+- 使用hashChange事件监听
+
+### history模式
+- 使用hostory.pushState, history.replaceState, history.back来更改路由，同时触发路由更改事件
+- 利用popstate监听浏览器前进，返回操作

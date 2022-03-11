@@ -174,7 +174,7 @@ Vue 的 diff 过程可以概括为：oldCh 和 newCh 各有两个头尾的变量
 
 ## VueRouter
 
-### 全局钩子
+### 全局钩子,路由守卫
 > 作用，可以用来控制权限
 
 1. beforeEach
