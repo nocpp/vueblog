@@ -10,8 +10,11 @@ publish: true
 ---
 
 ## Vue3为什么用proxy？
--  Vue3.0 要使用 Proxy 替换原本的 API 原因在于 Proxy 无需一层层递归为每个属性添加代理，一次即可完成以上操作，性能上更好
--  Proxy支持监听数组改变，defineProperties不支持
+- Vue3.0 要使用 Proxy 替换原本的 API 原因在于 Proxy 无需一层层递归为每个属性添加代理，一次即可完成以上操作，性能上更好
+- Proxy支持监听数组改变，defineProperties不支持
+- Object.defineProperties 是一次全部递归，性能较差
+- Proxy 是惰性递归，性能较好，什么时候get到，什么时候监听
+- 可监听新增，删除属性
 
 ```js
 let onWatch = (obj, setBind, getLogger) => {
@@ -46,6 +49,42 @@ let p = onWatch(
 p.a = 2 // 监听到属性a改变
 p.a // 'a' = 2
 ```
+
+## 组合式API(有点像React hooks中的自定义hooks，把类似逻辑放在一起，提取成自定义hooks，包含生命周期，数据逻辑等)
+- 当组件逻辑很多很复杂时，代码会难以理解，通过组合式API把相同的逻辑放在一起，让代码逻辑更清晰
+- 把组合式API放在setup 中
+- setup 的调用发生在 data property、computed property 或 methods 被解析之前，所以它们无法在 setup 中被获取
+- setup 中 可以放 onMounted生命周期
+- setup 可以使用watch
+```js
+import { ref, onMounted, watch, toRefs } from 'vue'
+```
+
+### 新增Ref函数
+使任何响应式变量在任何地方起作用
+```js
+import { ref } from 'vue'
+
+const counter = ref(0)
+
+console.log(counter) // { value: 0 }
+console.log(counter.value) // 0
+
+counter.value++
+console.log(counter.value) // 1
+```
+
+## ref和reactive的区别
+- reactive定义复杂的数据类型的数据，定义基本类型会有警告
+- ref推荐定义基本数据类型
+- ref定义的数据打印结果需要.value才能获取到结果
+- reactive则不需要
+
+## Reflect内置对象优势
+- 和Proxy能力一一对应和Object的一些方法
+- 返回值更明确，可以知道是否设置成功
+- 规范化，标准化，函数式（使用函数更容易理解，比直接用in或者delete更好理解）
+- 慢慢替代Object，因为Object应该作为一种数据格式，不应该包含那么多工具函数
 
 ## 生命周期钩子函数
 - beforeCreate, 获取不到 props 或者 data 中的数据

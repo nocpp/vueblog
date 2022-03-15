@@ -84,6 +84,12 @@ View <==> ViewModel <==> Model
 ## setState什么时候是异步的？
 目前，在事件处理函数内部的 setState 是异步的。
 
+### setState为什么用不可变值
+- 直接操作state可能会被setState的batchUpdates覆盖
+- 会影响shouldMountUpdate，无法判断是否更新了
+
+### setState可能会合并
+
 ## React state
 - hooks中setState存在批量更新，在React事件系统函数上下文中存在批量更新，比如点击事件。但是如果在事件回调函数中异步操作setState，异步回调中将打破批量操作，变成同步操作。setState后，继续执行setState后的代码，排队更新
 - 批量更新的事件包含Effect mount事件，点击事件，函数组件的执行代码里，全部生命周期事件(应该是)...
@@ -148,6 +154,17 @@ if (state.name !== 'Alien') {
 
 ## React事件
 > React中的事件是合成事件，synthetic事件，如果更新了函数组件，会把新的回调函数传给事件，不会重复绑定
+
+## React中事件回调函数为什么bind this?
+不绑定this，这个this默认是undefined
+- 可以使用定义静态方法的形势，这样就不用绑定this
+```js
+class {
+    callback = () => {
+        
+    }
+}
+```
 
 ## React拖拽
 > 函数组件和类组件一样的效果，之前不行是因为事件和state更新理解不到位，还有就是move事件范围
