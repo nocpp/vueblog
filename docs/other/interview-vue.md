@@ -11,8 +11,8 @@ publish: true
 
 ## Vue3为什么用proxy？
 - Vue3.0 要使用 Proxy 替换原本的 API 原因在于 Proxy 无需一层层递归为每个属性添加代理，一次即可完成以上操作，性能上更好
-- Proxy支持监听数组改变，defineProperties不支持
-- Object.defineProperties 是一次全部递归，性能较差
+- Proxy支持监听数组改变，defineProperty不支持
+- Object.defineProperty 是一次全部递归，性能较差
 - Proxy 是惰性递归，性能较好，什么时候get到，什么时候监听
 - 可监听新增，删除属性
 
@@ -49,6 +49,9 @@ let p = onWatch(
 p.a = 2 // 监听到属性a改变
 p.a // 'a' = 2
 ```
+
+## 为什么Object.definePropety深度监听时不把observe放到get里，实现懒监听。而proxy可以
+因为observer里面有遍历对象属性的操作，每次get都要遍历一次，但是proxy不用，只需要劫持整个对象，时间复杂度低的多
 
 ## 组合式API(有点像React hooks中的自定义hooks，把类似逻辑放在一起，提取成自定义hooks，包含生命周期，数据逻辑等)
 - 当组件逻辑很多很复杂时，代码会难以理解，通过组合式API把相同的逻辑放在一起，让代码逻辑更清晰
@@ -639,7 +642,7 @@ vue得数据更新，会开启一个异步队列，将所有得数据变化缓�
 
 
 ## 组成部分
-- Observer, Observer的核心是通过Object.defineProperties()来监听数据的变动，这个函数内部可以定义setter和getter，每当数据发生变化，就会触发setter。这时候Observer就要通知订阅者，订阅者就是Watch
+- Observer, Observer的核心是通过Object.defineProperty()来监听数据的变动，这个函数内部可以定义setter和getter，每当数据发生变化，就会触发setter。这时候Observer就要通知订阅者，订阅者就是Watch
 - Watcher, Watcher订阅者作为Observer和Compile之间通信的桥梁
 - Compile, Compile主要做的事情是解析模板指令，将模板中变量替换成数据，然后初始化渲染页面视图，并将每个指令对应的节点绑定更新函数，添加鉴定数据的订阅者，一旦数据有变动，收到通知，更新试图
 
@@ -651,7 +654,7 @@ vue得数据更新，会开启一个异步队列，将所有得数据变化缓�
 - 可以跨平台开发，通过VDom把视图呈现在不同的平台
 
 ## Vue响应式原理
-### 核心API，Object.defineProperties()来监听数据的变动，监听对象的某个属性的变更
+### 核心API，Object.defineProperty()来监听数据的变动，监听对象的某个属性的变更
 - Vue3.0使用proxy取代，但是有兼容问题，IE11不支持
 - 如何监听对象，复杂对象，还有数组
 - 几个缺点

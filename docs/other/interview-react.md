@@ -398,3 +398,28 @@ FancyInput = forwardRef(FancyInput);
 - redux
 - ref
 - Context
+
+## 什么时候会用到React.createPortal
+在使用固定定位，或者弹窗的时候，需要把组件放到最外层（UC浏览器需要），此时需要用到React.createPortal把Dom渲染到外层Dom下
+- 父容器是BFC时
+- 固定定位
+- zIndex太小时
+
+## React异步组件
+- const SomeComponent = React.lazy(() => import('./SomeComponent'));
+- React.Suspense
+```js
+// 该组件是动态加载的
+const OtherComponent = React.lazy(() => import('./OtherComponent'));
+
+function MyComponent() {
+  return (
+    // 显示 <Spinner> 组件直至 OtherComponent 加载完成
+    <React.Suspense fallback={<Spinner />}>
+      <div>
+        <OtherComponent />
+      </div>
+    </React.Suspense>
+  );
+}
+```
