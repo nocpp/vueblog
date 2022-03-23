@@ -48,20 +48,20 @@ var arr=['12','32','89','12','12','78','12','32'];
     }
     arr=unique1(arr);
     // 速度最快， 占空间最多（空间换时间），通过对象key不重复去重
-    function unique2(array){
-        var n = {}, r = [], type;
-        for (var i = 0; i < array.length; i++) {
-            type = typeof array[i];
-            if (!n[array[i]]) {
-                n[array[i]] = [type];
-                r.push(array[i]);
-            } else if (n[array[i]].indexOf(type) < 0) {
-                n[array[i]].push(type);
-                r.push(array[i]);
-            }
-        }
-        return r;
-    }
+	function testFn(arr) {
+		const r = [];
+		let obj = {};
+		const len = arr.length;
+		
+		for (let i = 0; i < len; i++) {
+			if (!obj[arr[i]]) {
+				r.push(arr[i]);
+				obj[arr[i]] = true;
+			}
+		}
+		
+		return r;
+	}
     //数组下标判断法，从第二个开始提高性能
     function unique3(array){
         var n = [array[0]]; //结果数组

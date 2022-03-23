@@ -703,6 +703,12 @@ vue得数据更新，会开启一个异步队列，将所有得数据变化缓�
 - mapGetter
 - ...
 
+### VueX为什么有action和mutations
+- mutation 必须是同步的
+- Action 可以包含任意异步操作
+-  vuex 里面 actions 只是一个架构性的概念，并不是必须的，说到底只是一个函数，你在里面想干嘛都可以，只要最后触发 mutation 就行。异步竞态怎么处理那是用户自己的事情
+-  mutations 里的同步意义在于，每个mutation执行完毕之后，可以得到对应的状态，使用devtools可以跟踪状态的变化，不同步也行
+
 ## VueRouter
 ### 路由原理
 利用url变化来加载不同页面或者组件
