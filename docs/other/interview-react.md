@@ -88,6 +88,9 @@ View <==> ViewModel <==> Model
 ## setState什么时候是异步的？
 目前，在事件处理函数内部的 setState 是异步的。
 
+## setState传对象会合并，batchUpdates
+## setState传函数，不会合并
+
 ### setState为什么用不可变值
 - 直接操作state可能会被setState的batchUpdates覆盖
 - 会影响shouldMountUpdate，无法判断是否更新了
@@ -152,9 +155,18 @@ if (state.name !== 'Alien') {
 
 
 ## React.memo与PureComponent
-- React.memo检查 props 变更，用作函数组件性能优化，可以传入第二个参数进行比较过程，true则相等，与shouldComponentUpdate相反
+- React.memo检查 props 变更，用作函数组件性能优化，可以传入第二个参数(第二个参数是一个函数，接收preProps,newProps, 类似SCU控制更新，但是返回true代表相同，不更新)
 > 如果你的组件在相同 props 的情况下渲染相同的结果，那么你可以通过将其包装在 React.memo 中调用
 - React.PureComponent 中以浅层对比 prop 和 state 的方式来实现了该函数,shouldComponentUpdate
+
+## shouldComponentUpdate
+- 默认值是true,要更新
+- 接收两个参数，nextProps, nextState
+- 父组件更新，如果子组件没设置SCU相关的，哪怕没有数据关联，子组件也会更新
+
+### 为什么React不把shouldComponentUpdate直接实现，每次都比较，而是默认返回true
+- 如果默认实现，有些人在更改state时是直接改，比如数组用push,pop，然后再setState那个数组，会导致无法更新，因为新旧state的地址相同
+- 如果每次都深比较，当数据层次很深时，可能导致性能问题
 
 ## React事件
 > React中的事件是合成事件，synthetic事件，如果更新了函数组件，会把新的回调函数传给事件，不会重复绑定
@@ -426,4 +438,41 @@ function MyComponent() {
     </React.Suspense>
   );
 }
+```
+
+## Redux
+- store state
+- reducer
+- action，异步action
+- dispatch
+- subscribe 接收更新
+- 单向数据流
+
+### react-redux
+- Provider <Provider store={Provider}>
+- connect Com = connect(mapStateToProps, mapDispatchToProps)(Com)
+- mapStateToProps
+- mapDispatchToProps
+
+### 异步action
+- 需要引入redux-thunx
+- redux中间件的中间指的就是action和store之间
+- redux-thunk就是对dispatch做了一个升级，之前dispatch只能派发对象，升级之后传递对象和函数都可以
+- [参考](https://blog.csdn.net/qq_40319394/article/details/105204096)
+```js
+const store = createStore(rducer, applyMiddleware(thunk, logger));
+return (dispatch) => {
+	fetch(url).then(res => {
+		dispatch(addToDo(res.text))
+	})
+}
+```
+
+## React-Router
+### 懒加载
+```js
+const Com = React.lazy(() => import('../../Com'));
+<React.Suspence fallback={<Loading />}>
+	<Route path="/" component={Com}/>
+</React.Suspence>
 ```

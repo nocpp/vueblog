@@ -366,7 +366,7 @@ observer.disconnect();
 通过hasOwnProperty方法，特别是在for…in…循环(enumerable)中，一定要注意。
 
 ### instanceof原理
-Instanceof的判断准则是：沿着A的__proto__这条线来找，同时沿着B的prototype这条线来找，如果两条线能找到同一个引用，即同一个对象，那么就返回true。如果找到终点还未重合，则返回false。
+Instanceof的判断准则是：沿着A的__proto__这条线来找，然后判断与B的prototype是否相等，如果相等，那么就返回true。如果找到终点还未重合，则返回false。
 ![instance的逻辑](./img/18.jpg)
 
 ### 特点
@@ -477,7 +477,6 @@ function wait(message) {
 wait( "Hello, closure!" );
 //将一个内部函数（名为 timer）传递给 setTimeout(..)。timer 具有涵盖 wait(..) 作用域 的闭包，因此还保有对变量 message 的引用。wait(..) 执行 1000 毫秒后，它的内部作用域并不会消失，timer 函数依然保有 wait(..) 作用域的闭包。
 ```
-
 
 ## 作用域
 > 作用域是一套设计良好的存储变量和访问变量的规则
