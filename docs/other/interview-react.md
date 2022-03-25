@@ -115,6 +115,10 @@ View <==> ViewModel <==> Model
 - host component，React 应用程序的叶节点，Fiber函数的返回值，最终交给Render渲染出来（创建或者更新）
 - [参考文章](https://github.com/acdlite/react-fiber-architecture)
 
+## 纯函数
+- 输入什么，就输出什么类型
+- 没有副作用，不改变输入值
+
 ## setState什么时候是异步的？
 目前，在事件处理函数内部的 setState 是异步的。
 
@@ -441,9 +445,9 @@ FancyInput = forwardRef(FancyInput);
 ## 组件通信的方法
 - props，父传子，子传父调用父方法
 - bus通信
-- redux
+- redux，复杂的公共信息，用户管理
 - ref
-- Context
+- Context，主题色，多语言
 
 ## 什么时候会用到React.createPortal
 在使用固定定位，或者弹窗的时候，需要把组件放到最外层（UC浏览器需要），此时需要用到React.createPortal把Dom渲染到外层Dom下
