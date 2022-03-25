@@ -28,6 +28,40 @@ View <==> ViewModel <==> Model
 ### MVVM的优势
 有了ViewModel后，可以减少很多重复代码，因为有了Binder，自动把数据更新体现到视图上，也能自动把用户交互传递到VM中
 
+
+## 生命周期
+![例图](interview-react_files/1.jpg)
+### 挂载时
+- constructor
+- static getDerivedStateFromProps（props, state），它应返回一个对象来更新 state
+- --------------
+- render
+- componentDidMount
+
+### 更新时
+- static getDerivedStateFromProps(props, state)，它应返回一个对象来更新 state
+- shouldComponentUpdate()
+- render()
+- --------------
+- getSnapshotBeforeUpdate(prevProps, prevState)
+:::tip
+在最近一次渲染输出（提交到 DOM 节点）之前调用。它使得组件能在发生更改之前从 DOM 中捕获一些信息（例如，滚动位置）。此生命周期的任何返回值将作为参数传递给 componentDidUpdate()
+:::
+- componentDidUpdate(prevProps, prevState, snapshot)
+
+### 卸载
+- componentWillUnmount()
+
+### 错误处理
+- static getDerivedStateFromError()
+- componentDidCatch()
+
+
+### 不安全的
+- UNSAFE_componentWillMount()
+- UNSAFE_componentWillUpdate()
+- UNSAFE_componentWillReceiveProps()
+
 ## Diff算法，为了提升时间复杂度为O(n)
 ### 启发式算法
 - 两个不同类型的元素会产生出不同的树；
