@@ -8,6 +8,60 @@ tags:
  - Vue
 publish: true
 ---
+## Vue 原理
+- Observer：对数据对象进行递归遍历，包括子属性对象的属性，利用 Object.defineProperty() 对属性都加上 setter 和 getter
+- Compile：解析 Vue 模板指令，将模板中的变量都替换成数据，然后初始化渲染页面视图，并将每个指令对应的节点绑定更新函数，添加监听数据的订阅者，一旦数据有变动，收到通知，调用更新函数进行数据更新。
+- Watcher：订阅 Observer 中的属性值变化的消息，当收到属性值变化的消息时，触发解析器 Compile 中对应的更新视图函数，beforeMount时触发
+- Dep：订阅器采用 发布-订阅 设计模式，用来收集订阅者 Watcher，对监听器 Observer 和 订阅者 Watcher 进行统一管理，每个属性有一个dep
+
+### 顺序
+1. 从 new Vue 开始，首先通过 get、set 监听 Data 中的数据变化，同时创建 Dep 用来搜集使用该 Data 的 Watcher。
+2. 编译模板，创建 Watcher，并将 Dep.target 标识为当前 Watcher。
+3. 编译模板时，如果使用到了 Data 中的数据，就会触发 Data 的 get 方法，然后调用 Dep.addSub 将 Watcher 搜集起来。
+4. 数据更新时，会触发 Data 的 set 方法，然后调用 Dep.notify 通知所有使用到该 Data 的 Watcher 去更新 DOM。
+5. [参考](https://zhuanlan.zhihu.com/p/168768245)
+
+```js
+// 执行 new Vue 时会依次执行以下方法
+// 1. Vue.prototype._init(option)
+// 2. initState(vm)
+// 3. observe(vm._data)
+// 4. new Observer(data)
+
+// 5. 调用 walk 方法，遍历 data 中的每一个属性，监听数据的变化。
+function walk(obj) {
+  const keys = Object.keys(obj);
+  for (let i = 0; i < keys.length; i++) {
+    defineReactive(obj, keys[i]);
+  }
+}
+
+// 6. 执行 defineProperty 监听数据读取和设置。
+function defineReactive(obj, key, val) {
+  // 为每个属性创建 Dep（依赖搜集的容器，后文会讲）
+  const dep = new Dep();
+  // 绑定 get、set
+  Object.defineProperty(obj, key, {
+    get() {
+      const value = val;
+      // 如果有 target 标识，则进行依赖搜集
+      if (Dep.target) {
+        dep.depend();
+      }
+      return value;
+    },
+    set(newVal) {
+      val = newVal;
+      // 修改数据时，通知页面重新渲染
+      dep.notify();
+    },
+  });
+}
+```
+
+## Vue更新原理
+- vue在模版解析时收集依赖
+- 在一次更新中，可以迅速找到组件更新范围
 
 ## Vue3为什么用proxy？
 - Vue3.0 要使用 Proxy 替换原本的 API 原因在于 Proxy 无需一层层递归为每个属性添加代理，一次即可完成以上操作，性能上更好
@@ -644,7 +698,7 @@ vue得数据更新，会开启一个异步队列，将所有得数据变化缓�
 ## 组成部分
 - Observer, Observer的核心是通过Object.defineProperty()来监听数据的变动，这个函数内部可以定义setter和getter，每当数据发生变化，就会触发setter。这时候Observer就要通知订阅者，订阅者就是Watch
 - Watcher, Watcher订阅者作为Observer和Compile之间通信的桥梁
-- Compile, Compile主要做的事情是解析模板指令，将模板中变量替换成数据，然后初始化渲染页面视图，并将每个指令对应的节点绑定更新函数，添加鉴定数据的订阅者，一旦数据有变动，收到通知，更新试图
+- Compile, Compile主要做的事情是解析模板指令，将模板中变量替换成数据，然后初始化渲染页面视图，并将每个指令对应的节点绑定更新函数，添加鉴定数据的订阅者，一旦数据有变动，收到通知，更新视图
 
 ## 虚拟Dom
 虚拟Dom是使用JS对象来表示Dom的一种方式，一般由Tag标签，属性值，和children组成，

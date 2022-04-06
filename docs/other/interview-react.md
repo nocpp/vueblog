@@ -9,6 +9,67 @@ tags:
 publish: true
 ---
 
+## React 与 Vue 区别
+1. 数据响应逻辑不同，vue通过代理/拦截的方式，使得直接改属性值就能更新，而react要手动调用setState。所以vue能直接知道哪些属性发生了变动，所以可以使用watch和computed。而react则必须从fiberRoot开始diff才能知道
+2. 模版引擎不同，react是用JSX，vue是用template，类似html语法+自定义指令和属性。比较清晰
+3. react中组件的属性是不可变的，每次都是赋新值，而vue是直接改属性值
+4. 性能方面，react需要注意使用SCU,pureComponent,memo等减少组件不必要的刷新，如果不设置，父组件更新了，子组件也会跟着更新。而vue则不用担心这些
+
+### 共同点
+- 都是MVVM
+- 单向数据流
+- 组件化开发
+
+## React 调度
+:::tip
+GUI渲染线程和JS引擎线程是互斥的，如果JS执行占用时间过久，就会阻塞渲染，让用户感到卡顿。所以React 16引入了Fiber
+:::
+
+## React 架构分层
+### React 15及以前
+- Reconciler 层（协调器），负责找出变更的部分
+- Renderer 层（更新器），把变化的组件渲染到页面上
+- Reconciler 和 Renderer交替执行
+
+### React 16+ 架构分层
+- Scheduler(调度器)，负责任务的优先级，高优先级任务优先进入协调器。通过超时检测和自实现requestIdleCallback实现
+- Reconciler(协调器)，更新 fiber 
+	1. 之前是通过递归处理VDom树，现在改为Fiber链表，把递归流程变更为可中断的循环过程（workloop），每次循环都会判断shouldYield是否还有足够的时间，没时间就等下一次
+	2. 为变化的Virtual DOM打上代表增/删/更新的标记，不会立即渲染变更的部分。当所有组件都完成Reconciler的工作，才会统一交给Renderer进行渲染更新。
+```js
+//副作用Tag
+export const Placement = /*             */ 0b0000000000010;  // 插入节点
+export const Update = /*                */ 0b0000000000100;  // 更新fiber
+export const Deletion = /*              */ 0b0000000001000;  // 删除fiebr
+export const Snapshot = /*              */ 0b0000100000000;  // 快照
+export const Passive = /*               */ 0b0001000000000;  // useEffect的副作用
+export const Callback = /*              */ 0b0000000100000;  // setState的 callback
+export const Ref = /*                   */ 0b0000010000000;  // ref
+```
+- Renderer(更新器)，把变化的组件渲染到页面上
+
+## React 更新的过程，原理
+1. 一次更新中，React无法像vue一样直接找到更新范围，要从跟节点开始diff，查找不同，找到不同再更新，当组件很大时，就会阻塞住页面UI。所以React 16 引入 Scheduler 和 Fiber， 让浏览器空闲时处理，优先保障用户体验
+2. 所有的更新都是发生在 workInProgress 树上, 更新完之后变成current树，再渲染到页面
+3. 通过beginWork 向下调和，由fiberRoot按照child指针逐层向下调和，期间会执行函数组件，实例化类组件，diff调和子节点（复用oldFiber），打上不同effect Tag（类组件的生命周期，或者元素的增加，删除，更新）
+4. 通过completeUnitOfWork,向上归并，如果有兄弟节点，返回兄弟，否则返回父节点，一直到fiberRoot，期间形成effectList，对于初始化流程会创建Dom，对Dom进行事件收集。一上一下构成整个fiber树的调和
+5. 在commit 阶段， 不需再遍历Fiber，只需执行更新effectList，更新Dom，执行生命周期，获取Ref等
+
+## 模拟requestIdleCallback
+- 要满足能让出线程，让浏览器渲染页面，并且一次事件循环只执行一次，所以选择宏任务
+- setTimeout ，最小间隔4ms，所以没选择这个
+- MessageChannel，解决了这个问题，
+
+## React 渲染原理
+1. 组件通过JSX转为React.createElement函数
+2. createElement函数主要接收三个参数，元素名称，属性值和子元素，然后生成虚拟Dom，本质是JS对象 --> 再传递给ReactElement生成VDom
+3. 通过以上步骤，我们获取到了VDom, 然后react通过diff算法比对更新前后的VDom，找到最小差异，才更新，但是随着组件越来越大，递归更新占用的时间越来越高，会引起页面卡顿，所以引入Fiber
+4. ReactDOM.render方法，中调用了legacyRenderSubtreeIntoContainer这个方法
+5. 首次构建应用， 创建一个 fiberRoot ，作为整个 React 应用的根基
+
+## rootFiber
+通过ReactDom.render渲染出来的，创建的rootFiber, 一个应用可能由多个rootFiber，但只有一个fiberRoot--current-->rootFiber
+
 ## 什么是MVVM？和MVC的区别是什么？
 - MVVM和MVC都是架构模式
 - M代表Model，数据层，负责数据
@@ -34,8 +95,8 @@ View <==> ViewModel <==> Model
 ### 挂载时
 - constructor
 - static getDerivedStateFromProps（props, state），它应返回一个对象来更新 state
-- --------------
 - render
+- --------------
 - componentDidMount
 
 ### 更新时
@@ -119,8 +180,9 @@ View <==> ViewModel <==> Model
 - 输入什么，就输出什么类型
 - 没有副作用，不改变输入值
 
-## setState什么时候是异步的？
-目前，在事件处理函数内部的 setState 是异步的。
+## setState什么时候是同步，异步的？
+- 在原生事件回调函数，setTimout回调中是同步的
+- 在合成事件中回调是异步的
 
 ## setState传对象会合并，batchUpdates
 ## setState传函数，不会合并
