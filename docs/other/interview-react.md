@@ -10,7 +10,7 @@ publish: true
 ---
 
 ## React 与 Vue 区别
-1. 数据响应逻辑不同，vue通过代理/拦截的方式，使得直接改属性值就能更新，而react要手动调用setState。所以vue能直接知道哪些属性发生了变动，所以可以使用watch和computed。而react则必须从fiberRoot开始diff才能知道
+1. 数据响应逻辑不同，vue通过代理/拦截的方式，使得直接改属性值就能更新，而react要手动调用setState。所以vue能直接知道哪些属性发生了变动，所以可以使用watch和computed，进行组件层级的更新。而react则必须从fiberRoot开始diff才能知道，属于整体更新，并且没有设置PURE，SCU，MEMO的话，会更新所有子组件，VUE不会。
 2. 模版引擎不同，react是用JSX，vue是用template，类似html语法+自定义指令和属性。比较清晰
 3. react中组件的属性是不可变的，每次都是赋新值，而vue是直接改属性值
 4. 性能方面，react需要注意使用SCU,pureComponent,memo等减少组件不必要的刷新，如果不设置，父组件更新了，子组件也会跟着更新。而vue则不用担心这些
