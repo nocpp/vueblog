@@ -30,7 +30,7 @@ GUI渲染线程和JS引擎线程是互斥的，如果JS执行占用时间过久�
 ### React 15及以前
 - Reconciler 层（协调器），负责找出变更的部分
 - Renderer 层（更新器），把变化的组件渲染到页面上
-> Reconciler 和 Renderer交替执行
+> Reconciler 和 Renderer交替执行, 所以可能会出现更新一半的情况
 
 ### React 16+ 架构分层
 - Scheduler(调度器)，负责任务的优先级，高优先级任务优先进入协调器。通过超时检测和自实现requestIdleCallback实现
@@ -133,13 +133,14 @@ View <==> ViewModel <==> Model
 ### 对比不同类型的元素
 - 当根节点为不同类型的元素时，React 会拆卸原有的树并且建立起新的树
 
-### 对比同一类型的元素
+### 对比同一类型的Dom元素
 - 当对比两个相同类型的 React 元素时，React 会保留 DOM 节点，仅比对及更新有改变的属性
 - 在处理完当前节点之后，React 继续对子节点进行递归。
 
 ### 对比同类型的组件元素
-- React 将更新该组件实例的 props 以保证与最新的元素保持一致，并且调用该实例的 UNSAFE_componentWillReceiveProps()、UNSAFE_componentWillUpdate() 以及 componentDidUpdate() 方法
+- React 将更新该组件实例的 props 以保证与最新的元素保持一致，并且调用该实例的 UNSAFE_componentWillReceiveProps()、UNSAFE_componentWillUpdate() 
 - 下一步，调用 render() 方法，diff 算法将在之前的结果以及新的结果中进行递归
+- componentDidUpdate() 方法
 
 ### 对子节点进行递归
 - 默认情况下，当递归 DOM 节点的子元素时，React 会同时遍历两个子元素的列表；当产生差异时，生成一个 mutation。如果没有key，会销毁不同元素，然后重建，性能问题

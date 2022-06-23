@@ -206,6 +206,7 @@ document.addEventListener("visibilitychange", function() {
 *{margin:0;padding:0;}
 ```
 11. Chrome 中文界面下默认会将小于 12px 的文本强制按照 12px 显示,可通过加入 CSS 属性 -webkit-text-size-adjust: none; 解决。
+12. navigator.clipboard 获取粘贴板内容兼容问题，window电脑上无法获取，浏览器兼容，使用paste事件获取
 
 ##  渐进增强和优雅降级之间的区别
 - 渐进增强：主要是针对低版本的浏览器进行页面重构，保证基本的功能情况下，再针对高级浏览器进行效果、交互等方面的改进和追加功能，以达到更好的用户体验。
