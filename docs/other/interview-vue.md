@@ -642,7 +642,7 @@ nextTick 可以让我们在下次 DOM 更新循环结束之后执行延迟回调
 
 在 Vue 2.4 之前都是使用的 microtasks，但是 microtasks 的优先级过高，在某些情况下可能会出现比事件冒泡更快的情况，但如果都使用 macrotasks 又可能会出现渲染的性能问题。所以在新版本中，会默认使用 microtasks，但在特殊情况下会使用 macrotasks，比如 v-on。
 
-### 微任务
+### nextTick实现顺序
 - Promise
 - MutationObserver
 - setImmediate
@@ -774,3 +774,10 @@ vue得数据更新，会开启一个异步队列，将所有得数据变化缓�
 ### history模式
 - 使用hostory.pushState, history.replaceState, history.back来更改路由，同时触发路由更改事件
 - 利用popstate监听浏览器前进，返回操作
+
+## vm.$forceUpdate
+vm.$forceUpdate：迫使 Vue 实例重新渲染。注意它仅仅影响实例本身和插入插槽内容的子组件，而不是所有子组件。
+—— vm-forceUpdate文档
+
+我们需要知道一个小知识点，vm.$forceUpdate 本质上就是触发了渲染watcher的重新执行，和你去修改一个响应式的属性触发更新的原理是一模一样的，它只是帮你调用了 vm._watcher.update()（只是提供给你了一个便捷的api，在设计模式中叫做门面模式）
+- [vue 更新原理](https://www.yisu.com/zixun/153276.html)

@@ -8,6 +8,8 @@ tags:
  - 易错点
 publish: true
 ---
+## splice, setTimeout接收的参数个数
+无数个，最后一个参数可以接收无限个
 
 ## 类型转换，字面量直接调用方法
 ```js

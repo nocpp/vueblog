@@ -13,7 +13,8 @@ publish: true
 1. 数据响应逻辑不同，vue通过代理/拦截的方式，使得直接改属性值就能更新，而react要手动调用setState。所以vue能直接知道哪些属性发生了变动，所以可以使用watch和computed，进行组件层级的更新。而react则必须从fiberRoot开始diff才能知道，属于整体更新，并且没有设置PURE，SCU，MEMO的话，会更新所有子组件，VUE不会。
 2. 模版引擎不同，react是用JSX，vue是用template，类似html语法+自定义指令和属性。比较清晰
 3. react中组件的属性是不可变的，每次都是赋新值，而vue是直接改属性值
-4. 性能方面，react需要注意使用SCU,pureComponent,memo等减少组件不必要的刷新，如果不设置，父组件更新了，子组件也会跟着更新。而vue则不用担心这些
+4. 性能方面，react需要注意使用SCU,pureComponent,memo等减少组件不必要的刷新，如果不设置，父组件更新了，子组件也会跟着更新。而vue则不用担心这些。只会精确更新依赖收集的当前组件，而不会递归的去更新子组件
+5. Vue其实每个组件都有自己的渲染 watcher，它掌管了当前组件的视图更新，但是并不会掌管 ChildComponent 的更新。那么在diff的过程中，只会对 component 上声明的 props、listeners等属性进行更新，而不会深入到组件内部进行更新。
 
 ### 共同点
 - 都是MVVM
@@ -29,7 +30,7 @@ GUI渲染线程和JS引擎线程是互斥的，如果JS执行占用时间过久�
 ### React 15及以前
 - Reconciler 层（协调器），负责找出变更的部分
 - Renderer 层（更新器），把变化的组件渲染到页面上
-- Reconciler 和 Renderer交替执行
+> Reconciler 和 Renderer交替执行
 
 ### React 16+ 架构分层
 - Scheduler(调度器)，负责任务的优先级，高优先级任务优先进入协调器。通过超时检测和自实现requestIdleCallback实现

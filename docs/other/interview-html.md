@@ -223,6 +223,7 @@ document.addEventListener("visibilitychange", function() {
 ## localStorage 和 sessionStorage 和 cookie的区别
 - cookie 是网站为了标示用户身份而储存在用户本地终端上的数据（通常经过加密）
 - cookie数据始终在同源的http请求中携带（即使不需要），记会在浏览器和服务器间来回传递（优化点）
+- cookie跨域传递，前端需要配置withCrentials: true, 后端配置access-cross: '*'
 - sessionStorage 和 localStorage 不会自动把数据发给服务器，仅在本地保存
 - cookie 数据大小不能超过4k
 - sessionStorage 和 localStorage 通常限制为5M
@@ -360,7 +361,7 @@ Service Worker是谷歌发起的实现PWA（Progressive Web App）的一个关�
 > JS是单线程，无法充分发挥多核CPU的能力。WebWorker为JS创造了多线程环境，允许主线程创建Worker线程，将一些任务分配给后者运行。在主线程运行的同时，Worker 线程在后台运行，两者互不干扰。等到 Worker 线程完成计算任务，再把结果返回给主线程。
 
 ### 应用
-- 可以用于视频解码，比如一个线程获取，另一个线程解码，传给JS主线程播放
+- 可以用于直播流播放，比如一个线程获取，另一个线程解码，传给JS主线程播放
 
 ### Web Worker 有以下几个使用注意点
 - 同源限制
