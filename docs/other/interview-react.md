@@ -198,6 +198,7 @@ View <==> ViewModel <==> Model
 ## React state
 - hooks中setState存在批量更新，在React事件系统函数上下文中存在批量更新，比如点击事件。但是如果在事件回调函数中异步操作setState，异步回调中将打破批量操作，变成同步操作。setState后，继续执行setState后的代码，排队更新
 - 批量更新的事件包含Effect mount事件，点击事件，函数组件的执行代码里，全部生命周期事件(应该是)...
+- React 18全部会合并，无论是哪种，要想不被合并，就得用flushSync
 ```js
 const funC = () => {
 	const [ number , setNumber ] = React.useState(0)
@@ -574,3 +575,12 @@ const Com = React.lazy(() => import('../../Com'));
 	<Route path="/" component={Com}/>
 </React.Suspence>
 ```
+
+
+## React 18更新的内容
+- 增加根API，createRoot，添加了 React 18 的所有改进并允许使用并发功能
+- 所有的更新都将自动批处理，跳出批量更新使用flushSync
+- 已卸载组件更新状态警告
+- 不再检查返回 undefined
+- Concurrent（并发） 模式
+- 增加Transition，可以用来降低渲染优先级。分别用来包裹计算量大的 function和 value，降低优先级，减少重复渲染次数。（例如在输入框替代防抖）
