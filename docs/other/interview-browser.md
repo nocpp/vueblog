@@ -24,3 +24,4 @@ publish: true
 - Safari : webkit 内核
 - Opera : 以前是 presto 内核， Opera 现已改用Google - Chrome 的 Blink 内核
 - Chrome: Blink (基于 webkit的精简版 ，Google与Opera Software共同开发)
+- 360浏览器: 双核浏览器，Google和IE

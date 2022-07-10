@@ -20,3 +20,22 @@ publish: true
 -  React Motion 动画库
 -  React Spring 动画
 -  
+-  
+-  
+-  
+
+## UmiJS配置代理
+```js
+    proxy: {
+        '/api/h': {
+            'target': 'http://192.168.1.90:8080',
+            'changeOrigin': true,
+            'pathRewrite': { '^/api/h': '' },
+        },
+        '/api': {
+            'target': 'http://corp-api-dev.z023.cn:9020/api',
+            'changeOrigin': true,
+            'pathRewrite': { '^/api': '' },
+        }
+    },
+```
