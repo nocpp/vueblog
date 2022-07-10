@@ -388,6 +388,10 @@ function ExampleWithManyStates() {
   });
 ```
 
+## useEffect 的执行时机与它的return 执行时机
+1. 第二个参数为空数组时，组件加载和卸载时执行
+2. 第二个参数为非空数组时，依赖的值变化的时候，先渲染dom节点，再执行上一次return的，再执行本次effect函数
+
 ## useEffect与componentDidUpdate和componentDidMount的区别
 - 与 componentDidMount、componentDidUpdate 不同的是，在浏览器完成布局与绘制之后，传给 useEffect 的函数会延迟调用。这使得它适用于许多常见的副作用场景，比如设置订阅和事件处理等情况，因此不应在函数中执行阻塞浏览器更新屏幕的操作。
 - 然而，并非所有 effect 都可以被延迟执行。例如，在浏览器执行下一次绘制前，用户可见的 DOM 变更就必须同步执行，这样用户才不会感觉到视觉上的不一致。（概念上类似于被动监听事件和主动监听事件的区别。）React 为此提供了一个额外的 useLayoutEffect Hook 来处理这类 effect。
