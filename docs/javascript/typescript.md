@@ -21,3 +21,7 @@ publish: true
 - Omit，返回一个类型，可以删除一些属性的类型，剩余类型必须传
 - Pick
 - Exclude
+
+
+## React中获取一个组件的属性值
+- React.componentProps<Select.Option>可以获取
