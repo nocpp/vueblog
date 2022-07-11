@@ -584,3 +584,28 @@ const Com = React.lazy(() => import('../../Com'));
 - 不再检查返回 undefined
 - Concurrent（并发） 模式
 - 增加Transition，可以用来降低渲染优先级。分别用来包裹计算量大的 function和 value，降低优先级，减少重复渲染次数。（例如在输入框替代防抖）
+
+
+## 自定义Hook
+- 利用自定义hook，可以提取很多通用逻辑，减少重复代码
+- 比如可以使用ahooks 的 useRequest，可以减少对loading控制，生命周期控制的书写
+- 可以用来动态改变title
+
+## React hook和闭包
+- 如果在hook中加载生命周期或者卸载生命周期时，获取state且只执行一次那种，无论该state如何变化，在Effect hook中state永远是第一次的值
+```jsx
+const [data, setData] = React.useState();
+React.useEffect(() => {
+	console.log(data);//永远是第一次的data
+	return () => {
+		console.log(data);//永远是第一次的data
+	}
+}, []);
+
+React.useEffect(() => {
+	console.log(data);//是最新的data
+	return () => {
+		console.log(data);//是最新的data
+	}
+}, [data]);
+```
