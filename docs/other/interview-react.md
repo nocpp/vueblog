@@ -449,7 +449,7 @@ function Example() {
   // ...
 }
 ```
-- useReducer，可以通过 reducer 来管理组件本地的复杂 state, state 逻辑较复杂且包含多个子值，或者下一个 state 依赖于之前的 state 等 比 useState 更适合。
+- useReducer，可以通过 reducer 来管理组件本地的复杂 state, state 逻辑较复杂且包含多个子值，或者下一个 state 依赖于之前的 state 等, 比 useState 更适合。当有多个state相互依赖，多次setState时，用useReducer可以使代码更清晰，把共同改变state的逻辑提出去，使代码更有逻辑性和阅读性。单个state，没什么关联的就用useState就好，useReducer的action并不局限于一定要type对象格式，任意格式都行。
 > 接收一个形如 (state, action) => newState 的 reducer
 ```js
 const initialState = {count: 0};
@@ -544,6 +544,7 @@ function MyComponent() {
 ```
 
 ## Redux
+可预测的状态容器
 - store state
 - reducer
 - action，异步action
