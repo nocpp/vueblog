@@ -544,7 +544,10 @@ function MyComponent() {
 ```
 
 ## Redux
-可预测的状态容器
+可预测的状态容器，给我们提供了一个可预测的状态容器，比如reducer函数。
+> 可预测是函数式编程的一个概念，意思就是一个函数，当给定相同的输入时，纯函数总是返回一致的输出，并且永远不会产生超出函数范围的效果，使它们可以预测。纯函数不管执行多少次，结果都是可预测的。
+
+
 - store state
 - reducer
 - action，异步action
@@ -553,6 +556,7 @@ function MyComponent() {
 - 单向数据流
 
 ### react-redux
+扮演了什么样的角色：把store中存的state，可以转为react组件中props，就是react-redux做的事情。
 - Provider <Provider store={Provider}>
 - connect Com = connect(mapStateToProps, mapDispatchToProps)(Com)
 - mapStateToProps
@@ -592,9 +596,11 @@ const Com = React.lazy(() => import('../../Com'));
 
 
 ## 自定义Hook
+从mixin，到hoc （装饰器模式）【react redux connect就是】，然后render Props(代理模式)【react router就是这种模式，childern传入函数，接受变量】, 再到自定义hook,都是为了复用react代码。
 - 利用自定义hook，可以提取很多通用逻辑，减少重复代码
 - 比如可以使用ahooks 的 useRequest，可以减少对loading控制，生命周期控制的书写
 - 可以用来动态改变title
+
 
 ## React hook和闭包
 - 如果在hook中加载生命周期或者卸载生命周期时，获取state且只执行一次那种，无论该state如何变化，在Effect hook中state永远是第一次的值
