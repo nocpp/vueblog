@@ -135,7 +135,7 @@ function debounce(fn, delay){
 ```
 
 ## 闭包的作用
-- 保存变量，封装事故
+- 保存变量，封装
 - 实现单例模式
 - 节流防抖
 - 封装工具类，递归
@@ -275,7 +275,7 @@ Function.prototype.myCall = function(context, ...args) {
                     if (this.state === PENDING) {
                         this.state = REJECTED;
                         this.reason = _value;
-                        this.sbList.forEach(_item => _item());
+                        this.fbList.forEach(_item => _item());
                     }
                 }
                 
