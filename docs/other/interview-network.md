@@ -63,7 +63,7 @@ publish: true
 - Set-Cookie
 
 ## get、post的区别
-1. get传参方式是通过地址栏URL传递，是可以直接看到get传递的参数，post传参方式参数URL不可见，get把请求的数据在URL后通过？连接，通过&进行参数分割。psot将参数存放在HTTP的包体内
+1. get传参方式是通过地址栏URL传递，是可以直接看到get传递的参数，post传参方式参数URL不可见，get把请求的数据在URL后通过？连接，通过&进行参数分割。post将参数存放在HTTP的包体内
 2. get传递数据是通过URL进行传递，对传递的数据长度是受到URL大小的限制，URL最大长度是2048个字符。post没有长度限制
 3. get后退不会有影响，post后退会重新进行提交
 4. get请求可以被缓存，post不可以被缓存
