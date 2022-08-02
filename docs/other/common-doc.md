@@ -39,3 +39,8 @@ publish: true
         }
     },
 ```
+
+
+## VSCode常用快捷键
+- ctrl + p 搜索文件名
+- F8 快速跳转错误的地方
