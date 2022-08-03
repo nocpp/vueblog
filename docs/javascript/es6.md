@@ -291,7 +291,7 @@ foo
 > Generator 函数返回的是生成器对象
 ```js
 function* gen(x) {
-  var y = yield x + 2;
+  var y = yield x + 2;//把 yield 看作特殊的return好理解
   return y;
 }
 

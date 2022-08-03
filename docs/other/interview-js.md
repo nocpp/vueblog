@@ -299,6 +299,7 @@ js引擎存在monitoring process进程，会持续不断的检查主线程执行
 - setTimeout/setInterval
 - setImmediate,I/O(Node)
 - requestAnimationFrame
+- MessageChannel
 
 ### 有哪些是微任务（microtask queue）
 - 原生Promise.then

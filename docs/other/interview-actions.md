@@ -368,7 +368,7 @@ Function.prototype.myCall = function(context, ...args) {
                 const handleData = (data, index) => {
                     result[index] = data;
                     
-                    if (index === len - 1) {
+                    if (index === len - 1) {//可能有时序问题
                         _resolve(result);
                     }
                 };
@@ -461,7 +461,7 @@ sort方法在chrome的V8引擎里有两种排序方法：
         //sort函数
         let testArr = [5, 4, 1, 2, 3];
         testArr.sort((a, b) => (a - b));//增序
-        testArr.sort((a, b) => (b - a));//增序
+        testArr.sort((a, b) => (b - a));//降序
         
         //选择排序
         for (let i = 0; i < testArr.length - 1; i++) {
