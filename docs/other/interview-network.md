@@ -450,7 +450,7 @@ URI 是统一资源标识符，而 URL 是统一资源定位符，URL是URI的�
 [参考文章](https://blog.51cto.com/14557673/2440993)
 
 ## 说一下CORS？
-CORS是一种新标准，支持同源通信，也支持跨域通信。fetch是实现CORS通信的
+CORS是一种新标准，支持同源通信，也支持跨域通信。
 
 ## 如何中断ajax请求？
 一种是设置超时时间让ajax自动断开，另一种是手动停止ajax请求，其核心是调用XML对象的abort方法，ajax.abort()

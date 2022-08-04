@@ -22,9 +22,12 @@ publish: true
 - 浏览器性能调优（Chrome开发工具的使用）
 - Webpack
 - 网络协议
-- TypeScript
-- Nodejs
 - PgRest
+
+- TypeScript [doing]
+- Nodejs [doing]
+- SSR 
+- Threejs 3D方向
 
 ## 常见问题
 ### 什么是闭包？

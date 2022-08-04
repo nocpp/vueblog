@@ -214,6 +214,11 @@ fs.stat("./avatar/a.txt", (err, data) => {
 })
 ```
 
+### 文件是否存在
+```js
+fs.existsSync();
+```
+
 ### 使用同步方法
 ```js
 fs.readFileSync //以上方法都可以加上sync变成同步，但是需要用try catch包裹，不然报错就会程序退出。会影响其他人使用，卡住
@@ -306,9 +311,63 @@ function decrypt(key, iv, crypted) {
 }
 ```
 
+### path 内置模块，处理linux和windows路径，不同系统，斜线不同
+```js
+path.join(__dirname, '/static', '/css/login.css'); //拼接路径
+```
+
 ## 路由，url和资源的一个映射，可能是页面或者接口或者文件
 > route 就放路由，页面
 > api 放接口
 
+## 静态服务路由
+- 返回的css文件，js文件，需要根据文件类型返回对应Content-Type,使用mime模块可以解决
+
+## node全局变量
+- __dirname 当前路径
+
+
+
+## Express 框架
+> 快速，开放，极简的框架，由路由和中间件组成
+- app = express() 函数，生成一个服务，类似http.createServer
+- app.get, res.send 函数，自动end，会自动判断返回内容，生成对应Content-Type
+- app.get的第三个参数，回调的next方法，就是中间件
+- app.get的第二个参数可以传函数数组
+
+### 路由
+- 字符串，固定字符串
+- 字符串模式，带参数，支持动态匹配，类似正则。也可以直接写正则表达式作为url
+
+
+## 中间件
+> 以为把代码都放入回调函数中，回调函数会很臃肿，并且代码复用性不好，所以抽出中间件的概念，把处理函数分为多个中间件，这样更好理解，其它地方也能复用中间件。本质就是一个函数
+- 中间件之间如何通信，可以在res中上加属性值
+- 中间件三个参数，req，res，和next。如果中间没有next，就会挂起
+
+### 中间件类别
+- 应用级, 挂在app上面的都叫做应用级中间件
+```js
+app.use(func1) //全部，注意先后顺序，只管他后面的
+app.use('/home', func1) //只响应/home
+```
+- 路由级
+挂在路由对象上
+```js
+const router = express.Router();
+router.get('/home', (req, res) => {});
+router.post();
+```
+- 错误处理
+- 内置
+- 第三方
+
 ## 常用工具
 - nodemon 保存后自动重启node服务，不重新运行会不生效
+- mime 模块，文件类型返回对应Content-Type
+
+
+## 思考
+- 麻烦的东西封装成模块或者找第三方模块
+- 学指定新东西时，要专注于这个技术本身，其他不相关的尽量简单，这样才能高效。比如学node，涉及到样式啥的都按最简单的来。发散的东西可以先记录，下次补充
+- 自己学学SSR，手动试试
