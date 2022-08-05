@@ -507,6 +507,11 @@ ARP和RARP(Reverse Address Resolve Protocol)即逆地址解析协议，该协议
 	+ TCP连接只能是点到点、一对一的。字节流
 	+ UDP支持一对一，一对多，多对一和多对多的交互通信。
 
+- GET产生一个TCP数据包；POST产生两个TCP数据包。
+	+ 对于GET方式的请求，浏览器会把http header和data一并发送出去，服务器响应200（返回数据）；
+	+ 而对于POST，浏览器先发送header，服务器响应100 continue，浏览器再发送data，服务器响应200 ok（返回数据）。
+> 并不是所有浏览器都会在POST中发送两次包，Firefox就只发送一次。
+
 :::tip
 TCP是一个面向连接的、可靠的、基于字节流的传输层协议。
 而UDP是一个面向无连接的传输层协议。(就这么简单，其它TCP的特性也就没有了)。

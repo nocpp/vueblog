@@ -332,7 +332,7 @@ path.join(__dirname, '/static', '/css/login.css'); //拼接路径
 > 快速，开放，极简的框架，由路由和中间件组成
 - app = express() 函数，生成一个服务，类似http.createServer
 - app.get, res.send 函数，自动end，会自动判断返回内容，生成对应Content-Type
-- app.get的第三个参数，回调的next方法，就是中间件
+- app.get的第三个参数，回调的next方法，就是中间件，如果next传参数，就是传error，下一个中间件的回调第一个参数就是error
 - app.get的第二个参数可以传函数数组
 
 ### 路由
@@ -350,22 +350,102 @@ path.join(__dirname, '/static', '/css/login.css'); //拼接路径
 ```js
 app.use(func1) //全部，注意先后顺序，只管他后面的
 app.use('/home', func1) //只响应/home
+app.get('/')
+app.post('/')
+app.use(express.static('public')); //托管静态文件，直接就可以吧public文件夹里的静态资源直接访问了
+app.use('/static', express.static('public')); //虚拟目录，访问static就等同于public
 ```
 - 路由级
 挂在路由对象上
 ```js
 const router = express.Router();
-router.get('/home', (req, res) => {});
-router.post();
+app.use(express.urlencoded({ extended: false }));//配置解析post参数的中间件，这是响应x-www-form-urlencoded 格式
+app.use(express.json()); //配置解析post参数的中间件，解析json格式参数
+router.get('/home', (req, res) => {});//通过req.query获取参数
+router.post(); //参数通过req.body获取参数，但是必须配置中间件
+//
 ```
 - 错误处理
 - 内置
 - 第三方
 
+## 服务端渲染（SSR）和客户端渲染（BSR）
+- 客户端渲染，由前端组装页面，前后端分离，一定能找到提供数据的接口
+- SSR的网站找不到数据的接口，在服务端就组装好了数据页面了
+	+ 前端做好静态页面，模版，假数据，做好跳转
+	+ 后端取数据，删除模版的假数据，利用模版语法替换假数据
+> 同构JS应用既能seo（服务端renderToString），又能快速交互（前端路由）。jsp只是前者。而且用三大框架开发，只操作数据，对比以前拿到数据后还要手动更新dom节点来说，方便了很多，代码量也少了不少，代码都是复用的，一端编写，两端执行
+
+
+### 老的JSP，PHP这种纯服务端渲染缺点
+> 解决办法，前后端分离（解决开发维护问题），动态静态分离（解决并发问题，减轻服务器压力，静态资源加载更快并且可以缓存加速，但是html是算静态还是动态呢？所以有了前后分层）
+- 耦合性不好，前端改个字，然后前后端都要重新部署
+- 开发协作困难，维护性不好，前后端代码都在一起
+- 性能不好，数据逻辑和视图逻辑每次请求后都要执行，动态生成html
+- 服务器成本高，由于Tomcat/Apache并发能力不如nginx，所以需要更多服务器
+
+:::tip
+- 静态资源:图片、CSS、JS等公共资源，与特定用户无关的资源  
+- 动态资源:应用逻辑、数据操作等与特定用户密切相关的资源 
+:::
+
+### 前后端分离
+> 前端后端都可以操作视图层，客户端驱动的话，不需要刷新页面，就可以通过ajax请求数据更新页面，还可以减轻服务器压力，所以把视图逻辑放到客户端
+### SPA应用的缺点
+- 依赖客户端的设备
+- 首屏性能问题，组件树渲染前，白屏问题，是因为组件渲染进程是同步阻塞的，影响了首屏性能问题，性能较差的设备，白屏很长时间
+	+ 性能较差的设备，白屏很长时间
+	+ 网络较差，会加载很长时间
+- SEO问题
+- [参考](http://www.ayqy.net/blog/diference-between-ssr-and-jsp-php/)
+
+### 还有SSG 生成静态的网站，可以和SSR结合使用，NEXT框架
+
+
+### 服务端渲染（频繁更新的，首页用SSR，其余静态生成）
+- 首屏采用服务端渲染，解决白屏问题，确保首屏打开更快速，更稳定
+- 更成熟，基于前端组件化开发，现代生态，基于NODEJS同构方案成为最佳体验
+- 独立性，仍然是前后端分层
+- EJS模版
+
+## EJS模版渲染
+```js
+app.use("views", '/views')
+app.use("view engine", "ejs")
+
+//router中使用res.render方法
+res.render('loign', { title: '111' });
+res.redirect('home'); //重定向
+```
+### 支持直接渲染html
+```js
+app.use("view engine", "html");
+app.engine("html", require("ejs").renderFile)
+```
+
+## 关系型数据库和非关系型数据库
+- 关系型，表表和有关联，删除的话会删除关联表的内容，外键关系等，用sql语句
+- 非关系型，no sql，not only sql，轻量高效，mongoDB, redis等，不用sql语句，使用BSON的方式
+
+## MongoDB
+> 轻量，查询很快，耗内存
+### 术语
+- 数据库
+- 集合/表
+- 文档/数据行
+- 域/字段
+- 索引
+- 主键
+
+### 命令
+- use 创建数据库
+- db 查看当前数据库
+- show dbs 看全部
+
 ## 常用工具
 - nodemon 保存后自动重启node服务，不重新运行会不生效
 - mime 模块，文件类型返回对应Content-Type
-
+- FeHelper Chrome 插件
 
 ## 思考
 - 麻烦的东西封装成模块或者找第三方模块
