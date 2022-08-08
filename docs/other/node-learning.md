@@ -425,7 +425,8 @@ app.engine("html", require("ejs").renderFile)
 
 ## 关系型数据库和非关系型数据库
 - 关系型，表表和有关联，删除的话会删除关联表的内容，外键关系等，用sql语句
-- 非关系型，no sql，not only sql，轻量高效，mongoDB, redis等，不用sql语句，使用BSON的方式
+- 非关系型，no sql，not only sql，轻量高效，mongoDB, redis等，不用sql语句，使用BSON的方式。语句方法类似JS调用方法
+- MongoDB一个集合里，字段可以不一致，数量也可以不同，很自由[但是要限制]
 
 ## MongoDB
 > 轻量，查询很快，耗内存
@@ -441,13 +442,83 @@ app.engine("html", require("ejs").renderFile)
 - use 创建数据库
 - db 查看当前数据库
 - show dbs 看全部
+- db.createCollection 创建集合/表
+- db.dropDatabase 删除数据库
+- db.getCollectionNames 查询所有数据库
+- db.[集合名].dorp() 删除集合
+- db.[集合名].save({ name: "张三" }) 给集合插入数据
+- db.[集合名].update() 更新
+- db.[集合名].remove（{"myAge": 100}) 删除myAge是100的数据，传空对象是删除所有
+- db.[集合名].update({"name": "张三"}, {$set: {"age": 200}}) 更新, 不加$set，会是直接替换
+- db.[集合名].update({"name": "张三"}, {$inc: {"age": 200}}) 更新, $inc 增加
+- db.[集合名].update({"name": "张三"}, {$inc: {"age": -200}}) 更新, 减
+
+
+### 查询命令
+- db.[集合名].find({"user": "az", "password": 100}) 条件查询, 不传条件就查所有
+- db.[集合名].find({"age": {"$gte": 100}}) 条件查询, 大于100
+- db.[集合名].distinct("name") 查询某字段，去重复
+- db.[集合名].find(/k/) 模糊查询，用正则写法 
+- db.[集合名].find({}, {name: 1, age: 1, _id: 0}) 只查某个列/域，就不会返回_id
+- db.[集合名].find({}).sort({age: -1}) 排序，1是升序, -1是倒序
+- db.[集合名].find({}).skip(5).limt(5) 分页，查询5-10条
+- db.[集合名].find({"$or": [{age: {$gte: 100}}]}) 或
+- db.[集合名].findOne() 查询第一条
+- db.[集合名].find().count() 聚合查询，查询数量
+
+
+### nodejs操作mongoDb
+```js
+const mongoose = require("mongoose");
+mongoose.connect("mongodb://127.0.0.1:27017/[数据库名字]");
+
+//连接完成后，用模型，可以限制类型去关联集合，操作
+const mongoose = require("mongoose");
+const UserType = {
+    username: String,
+    password: String,
+    age: Number
+};
+const Schema = mongoose.Schema();
+const userModal = mongoose.useModel("user", new Schema(UserType)); //userModal会对应user集合，并且会自动创建user
+```
+
+## RestFul API 风格
+> url中只包含资源名称，利用请求method来区分创建还是修改，请求参数模版，page，limit, offet, orderBy
+```js
+// api/getUserList GET 这种不是   api/user GET 这种是
+// api/updateUserList POST 这种不是   api/user PUT 这种是
+// api/AddUserList POST 这种不是   api/user POST 这种是
+// api/DelUserList POST 这种不是   api/user/:id DELETE 这种是
+```
+
+### graphql 
+根据前端，自己获取想要的字段
+
+## MVC架构
+> 当业务变得很复杂时，不分层会很难理解和维护，以及复用
+- 把业务抽象为控制层
+- 目录结构就有了
+    + routes 路由层
+    + controllers 路由里的回调函数，逻辑处理
+    + model 直接操作数据库
+    + services  调model的方法
+    + view 视图层
+
+## cookie和session
+- cookie 是存在客户端
+- session 是存在服务端，与cookie结合，用cookie存储sessionId
 
 ## 常用工具
 - nodemon 保存后自动重启node服务，不重新运行会不生效
 - mime 模块，文件类型返回对应Content-Type
 - FeHelper Chrome 插件
+- Robomongo 可视化MongoDB工具
+- mongoose nodejs链接mongodb
+- express-session 生成session的模块
 
 ## 思考
 - 麻烦的东西封装成模块或者找第三方模块
 - 学指定新东西时，要专注于这个技术本身，其他不相关的尽量简单，这样才能高效。比如学node，涉及到样式啥的都按最简单的来。发散的东西可以先记录，下次补充
 - 自己学学SSR，手动试试
+- 随着代码越来越多，越来越复杂，要抽象分层
