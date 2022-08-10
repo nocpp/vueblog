@@ -504,10 +504,18 @@ const userModal = mongoose.useModel("user", new Schema(UserType)); //userModal�
     + model 直接操作数据库
     + services  调model的方法
     + view 视图层
-
+r
 ## cookie和session
 - cookie 是存在客户端
-- session 是存在服务端，与cookie结合，用cookie存储sessionId
+- session 是存在服务端，与cookie结合，用cookie存储sessionId。解决cookie可能被盗用session服务端可以控制它失效
+
+### session缺点
+- 多个服务时，session复制的问题，可以通过专门弄个数据库存解决
+- 安全问题，浏览器会自动发送cookie。（请求伪造，CSRF）
+
+## JWT解决cookie问题 Json Web Token
+- 存在localStorage中，避免被串改
+- 可以避免CSRF，请求不会自动携带token
 
 ## 常用工具
 - nodemon 保存后自动重启node服务，不重新运行会不生效
@@ -516,6 +524,23 @@ const userModal = mongoose.useModel("user", new Schema(UserType)); //userModal�
 - Robomongo 可视化MongoDB工具
 - mongoose nodejs链接mongodb
 - express-session 生成session的模块
+- connect-mongo
+- jsonwebtoken 模块 JWT
+- axios
+	+ 拦截器，interceptors 可以在请求前，响应后执行某个方法，任何地方都会调用
+- multer 处理 multipart/form-data 格式，上传文件
+- apidoc API文档生成工具，抓取注释色生成文档
+
+## Koa 和 Express 的区别
+- Express 上手更容易，生态更丰富，基于connext中间件模型，是线性的，流水线般，如果一个中间件没有执行next，就会卡住
+- Koa 不会提供内置中间件，更轻量
+- Koa Context 参数
+- Koa 洋葱模型
+- Express 使用回调处理异步，Koa v1使用generator , v2使用async await
+- next不同，Koa的next控制权会回到自己，是Promise的，Express 的next不是
+
+## Koa 中 回调参数不同
+> (ctx, next)
 
 ## 思考
 - 麻烦的东西封装成模块或者找第三方模块
