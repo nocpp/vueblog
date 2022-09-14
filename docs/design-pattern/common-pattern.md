@@ -165,7 +165,6 @@ class extends WrappedComponent {
 - 发布订阅模式有个调度中心，可以通过它知道有哪些订阅者
 - 观察者模式是发布者直接与订阅者沟通
 
-
 ## 门面模式
 例如Vue.$forceUpdate, 只是提供给你了一个便捷的api
 

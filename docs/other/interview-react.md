@@ -62,7 +62,7 @@ export const Ref = /*                   */ 0b0000010000000;  // ref
 - MessageChannel，解决了这个问题，
 
 ## React 渲染原理
-1. 组件通过JSX转为React.createElement函数
+1. 组件通过render函数或者函数组件的return,使JSX转为React.createElement函数
 2. createElement函数主要接收三个参数，元素名称，属性值和子元素，然后生成虚拟Dom，本质是JS对象 --> 再传递给ReactElement生成VDom
 3. 通过以上步骤，我们获取到了VDom, 然后react通过diff算法比对更新前后的VDom，找到最小差异，才更新，但是随着组件越来越大，递归更新占用的时间越来越高，会引起页面卡顿，所以引入Fiber
 4. ReactDOM.render方法，中调用了legacyRenderSubtreeIntoContainer这个方法
