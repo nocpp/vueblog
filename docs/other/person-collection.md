@@ -14,6 +14,10 @@ publish: true
 2. 在大前端中，可以更有效的进行开发，前端负责接口层，后端只负责数据和底层
 [参考](https://www.imooc.com/article/293310/)
 
+## 参考书
+- [代码整洁之道](https://github.com/glen9527/Clean-Code-zh/blob/master/docs/ch1.md)
+- [重构](https://github.com/NxeedGoto/Refactoring2-zh)
+
 ## 需要掌握的知识
 - JS（基础面试题，手写代码题，算法题）
 - CSS，HTML（常见布局，flex，grid，position）
