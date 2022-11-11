@@ -9,6 +9,9 @@ tags:
 publish: true
 ---
 
+## sub 和 sup
+> 可以用来显示上标和下标，比如2^10 = 2 <sup>10</sup>,sub是下标，两者不能同时使用
+
 ## 为什么前端人员要熟悉nodejs
 1. 了解Server端开发后，更容易理解后端开发，和后端沟通
 2. 在大前端中，可以更有效的进行开发，前端负责接口层，后端只负责数据和底层
@@ -73,3 +76,18 @@ yarn --update-checksums
 
 ## 园区代开
 - 园区个人代开，是指地方政府指定的税收优惠园区，园区内进行纳税可以享受到一定的税收扶持和优惠，通过园区内进行办理个人代开优势也更多，因为个人代开每个地方限制不同，园区自然人代开是运用了核定征收，综合税率在1.5%左右，完税后有完税凭证。
+
+## 上下文无关文法
+- [上下文无关文法](https://www.zhihu.com/question/21833944/answer/307309365)
+
+## JSON序列化三种情况
+```js
+JSON.parse(JSON.stringify({num: NaN}))
+{num: null}num: null[[Prototype]]: Object
+
+JSON.parse(JSON.stringify({num: undefined}))
+{}
+
+JSON.parse(JSON.stringify({num: null}))
+{num: null}
+```
