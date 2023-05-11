@@ -9,6 +9,16 @@ tags:
 publish: true
 ---
 
+## 搜索引擎调教
+### 不看某个网站结果
+```shell
+如何学习看一本书？- csdn
+```
+### 只搜索某个网站结果
+```shell
+site:xiaohongshu.com 护士科研
+```
+
 ## sub 和 sup
 > 可以用来显示上标和下标，比如2^10 = 2 <sup>10</sup>,sub是下标，两者不能同时使用
 
@@ -91,3 +101,24 @@ JSON.parse(JSON.stringify({num: undefined}))
 JSON.parse(JSON.stringify({num: null}))
 {num: null}
 ```
+
+
+## 小程序生命周期Taro
+### 冷启动
+1. componentDidMount
+2. onLaunch
+3. onShow(componentDidShow)
+4. onHide
+
+### 热启动
+1. componentDidShow
+
+### 页面生命周期
+1. 小程序跳转页面生命周期（冷启动，热启动）componentDidMount和componentDidShow都执行
+2. 普通打开小程序，热启动只执行componentDidShow
+
+## 锁包机制
+- package.json 和 package.lock 关系，npm安装依赖时，看看lock是否和package兼容，兼容的话，就用lock中的，否则用package
+- yarn.lock，yarn安装时，使用yarn.lock
+- cnpm，没有锁
+- pnpm，使用pnpm.lock.yaml，可以用pnpm import

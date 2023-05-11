@@ -91,6 +91,30 @@ Point.age = 10; //静态属性
 Point.prototype.test = function(){};
 ```
 
+### Promise异常处理
+```js
+const proM = () => {
+	return new Promise((resolve, reject) => {
+		reject('hello')
+	})
+}
+
+async function main () {
+	await proM() // 没处理异常，会报错
+	proM() // 同样会报错
+	
+	proM().catch(e => console.log(e))  // OK
+	try{
+		proM()  // 同样会报错
+		await proM()  // OK
+	}catch(e){
+		//TODO handle the exception
+	}
+}
+
+main()
+```
+
 ### Promise是什么？
 Promise 对象用于表示一个异步操作的最终完成 (或失败)及其结果值。
 
@@ -329,3 +353,57 @@ result.value.then(function(data){
 
 ## ['10', '10', '10', '10', '10'].map(parseInt) 的输出值是什么？
 - [10, NaN, 2, 3, 4]
+
+## js装饰器简单理解
+> 装饰器（Decorator）是一种与类（class）相关的语法，用来注释或修改类和类方法。
+```js
+@frozen
+class Foo {
+	@configurable(false)
+	@enumerable(true)
+	method() {}
+	
+	@throttle(500)
+	expensiveMethod() {}
+}
+```
+上面用了四个装饰器，一个用在类本身，另外三个用在类函数上
+### 类装饰
+装饰器对类的行为的改变，是在代码编译时发生的，而不是运行时
+```js
+// 上面个类等同于
+Foo = frozen(Foo) || Foo;
+```
+### 方法装饰
+与装饰类不同，对类方法的装饰本质是操作起描述符，可以看作是Object.defineProperty的语法糖
+
+### 装饰器的参数
+- target
+- name
+- descriptor
+
+## JS的get和set属性
+```js
+// js里class有get和set两种修饰符
+class Obj {
+    c=1
+    get a(){
+        this.c = "修改后的c"
+        return "a的值"
+    }
+ 
+}
+ 
+const obj = new Obj()
+obj.a 
+```
+
+## ES版本
+- ES6->ES10
+[ES6->ES10](https://juejin.cn/post/6844903811622912014)
+- ES11
+[ES11](https://juejin.cn/post/6883306672064987149)
+- ES12
+[ES12](https://juejin.cn/post/6973838198891872269)
+- ES13
+[ES13](https://juejin.cn/post/7144852096024576036)
