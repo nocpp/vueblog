@@ -564,6 +564,13 @@ db
 	}, {
 		$sort: { "counter": -1 }
 	}])
+	
+    {
+        $group: {
+            _id: null, // 这样就是查询总次数
+            counter: {$sum: 1}
+        }
+    }
 ```
 ### 查询页面总次数
 ```shell
@@ -578,7 +585,8 @@ db
 		$group: {_id: "_id", counter: {$sum: 1}}
 	}])
 ```
-
-101834
-
-133559
+### 查询条数
+```shell
+const count = await db.collection('collectionName').countDocuments(query);
+console.log('创建时间大于昨日的记录条数:', count);
+```

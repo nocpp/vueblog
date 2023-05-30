@@ -122,3 +122,52 @@ JSON.parse(JSON.stringify({num: null}))
 - yarn.lock，yarn安装时，使用yarn.lock
 - cnpm，没有锁
 - pnpm，使用pnpm.lock.yaml，可以用pnpm import
+
+## Taro版本控制
+如果发现不一致的情况可以使用 Taro 升级命令 taro update self [版本号] 和 taro update project [版本号]来分别将 CLI 和项目依赖升级到指定版本；或者也可以手动安装相应版本 CLI，修改 package.json 依赖版本号，然后重装依赖来解决。
+
+## vim常用快捷键
+```shell
+gg 回到开头
+shift+g 到结尾
+
+w 向右跳光标
+b 向左跳光标
+
+向下翻一页：Ctrl + f 或 PageDown
+向上翻一页：Ctrl + b 或 PageUp
+向下翻半页：Ctrl + d
+向上翻半页：Ctrl + u
+
+0 回到当前行首
+$ 跳到当前行尾
+
+:set cursorline 高亮光标
+
+
+:changes 查看修改历史
+
+p：粘贴
+u：撤消上一步操作
+Ctrl+r：重做上一步操作
+/：进入搜索模式
+n：查找下一个匹配项
+N：查找上一个匹配项
+
+i：进入插入模式
+Esc：退出插入模式
+:w：保存文件
+:q：退出 Vim
+:wq：保存并退出 Vim
+:x：保存并退出 Vim
+:q!：强制退出 Vim
+dd：删除当前行
+yy：复制当前行
+
+:set number：显示行号
+:set nonumber：隐藏行号
+
+:set cursorline 设置光标下划线
+:set nocursorline 设置不要光标下划线
+:highlight CursorLine guibg=yellow ctermbg=yellow 设置光标下划线样式
+```

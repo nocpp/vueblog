@@ -326,6 +326,21 @@ Firefox是取的（10%和7天的最小值）
     
 - 使用方式：
     服务器端进行配置，开始gzip，然后请求头增加Accept-Encoding: gzip即可，服务器会对它进行压缩
+	
+### nginx开启gzip
+```txt
+开启状态
+开启类型
+大小限制，最小多少开启
+在以下条件禁止
+gzip on;
+gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+gzip_min_length 1024;
+gzip_disable "MSIE [1-6]\.";
+```
+### 检查是否开启成功
+1. 观察响应头是否有Content-Encoding: gzip 
+2. 在火狐开发者工具中，网络选项卡，对比同一资源传输尺寸和实际尺寸
 
 :::tip
 启用方法

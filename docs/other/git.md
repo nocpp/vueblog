@@ -50,11 +50,32 @@ upstream https://github.com/user1/repository.git (push)
 
 ## git merge和rebase
 - [merge 和 rebase](https://www.jianshu.com/p/fbf46dd9e71d)
+```shell
+ // 如果您的本地分支名为master，远程分支名为origin/master，则可以使用以下命令将它们合并：
+git merge origin/master
+// 如果您的本地分支名为master，远程分支名为origin/master，则可以使用以下命令将本地分支推送到远程分支
+git push origin master
+```
 
 ## git pull 和 fetch 的区别
+> git pull 命令相当于执行 git fetch 和 git merge 命令的组合。它会从远程仓库获取最新的代码，然后将其合并到当前分支中。如果远程仓库和本地仓库中的代码有冲突，git pull 命令会尝试自动解决这些冲突。如果自动解决失败，你需要手动解决冲突后再提交合并。
 - 借助pull命令就可以将远程仓库中的代码更新到本地的仓库中了
 - pull和fetch的区别，pull实现了一个合并的功能，等于fetch+merge
+```shell
+git fetch origin develop // 抓取远程develop分支
+git pull origin develop:master //这将下载develop分支的最新代码并将其合并到本地master分支中
+```
 - pull和clone的区别，pull实现了更新，而clone实现的是从无到有的建立
+```txt
+`git fetch origin test` 命令的执行过程如下：
+
+1. 首先，Git 会查找远程仓库 `origin` 的地址，并尝试连接该仓库。
+2. 接着，Git 会检查本地仓库中是否已经存在一个名为 `test` 的分支。如果不存在，则 Git 会在本地创建一个新的分支，名称为 `origin/test`。
+3. 然后，Git 会从远程仓库 `origin` 中拉取 `test` 分支的最新代码，并将其存储在本地仓库的 `origin/test` 分支上。
+4. 如果本地仓库中已经存在名为 `origin/test` 的分支，则 Git 会将远程仓库的 `test` 分支与本地仓库的 `origin/test` 分支进行合并。
+
+在执行 `git fetch origin test` 命令后，你可以通过 `git log origin/test` 命令查看 `origin/test` 分支上的最新代码提交记录。
+```
 
 ## git 快照的理解
 > 每次commit，都会生成变化了的文件的snapshot，在.git/object下，记录了变化的整个文件，所以在commit的时候比其它版本控制系统更快，并且由于git gc的存在，会把多余的bolb变成类似其它SVC的记录本法，记录文件的差异。这也是git更快的优势之一
