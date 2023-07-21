@@ -28,7 +28,8 @@ const test2 = ['123', {}, function] as const;//可以解决类型问题
 
 
 ## utility types
-- Parameter, 可以读取后面泛型的参数
+> [参考](https://juejin.cn/post/6994038108543156238#heading-11)
+- Parameter, 可以读取后面函数的的参数类型，返回元组
 - Partial，可以生成根据老类型生成新类型，允许不传任何属性
 - Omit，返回一个类型，可以删除一些属性的类型，剩余类型必须传
 - Pick

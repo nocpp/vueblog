@@ -86,3 +86,7 @@ Samesite=Strict 被称为是严格模式,表明这个 Cookie 在任何情况都�
 1. Arachni
 2. Mozilla HTTP Observatory
 3. w3af
+
+## Cookie安全
+> 场景：用户使用iframe嵌入了我们网页，在我们网页中使用Cookie存储token，在发送接口请求时，从Cookie中获取token并传递。但是由于同源限制，我们的网页无法设置Cookie。需要在设置Cookie的代码中加上SameSite: None;Secure。
+必须要Secure才能生效，并且设置好https与http不能相容
