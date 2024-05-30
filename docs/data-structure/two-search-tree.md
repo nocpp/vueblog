@@ -3,7 +3,7 @@ title: 二叉搜索树
 date: '2021-11-02'
 sidebar: 'auto'
 categories:
- - 数据结构
+ - 算法与数据结构
 tags:
  - 二叉搜索树
 publish: true

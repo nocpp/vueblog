@@ -3,7 +3,7 @@ title: 排序算法
 date: '2021-11-8'
 sidebar: 'auto'
 categories:
- - 数据结构
+ - 算法与数据结构
 tags:
  - 排序算法
 publish: true

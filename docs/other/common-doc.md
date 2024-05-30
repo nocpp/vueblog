@@ -19,10 +19,6 @@ publish: true
 -  React Transition Group 过渡
 -  React Motion 动画库
 -  React Spring 动画
--  
--  
--  
--  
 
 ## UmiJS配置代理
 ```js

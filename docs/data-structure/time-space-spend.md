@@ -3,7 +3,7 @@ title: 时间复杂度和空间复杂度
 date: '2021-10-19'
 sidebar: 'auto'
 categories:
- - 数据结构
+ - 算法与数据结构
 tags:
  - 时间复杂度
  - 空间复杂度

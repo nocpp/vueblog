@@ -92,7 +92,8 @@ View <==> ViewModel <==> Model
 
 
 ## 生命周期
-![例图](interview-react_files/1.jpg)
+- ![React16.0前生命周期](./interview-react_files/2.jpg)
+- ![React16.0后生命周期](./interview-react_files/1.jpg)
 ### 挂载时
 - constructor
 - static getDerivedStateFromProps（props, state），它应返回一个对象来更新 state
@@ -178,13 +179,48 @@ View <==> ViewModel <==> Model
 - host component，React 应用程序的叶节点，Fiber函数的返回值，最终交给Render渲染出来（创建或者更新）
 - [参考文章](https://github.com/acdlite/react-fiber-architecture)
 
+React Fiber 是 React 16 引入的一种新架构，用于提升 React 应用的性能和用户体验。以下是对 React Fiber 的理解和一些关键概念的解释：
+
+### 1. 什么是 React Fiber？
+React Fiber 是一种用来协调（协调即更新 UI 的过程） React 树的重新实现，它将 React 的渲染机制重新设计为一个增量可中断的渲染过程。传统的 React 渲染是同步且不可中断的，而 Fiber 使得渲染过程变得可分割和可中断，从而更好地管理复杂的更新和高优先级任务。
+
+### 2. Fiber 的核心概念
+- **增量渲染**：Fiber 将渲染工作分成多个小任务，每个任务可以在一个单位时间内完成。这允许 React 在渲染过程中暂停和恢复工作，从而在用户交互和复杂计算之间取得平衡。
+  
+- **优先级调度**：每个更新任务都有不同的优先级，React Fiber 可以根据任务的优先级来决定哪些任务应该优先处理。例如，用户输入等高优先级任务可以打断低优先级任务的执行。
+
+- **可中断和恢复**：Fiber 使得渲染过程可以被打断并在以后恢复。这对于保持流畅的用户体验非常重要，特别是在处理大量复杂更新时。
+
+### 3. Fiber 的工作原理
+Fiber 的工作分为两个阶段：
+- **Reconciliation（协调）阶段**：这个阶段主要是计算哪些部分需要更新，它是可以中断的。React 会遍历组件树并生成一个新的 Fiber 树，标记出需要更新的部分。
+- **Commit（提交）阶段**：这个阶段将更新应用到 DOM 上，它是同步且不可中断的。所有必要的 DOM 更新会在这个阶段一次性完成。
+
+### 4. Fiber 的数据结构
+每个 Fiber 是一个 JavaScript 对象，包含了组件的相关信息，如状态、props、更新队列等。Fiber 树是组件树的一种轻量级表示形式，用于在协调阶段跟踪组件的更新情况。
+
+### 5. 优势
+- **响应性提高**：由于渲染工作是可中断的，React 能在渲染复杂组件的同时保持界面的流畅响应。
+- **时间分片**：通过将渲染工作分割成小任务，React 可以更好地利用空闲时间片执行更新，避免长时间阻塞主线程。
+- **更好的错误处理**：Fiber 使得 React 能够更好地捕获和处理渲染过程中的错误，提升应用的稳定性。
+
+### 6. 具体实现
+React Fiber 的实现包括：
+- **Scheduler（调度器）**：负责管理不同优先级的任务，决定任务的执行顺序和时间。
+- **Work Loop**：核心工作循环，调度和执行各个 Fiber 任务。
+- **Expiration Time**：每个更新任务的过期时间，用于确定任务的优先级。
+
+### 总结
+React Fiber 是为了提升 React 性能和用户体验而引入的一个新架构，通过增量渲染、优先级调度和可中断的渲染机制，使得 React 能够更高效地处理复杂的更新和高优先级任务。在实际开发中，理解和利用 Fiber 的这些特性，可以帮助我们编写更高效、响应更快的 React 应用。
+
 ## 纯函数
 - 输入什么，就输出什么类型
 - 没有副作用，不改变输入值
 
 ## setState什么时候是同步，异步的？
-- 在原生事件回调函数，setTimout回调中是同步的
+- 在原生事件回调函数，setTimout回调中是同步的。
 - 在合成事件中回调是异步的
+- 在 React 18 引入了并发特性之后，setState 的批处理行为在所有上下文中都变得一致了。
 
 ## setState传对象会合并，batchUpdates
 ## setState传函数，不会合并
@@ -557,10 +593,12 @@ function MyComponent() {
 
 ### react-redux
 扮演了什么样的角色：把store中存的state，可以转为react组件中props，就是react-redux做的事情。
-- Provider <Provider store={Provider}>
-- connect Com = connect(mapStateToProps, mapDispatchToProps)(Com)
-- mapStateToProps
-- mapDispatchToProps
+```js
+Provider <Provider store={Provider}>
+connect Com = connect(mapStateToProps, mapDispatchToProps)(Com)
+mapStateToProps
+mapDispatchToProps
+```
 
 ### 异步action
 - 需要引入redux-thunx

@@ -3,7 +3,7 @@ title: 二叉树的应用
 date: '2021-11-02'
 sidebar: 'auto'
 categories:
- - 数据结构
+ - 算法与数据结构
 tags:
  - 二叉树
 publish: true

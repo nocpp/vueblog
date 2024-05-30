@@ -3,7 +3,7 @@ title: 队列的应用
 date: '2021-10-26'
 sidebar: 'auto'
 categories:
- - 数据结构
+ - 算法与数据结构
 tags:
  - 队列
 publish: true

@@ -71,7 +71,7 @@ px像素（Pixel）。相对长度单位。像素px是相对于显示器屏幕�
     由里向外content,padding,border,margin.
 2. 盒模型分为两种  
 	- border-box: IE盒子模型中，width表示content+padding+border这三个部分的宽度
-    - content-box: 在标准的盒子模型中，width指content部分的宽度 (默认是这个)
+  - content-box: 在标准的盒子模型中，width指content部分的宽度 (默认是这个)
 
 ## 画一个简单的三角形(利用边框透明来画)
 ```css
@@ -231,7 +231,7 @@ div{
 - 对于非继承属性，inherit 这指定的行为通常没有多大意义，一般使用使用 initial 或 unset 作为替代。
 
 ## margin折叠的意义是什么？
-是为了让多段落文章这种布局，更容易定义垂直间距，便于用户阅读。具体可以参照下面文章。在多个P段落中，如果想要保证每个段落间距是10px，并且开头结尾都要10px，只需要写margin 的top和bottom都等于10px就行了，如果没有这个特性，写了top 10px后，还得找到最后一个元素写10px marginBottom
+是为了让多段落文章这种布局，更容易定义垂直间距，便于用户阅读。具体可以参照下面文章。在多个P段落中，如果想要保证每个段落间距是10px，并且开头结尾都要10px，只需要写margin 的top和bottom都等于10px就行了，如果没有这个特性，写了top 10px后，还得找到第一个一个元素写marginTop: 0
 
 [margin折叠的意义](https://medium.com/@joseph0crick/margin-collapse-in-css-what-why-and-how-328c10e37ca0)
 
@@ -331,10 +331,32 @@ div{
 ```
 
 ## flex属性
-### flex-grow 与 flex的区别
-1. 剩余宽度计算方式不同, flex-grow的剩余宽度等于容器宽度减去所有项目宽度和, 而flex的剩余宽度等于flex-grow的剩余宽度加上设置了flex属性的项的宽度和
-2. 计算宽度方式都是剩余宽度*设置比例/设置了项目个数
-3. flex是几个值的简写，flex-grow，flex-shrink，flex-basis
+### flex-grow
+- 这个属性规定了 flex-grow 项在 flex 容器中分配剩余空间的相对比例。 主尺寸是项的宽度或高度，这取决于flex-direction值。
+- <number [0,∞]> 
+- 默认：0
+### flex-shrink
+- flex-shrink 属性指定了 flex 元素的收缩规则。flex 元素仅在默认宽度之和大于容器的时候才会发生收缩，其收缩的大小是依据 flex-shrink 的值。
+- <number [0,∞]> 
+- 默认：1
+### flex-basis
+- flex-basis 指定了 flex 元素在主轴方向上的初始大小，如果不使用 box-sizing 改变盒模型的话，那么这个属性就决定了 flex 元素的内容盒（content-box）的尺寸
+- 值可以是具体宽度，百分比，auto，content等关键字
+- 默认为: auto
+> 参考元素的宽度/高度（width/height）属性：如果元素有设置具体的宽度或高度（对于水平和垂直的弹性容器分别是 width 和 height），则 flex-basis 会使用这个设置值作为初始基础大小。
+> 内容大小：如果元素没有设置宽度或高度，那么 flex-basis 将会自动根据内容的大小来决定元素的基础大小。
+- flex-basis: 0表示，当 flex-basis: 0 时，项目的初始主尺寸为零，布局引擎会根据 flex-grow 或 flex-shrink 属性来动态调整项目的最终尺寸
+
+### flex属性
+- flex是几个值的简写，flex-grow，flex-shrink，flex-basis
+- 可以有1个参数，2个参数，3个参数
+- 其中1~2个参数有多种情况，大致分为：
+  + 根据值可以分为basis和非basis
+  + 所以不写basis，则flex-basis: 0
+  + 写了basis，则flex-shrink: 1
+
+### flex-grow: 1 与 flex: 1的区别
+- 就是flex-basis的区别，flex: 1的basis是0，flex-grow的basis则是auto
 
 ### 容器的属性
 - flex-direction
@@ -345,15 +367,7 @@ div{
 - align-content 属性设置了浏览器如何沿着弹性盒子布局的纵轴和网格布局的主轴在内容项之间和周围分配空间。（start，center等）
 
 ### 子元素属性
-- order  属性定义项目的排列顺序。数值越小，排列越靠前，默认为0。
-- flex-grow 定义项目的放大比例，默认为0，即如果存在剩余空间，也不放大。
-- flex-shrink 定义了项目的缩小比例，默认为1，即如果空间不足，该项目将缩小。
-- flex-basis 指定了 flex 元素在主轴方向上的初始大小。默认（auto）
-- flex 是（flex-grow，flex-shrink，flex-basis）的合写，可以使用一个，两个或三个值来指定 flex属性。
-	+ 如果值是一个无单位的数等于设置（flex: 1*这个数是你设置的num* 1 0）, 约等于设置了flex-grow的值
-	+ 如果是一个有单位值会当作设置了flex-basis的值
-	+ 如果是两个值，第一个值必须为一个无单位数，当作flex-grow，第二个值根据有无单位来作为flex-basis或者shrink
-	+ 第一/二个值必须为一个无单位数，第三个值必须有单位
+- order 属性定义项目的排列顺序。数值越小，排列越靠前，默认为0。
 - align-self 会对齐当前 grid 或 flex 行中的元素，并覆盖已有的 align-items 的值。
 
 ## display:none与visibility：hidden的区别？
@@ -374,6 +388,7 @@ div{
 10. 对属性频繁变动的元素使用will-change, 比如移动的，滚动的，让浏览器能提前准备，但不能过度使用，不变了记得关闭
 ```css
 will-change: transform, opacity;
+will-change: auto; // 关闭will-change
 ```
 
 ## 浏览器是怎样解析CSS选择器的？
@@ -456,6 +471,16 @@ div {
 ```
 > 可以做九宫格，图片墙。可以设置间距，flex不行
 [参考GRID详解](https://www.ruanyifeng.com/blog/2019/03/grid-layout-tutorial.html)
+
+
+## 线性渐变参数意义
+- 180deg代表渐变方向角度，180deg表示从上到下，也可以写作to bottom。0deg是从下到上，角度增加，方向顺时针旋转
+- red表示渐变开始的颜色，30%表示在这个位置开始red的渐变，没有写0%的话，默认是第一个颜色，当前就是red
+- 40%表示red到green渐变的中间位置，不写的话默认是中间位置
+- green表示渐变过程的颜色，70%表示在这个位置开始green的渐变，没有100%的颜色的话，默认是最后一个颜色
+```css
+background-image: linear-gradient(180deg, red 30%, 40%, green 70%);
+```
 
 ## 参考的文章
 [300题](https://juejin.cn/post/6914831351271292936)

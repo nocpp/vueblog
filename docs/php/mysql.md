@@ -3,16 +3,14 @@ title: Mysql相关问题
 date: '2022-11-05'
 sidebar: 'auto'
 categories:
- - php
+ - 后端相关
 tags:
  - mysql
-publish: false
+publish: true
 ---
-
-
 ## mysql初次安装后设置密码
 - [设置账号密码](https://developer.aliyun.com/article/1003260)
-- alter user'root'@'localhost' IDENTIFIED BY 'zll@123456';
+- alter user'root'@'localhost' IDENTIFIED BY 'test@123456';
 - 配置的目录
 > /opt/homebrew/etc/my.cnf
 

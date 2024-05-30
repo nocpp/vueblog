@@ -3,7 +3,7 @@ title: 易错点
 date: '2021-11-15'
 sidebar: 'auto'
 categories:
- - javascript
+ - 前端基础
 tags:
  - 易错点
 publish: true

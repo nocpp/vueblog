@@ -3,7 +3,7 @@ title: 谷歌真题
 date: '2021-11-17'
 sidebar: 'auto'
 categories:
- - 数据结构
+ - 算法与数据结构
 tags:
  - 谷歌真题
 publish: true

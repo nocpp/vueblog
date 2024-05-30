@@ -3,13 +3,11 @@ title: 数据结构与算法
 date: '2022-10-12'
 sidebar: 'auto'
 categories:
- - 软考
+ - 计算机基础
 tags:
  - 数据结构
 publish: true
 ---
-
-
 ## algorithm
 
 ### 排序算法

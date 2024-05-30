@@ -3,7 +3,7 @@ title: React常见问题
 date: '2022-07-11'
 sidebar: 'auto'
 categories:
- - react
+ - 前端基础
 tags:
  - react
 publish: true

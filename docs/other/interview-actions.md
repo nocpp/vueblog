@@ -178,7 +178,6 @@ function myNew(fn, ...args) {
 }
 ```
 3. 如何模拟实现一个 bind 的效果？
-
 ```js
 Function.prototype.bind_ = function (obj) {
     if (typeof this !== "function") {
@@ -496,31 +495,38 @@ sort方法在chrome的V8引擎里有两种排序方法：
             return arr;
         }
         
-        //快速排序
-        function Quick_Sort(arr, begin, end){
-            begin = typeof begin === 'number' ? begin : 0;
-            end = typeof end === 'number' ? end : arr.length - 1;
-            
-            if(begin > end)
-                return;
-
-            let tmp = arr[begin];
-            let i = begin;
-            let j = end;
-            while(i != j){
-                while(arr[j] >= tmp && j > i)
-                    j--;
-                while(arr[i] <= tmp && j > i)
-                    i++;
-                if(j > i){
-                    [arr[i], arr[j]] = [arr[j], arr[i]];
+        // 快速排序
+        function quickSort(array) {
+            // 边界条件：如果数组长度为0或1，则无需排序，直接返回。
+            if (array.length <= 1) {
+                return array;
+            }
+        
+            // 选择一个基准点，一般选择数组的第一个元素。
+            var pivot = array[0];
+        
+            // 定义两个数组，left存放小于pivot的元素，right存放大于等于pivot的元素。
+            var left = [];
+            var right = [];
+        
+            // 遍历数组，从第二个元素开始与pivot进行比较，分别放入left或right数组。
+            for (var i = 1; i < array.length; i++) {
+                if (array[i] < pivot) {
+                    left.push(array[i]);
+                } else {
+                    right.push(array[i]);
                 }
             }
-            arr[begin] = arr[i];
-            arr[i] = tmp;
-            Quick_Sort(arr, begin, i-1);
-            Quick_Sort(arr, i+1, end);
+        
+            // 递归对left和right进行排序，并将结果与pivot合并，返回最终结果。
+            return quickSort(left).concat(pivot, quickSort(right));
         }
+        
+        // 测试快速排序函数
+        var arr = [34, 7, 23, 32, 5, 62];
+        console.log("原数组:", arr);
+        var sortedArr = quickSort(arr);
+        console.log("排序后的数组:", sortedArr);
 
 ```
 [快速排序详解](https://blog.csdn.net/qq_40941722/article/details/94396010)

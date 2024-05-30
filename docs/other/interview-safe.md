@@ -10,32 +10,24 @@ publish: true
 ---
 
 ## 前端安全问题
-
-1.前端有哪些攻击方式？
-
-2.什么是XSS攻击？XSS攻击有几种类型？如果防范XSS攻击？
-
-3.什么是CSRF攻击？如何防范CSRF攻击
-
-4.如何检测网站是否安全？
+1. 前端有哪些攻击方式？
+2. 什么是XSS攻击？XSS攻击有几种类型？如果防范XSS攻击？
+3. 什么是CSRF攻击？如何防范CSRF攻击
+4. 如何检测网站是否安全？
 
 ## 1. XSS攻击
+> XSS(Cross-Site Scripting，跨站脚本攻击)是一种代码注入攻击。攻击者在目标网站上注入恶意代码，当被攻击者登陆网站时就会执行这些恶意代码，这些脚本可以读取 cookie，session tokens，或者其它敏感的网站信息，对用户进行钓鱼欺诈，甚至发起蠕虫攻击等。
 
-XSS(Cross-Site Scripting，跨站脚本攻击)是一种代码注入攻击。攻击者在目标网站上注入恶意代码，当被攻击者登陆网站时就会执行这些恶意代码，这些脚本可以读取 cookie，session tokens，或者其它敏感的网站信息，对用户进行钓鱼欺诈，甚至发起蠕虫攻击等。
-XSS 的本质是：恶意代码未经过滤，与网站正常的代码混在一起；浏览器无法分辨哪些脚本是可信的，导致恶意脚本被执行。由于直接在用户的终端执行，恶意代码能够直接获取用户的信息，利用这些信息冒充用户向网站发起攻击者定义的请求。
+> XSS 的本质是：恶意代码未经过滤，与网站正常的代码混在一起；浏览器无法分辨哪些脚本是可信的，导致恶意脚本被执行。由于直接在用户的终端执行，恶意代码能够直接获取用户的信息，利用这些信息冒充用户向网站发起攻击者定义的请求。
 
-**防御办法**
+### 开发遇到的实际情况
+用户在意见反馈，用户名等地方提交恶意代码，如果没做处理的话，后台在查看这个文本的时候，就会执行他的脚本，将用户的所有存储信息和网址发送给他，这样他可以利用用户信息进入到后台
 
-1.使用通用 XSS 攻击字串手动检测 XSS 漏洞
-
-如: jaVasCript:/*-/*`/*\`/*'/*"/**/(/* */oNcliCk=alert() )//%0D%0A%0d%0a//</stYle/</titLe/</teXtarEa/</scRipt/--!>\x3csVg/<sVg/oNloAd=alert()//>\x3e
-能够检测到存在于 HTML 属性、HTML 文字内容、HTML 注释、跳转链接、内联 JavaScript 字符串、内联 CSS 样式表等多种上下文中的 XSS 漏洞，也能检测 eval()、setTimeout()、setInterval()、Function()、innerHTML、document.write() 等 DOM 型 XSS 漏洞，并且能绕过一些 XSS 过滤器。
-<img src=1 onerror=alert(1)>
-
-2.使用第三方工具进行扫描
+### 防御办法
+1.前端在使用html或者富文本的地方，将利用xss防范库将xss攻击相关字段替换为实体符。还有就是尽量避免直接使用innerHTML
+2.后端在存储用户提交文本的时候，过滤掉xss相关字符
 
 ## 2. CSRF
-
 CSRF（Cross-site request forgery）跨站请求伪造：攻击者诱导受害者进入第三方网站，在第三方网站中，向被攻击网站发送跨站请求。利用受害者在被攻击网站已经获取的注册凭证，绕过后台的用户验证，达到冒充用户对被攻击的网站执行某项操作的目的。
 
 典型的CSRF攻击流程：
@@ -64,9 +56,7 @@ CSRF（Cross-site request forgery）跨站请求伪造：攻击者诱导受害�
 3. 使用Token(主流)
 
 4. Samesite Cookie属性
-5. 
-为了从源头上解决这个问题，Google起草了一份草案来改进HTTP协议，为Set-Cookie响应头新增Samesite属性，它用来标明这个 Cookie是个“同站 Cookie”，同站Cookie只能作为第一方Cookie，不能作为第三方Cookie，Samesite 有两个属性值，分别是 Strict 和 Lax。
-部署简单，并能有效防御CSRF攻击，但是存在兼容性问题。
+5. 为了从源头上解决这个问题，Google起草了一份草案来改进HTTP协议，为Set-Cookie响应头新增Samesite属性，它用来标明这个 Cookie是个“同站 Cookie”，同站Cookie只能作为第一方Cookie，不能作为第三方Cookie，Samesite 有两个属性值，分别是 Strict 和 Lax。部署简单，并能有效防御CSRF攻击，但是存在兼容性问题。
 
 Samesite=Strict
 
@@ -88,5 +78,6 @@ Samesite=Strict 被称为是严格模式,表明这个 Cookie 在任何情况都�
 3. w3af
 
 ## Cookie安全
-> 场景：用户使用iframe嵌入了我们网页，在我们网页中使用Cookie存储token，在发送接口请求时，从Cookie中获取token并传递。但是由于同源限制，我们的网页无法设置Cookie。需要在设置Cookie的代码中加上SameSite: None;Secure。
-必须要Secure才能生效，并且设置好https与http不能相容
+> 场景：用户使用iframe嵌入了我们网页，在我们网页中使用Cookie存储token，在发送接口请求时，从Cookie中获取token并传递。但是由于同源限制，我们的网页无法设置Cookie。
+
+> 需要在设置Cookie的代码中加上SameSite: None;Secure。必须要Secure才能生效，并且设置好https与http不能相容

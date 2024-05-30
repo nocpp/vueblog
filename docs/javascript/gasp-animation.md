@@ -3,7 +3,7 @@ title: GASP动画
 date: '2023-06-28'
 sidebar: 'auto'
 categories:
- - javascript
+ - 前端基础
 tags:
  - gasp,animation
 publish: true

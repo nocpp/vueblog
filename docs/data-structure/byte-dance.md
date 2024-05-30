@@ -3,7 +3,7 @@ title: 字节真题
 date: '2021-11-26'
 sidebar: 'auto'
 categories:
- - 数据结构
+ - 算法与数据结构
 tags:
  - 字节真题
 publish: true

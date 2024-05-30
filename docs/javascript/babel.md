@@ -3,16 +3,16 @@ title: Babel
 date: '2022-12-05'
 sidebar: 'auto'
 categories:
- - typescript
+ - 前端基础
 tags:
  - babel
 publish: true
 ---
 
-## Banbel
+## Babel
 相当于中介，把新出的代码转译为浏览器支持的版本代码，比如ES6转ES5
 	
-## Babel远离
+## Babel原理
 利用AST，把代码转译为ES5
 
 ## 架构

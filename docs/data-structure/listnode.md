@@ -3,7 +3,7 @@ title: 链表的应用
 date: '2021-10-22'
 sidebar: 'auto'
 categories:
- - 数据结构
+ - 算法与数据结构
 tags:
  - 链表
 publish: true

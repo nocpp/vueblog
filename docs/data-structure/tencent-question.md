@@ -3,7 +3,7 @@ title: 腾讯真题
 date: '2021-11-31'
 sidebar: 'auto'
 categories:
- - 数据结构
+ - 算法与数据结构
 tags:
  - 腾讯真题
 publish: true

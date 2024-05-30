@@ -3,7 +3,7 @@ title: 常用设计模式
 date: '2021-10-09'
 sidebar: 'auto'
 categories:
- - 设计模式
+ - 算法与数据结构
 tags:
  - 设计模式
 publish: true

@@ -3,7 +3,7 @@ title: 高阶组件
 date: '2021-10-09'
 sidebar: 'auto'
 categories:
- - react
+ - 前端基础
 tags:
  - 高阶组件
 publish: true

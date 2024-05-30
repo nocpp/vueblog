@@ -3,7 +3,7 @@ title: 软件工程
 date: '2022-10-12'
 sidebar: 'auto'
 categories:
- - 软考
+ - 计算机基础
 tags:
  - 软件工程
 publish: true

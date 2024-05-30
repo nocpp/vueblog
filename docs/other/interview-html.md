@@ -450,6 +450,93 @@ importScripts('script1.js', 'script2.js');//加载多个
 ## Web Components
 > Web Components是一系列可以用来定义自己的组件的API，比如user-card.
 [Web Components 入门实例教程](https://www.ruanyifeng.com/blog/2019/08/web_components.html)
+```html
+  <user-info></user-info>
+  
+  <script>
+    class UserInfo extends HTMLElement {
+        constructor() {
+            super();
+            const shadow = this.attachShadow({mode: 'open'});
+            this.user = { name: 'John Doe', age: 30 };
+            shadow.innerHTML = `
+              <style>
+                div {
+                  font-family: Arial, sans-serif;
+                }
+              </style>
+              <div>
+                <p>Name: <span id="name"></span></p>
+                <p>Age: <span id="age"></span></p>
+              </div>
+            `;
+        }
+  
+        connectedCallback() {
+            this.update();
+        }
+  
+        update() {
+            const nameElem = this.shadowRoot.querySelector('#name');
+            const ageElem = this.shadowRoot.querySelector('#age');
+            nameElem.textContent = this.user.name;
+            ageElem.textContent = this.user.age;
+        }
+    }
+  
+    customElements.define('user-info', UserInfo);
+  </script>
+```
+```html
+<custom-modal>
+    <span slot="title">My Modal</span>
+    <p slot="content">This is the content of the modal.</p>
+</custom-modal>
+
+<script>
+  class CustomModal extends HTMLElement {
+      constructor() {
+          super();
+          const shadow = this.attachShadow({mode: 'open'});
+          shadow.innerHTML = `
+            <style>
+              .modal {
+                display: none;
+                position: fixed;
+                z-index: 1;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                overflow: auto;
+                background-color: rgb(0,0,0);
+                background-color: rgba(0,0,0,0.4);
+              }
+              .modal-content {
+                background-color: #fefefe;
+                margin: 15% auto;
+                padding: 20px;
+                border: 1px solid #888;
+                width: 80%;
+              }
+            </style>
+            <div class="modal">
+              <div class="modal-content">
+                <slot name="title"></slot>
+                <slot name="content"></slot>
+              </div>
+            </div>
+          `;
+      }
+
+      connectedCallback() {
+          this.shadowRoot.querySelector('.modal').style.display = 'block';
+      }
+  }
+
+  customElements.define('custom-modal', CustomModal);
+</script>
+```
 
 ## Iframe父子通信方式
 ### 同域下父子页面的通信

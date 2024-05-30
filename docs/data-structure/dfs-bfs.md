@@ -3,7 +3,7 @@ title: DFS（深度优先搜索）和BFS（广度优先搜索）
 date: '2021-10-28'
 sidebar: 'auto'
 categories:
- - 数据结构
+ - 算法与数据结构
 tags:
  - DFS
  - BFS

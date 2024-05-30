@@ -3,7 +3,7 @@ title: TypeScript
 date: '2022-07-08'
 sidebar: 'auto'
 categories:
- - typescript
+ - 前端基础
 tags:
  - ts
 publish: true
@@ -22,7 +22,7 @@ const test2 = ['123', {}, function] as const;//可以解决类型问题
 ```
 ## type和interface的区别
 - type可以使用联合类型(string | number)
-- type可以创建utility types,比如Parameter<typeof http>
+- type可以创建utility types,比如Parameter&lt;typeof http&gt;
 - 虽然很多时候可以互换
 - interface 同名会合并
 

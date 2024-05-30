@@ -3,7 +3,7 @@ title: Vue知识
 date: '2022-11-30'
 sidebar: 'auto'
 categories:
- - vue
+ - 前端基础
 tags:
  - vue
 publish: true

@@ -3,7 +3,7 @@ title: 数据结构类型
 date: '2021-10-13'
 sidebar: 'auto'
 categories:
- - 数据结构
+ - 算法与数据结构
 tags:
  - 类型
 publish: true

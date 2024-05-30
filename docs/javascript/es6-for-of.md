@@ -3,7 +3,7 @@ title: ES6 中 for of
 date: '2021-10-19'
 sidebar: 'auto'
 categories:
- - javascript
+ - 前端基础
 tags:
  - forof
 publish: true
@@ -102,3 +102,43 @@ function idMaker() {
 - NodeList 对象
 
 > 对象结构没有，需要自己实现才能使用for of
+
+## 对象实现iterator，支持for of
+```js
+const myObject = {
+    a: 'a',
+    c: 'c',
+    b: 'b',
+    [Symbol.iterator]() {
+        let index = 0;
+        let keys = Object.keys(this);
+        return {
+            next: () => {
+                if (index < keys.length) {
+                    const theKey = keys[index++]
+                    return { value: this[theKey], done: false };
+                } else {
+                    return { done: true };
+                }
+            }
+        };
+    }
+};
+const myObject = {
+    a: 'a',
+    c: 'c',
+    b: 'b',
+    // generator 写法
+    [Symbol.iterator]: function*() {
+        let index = 0;
+        let keys = Object.keys(this);
+        for (let i = 0; i < keys.length; i++) {
+          if (index < keys.length) {
+            const theKey = keys[index++]
+            yield this[theKey];
+          }
+        }
+    }
+};
+for(const val of myObject) { console.log(val) }
+```

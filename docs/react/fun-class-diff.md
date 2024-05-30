@@ -1,9 +1,9 @@
 ---
-title: 函数组件和类组件的区别，普通变量放外面和里面以及和state和hooks变量的区别
+title: 函数组件和类组件的区别
 date: '2021-10-09'
 sidebar: 'auto'
 categories:
- - react
+ - 前端基础
 tags:
  - react
  - 函数组件
@@ -132,7 +132,7 @@ class ProfileClass extends React.Component {
 }
 ```
 
-
-### 变量写在组件外面，模块更新时不会重新生成该变量
-### 变量写在组件里面，模块更新时，会重新初始化
-### 变量赋值是hooks，模块更新时会查找该函数的hooks数组，有state的话会赋值给它
+## 变量位置影响
+- 变量写在组件外面，模块更新时不会重新生成该变量
+- 变量写在组件里面，模块更新时，会重新初始化
+- 变量赋值是hooks，模块更新时会查找该函数的hooks数组，有state的话会赋值给它

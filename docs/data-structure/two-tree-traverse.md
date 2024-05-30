@@ -3,7 +3,7 @@ title: 二叉树的遍历
 date: '2021-10-19'
 sidebar: 'auto'
 categories:
- - 数据结构
+ - 算法与数据结构
 tags:
  - 二叉树
  - 遍历

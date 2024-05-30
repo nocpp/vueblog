@@ -3,7 +3,7 @@ title: 环形链表
 date: '2021-10-25'
 sidebar: 'auto'
 categories:
- - 数据结构
+ - 算法与数据结构
 tags:
  - 环形链表
 publish: true

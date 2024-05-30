@@ -3,7 +3,7 @@ title: php基础
 date: '2022-12-06'
 sidebar: 'auto'
 categories:
- - php
+ - 后端相关
 tags:
  - php
 publish: true

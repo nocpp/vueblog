@@ -3,10 +3,10 @@ title: 使用技巧
 date: '2023-07-21'
 sidebar: 'auto'
 categories:
- - 深度思考
+ - 个人思考
 tags:
  - 技巧
-publish: false
+publish: true
 ---
 
 ## 深呼吸技巧

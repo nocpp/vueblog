@@ -3,7 +3,7 @@ title: 堆结构
 date: '2021-11-8'
 sidebar: 'auto'
 categories:
- - 数据结构
+ - 算法与数据结构
 tags:
  - 堆
 publish: true
@@ -175,4 +175,58 @@ function findKMax(arr, k) {
 	
 	return heap[0];
 }
+```
+
+
+## 堆排序升序
+```js
+// 堆排序的主函数
+function heapSort(array) {
+  let n = array.length;
+
+  // 建立最大堆
+  for (let i = Math.floor(n / 2) - 1; i >= 0; i--) {
+    heapify(array, n, i);
+  }
+
+  // 一个个取出元素重新构建堆
+  for (let i = n - 1; i > 0; i--) {
+    // 将当前根（最大的）与末尾元素交换
+    [array[0], array[i]] = [array[i], array[0]];
+    // 调整堆
+    heapify(array, i, 0);
+  }
+
+  return array;
+}
+
+// 调整最大堆
+function heapify(array, heapSize, rootIndex) {
+  let largest = rootIndex; // 根节点
+  let leftChild = 2 * rootIndex + 1; // 左子节点
+  let rightChild = 2 * rootIndex + 2; // 右子节点
+
+  // 如果左子节点存在，且大于根节点
+  if (leftChild < heapSize && array[leftChild] > array[largest]) {
+    largest = leftChild;
+  }
+
+  // 如果右子节点存在，且大于根节点
+  if (rightChild < heapSize && array[rightChild] > array[largest]) {
+    largest = rightChild;
+  }
+
+  // 如果最大值不是根节点
+  if (largest !== rootIndex) {
+    [array[rootIndex], array[largest]] = [array[largest], array[rootIndex]];
+    // 递归调整受影响的子树
+    heapify(array, heapSize, largest);
+  }
+}
+
+// 示例用法
+const arr = [12, 11, 13, 5, 6, 7];
+console.log("原数组:", arr);
+const sortedArr = heapSort(arr);
+console.log("排序后的数组:", sortedArr);
 ```

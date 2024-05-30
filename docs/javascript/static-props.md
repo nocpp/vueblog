@@ -3,7 +3,7 @@ title: class中静态属性和实例属性的区别
 date: '2021-10-09'
 sidebar: 'auto'
 categories:
- - javascript
+ - 前端基础
 tags:
  - static
 publish: true

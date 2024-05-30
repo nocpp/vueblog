@@ -3,7 +3,7 @@ title: 递归和回溯思想的应用
 date: '2021-10-28'
 sidebar: 'auto'
 categories:
- - 数据结构
+ - 算法与数据结构
 tags:
  - 递归
  - 回溯

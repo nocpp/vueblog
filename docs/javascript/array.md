@@ -3,7 +3,7 @@ title: JS数组
 date: '2021-10-31'
 sidebar: 'auto'
 categories:
- - javascript
+ - 前端基础
 tags:
  - 数组
 publish: true

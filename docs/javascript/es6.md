@@ -3,7 +3,7 @@ title: ES6 常用属性
 date: '2021-10-25'
 sidebar: 'auto'
 categories:
- - javascript
+ - 前端基础
 tags:
  - ES6
 publish: true
@@ -39,7 +39,7 @@ publish: true
 - const和let一样不会与window相映射、支持块级作用域、在声明的上面访问变量会报错
 
 ### 使用箭头函数应注意什么？
-1. 用了箭头函数，this就不是指向window，而是父级
+1. 用了箭头函数，this就不是指向调用者，而是父级
 2. 不能够使用arguments对象
 3. 不能用作构造函数，这就是说不能够使用new命令，否则会抛出一个错误
 4. 不可以使用yield命令，因此箭头函数不能用作 Generator 函数
@@ -68,11 +68,11 @@ window.str = window.str.replace(/\$\{(.*?)\}/g,function(){
 ```js
 //定义类
 class Point { 
-  constructor(x,y) { 
+  constructor(x,y) {
       //构造方法
        this.x = x; //this关键字代表实例对象
        this.y = y; 
-  } 
+  }
   
   //静态属性
   static name = 'age'

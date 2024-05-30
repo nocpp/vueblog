@@ -3,7 +3,7 @@ title: 正则表达式
 date: '2022-01-18'
 sidebar: 'auto'
 categories:
- - javascript
+ - 前端基础
 tags:
  - 正则
 publish: true
@@ -19,8 +19,13 @@ publish: true
 - 非贪婪匹配, 能匹配少的就不匹配多的原则, 可以用于获取多个括号内容。不加?，默认是贪婪模式，会按最长的匹配
 ```js
 let str = '你好，${name} 已经 ${age}岁了'
-str = str.match(/\$\{(.*?)\}/g)
-console.log(str);//结果 ['${name}', '${age}']，贪婪模式['${name} 已经 ${age}']
+let data = { name: '张三', age: 80 }
+str = str.replace(/\$\{(.*?)\}/g, (...args) => {
+    console.log(args) // ['${name}', 'name', 3, '你好，${name} 已经 ${age}岁了']
+    return data[args[1]]
+})
+console.log(str)
+// 输出：你好，张三 已经 80岁了
 ```
 - 先行断言，x 只有在 y 前面才匹配，必须写成/ x(?=y)/的形式
 ```js

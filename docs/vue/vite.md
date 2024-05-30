@@ -3,7 +3,7 @@ title: Vite知识
 date: '2022-12-08'
 sidebar: 'auto'
 categories:
- - vue
+ - 前端基础
 tags:
  - vite
 publish: true

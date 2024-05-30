@@ -646,9 +646,12 @@ nextTick 可以让我们在下次 DOM 更新循环结束之后执行延迟回调
 在 Vue 2.4 之前都是使用的 microtasks，但是 microtasks 的优先级过高，在某些情况下可能会出现比事件冒泡更快的情况，但如果都使用 macrotasks 又可能会出现渲染的性能问题。所以在新版本中，会默认使用 microtasks，但在特殊情况下会使用 macrotasks，比如 v-on。
 
 ### nextTick实现顺序
+### 微任务
 - Promise
 - MutationObserver
+### 宏任务
 - setImmediate
+- MessageChannel
 - setTimeout
 
 对于实现 macrotasks ，会先判断是否能使用 setImmediate ，不能的话降级为 MessageChannel ，以上都不行的话就使用 setTimeout
@@ -679,7 +682,7 @@ if (typeof setImmediate !== 'undefined' && isNative(setImmediate)) {
 
 ### Vue更新原理
 - 当数据变化得时候，会促发它得set方法中得派发更新 notify()
-- 遍历触发当前Dep中存放得watchr
+- 遍历触发当前Dep中存放得watcher
 - 因为vue数据变化得时候不会马上更新页面需要做些去重等事情，所以它走得是queueWatcher
 - 而queueWatcher处理后，把更新Dom放入nextTick这个方法中，触发watcher中的run
 - 所以nextTick中回调是能拿到更新后的Dom，因为是两个微任务，先更新Dom，再执行nextTick回调
@@ -751,14 +754,12 @@ vue得数据更新，会开启一个异步队列，将所有得数据变化缓�
 ### 不使用key和使用key的区别
 在diff过程中，如果没有key，就会之间销毁，重建，有key就会判断key是否相等，满足条件的话可以重用节点
 
-
-## VueX，待完善
+## VueX
 - state
 - getter
 - action
 - mutation
 - mapGetter
-- ...
 
 ### VueX为什么有action和mutations
 - mutation 必须是同步的
@@ -784,3 +785,13 @@ vm.$forceUpdate：迫使 Vue 实例重新渲染。注意它仅仅影响实例本
 
 我们需要知道一个小知识点，vm.$forceUpdate 本质上就是触发了渲染watcher的重新执行，和你去修改一个响应式的属性触发更新的原理是一模一样的，它只是帮你调用了 vm._watcher.update()（只是提供给你了一个便捷的api，在设计模式中叫做门面模式）
 - [vue 更新原理](https://www.yisu.com/zixun/153276.html)
+
+## React和Vue Diff算法对比
+- React 的 diff 算法：
+  + 相对简单，假设同级节点不会频繁移动，通过 key 属性来进行优化，采用逐层对比的策略。
+  + 单层对比：在每一层中，React 会先对比类型，如果类型不同直接替换整个节点。
+  + Key 的重要性：同级节点中使用 key 可以极大地优化算法性能，防止不必要的重新渲染
+- Vue 的 diff 算法：
+  + 双端对比：Vue 从两端同时进行对比，先对比头部，再对比尾部，然后对比中间部分。
+  + LIS 优化：在对比中间部分时，Vue 通过计算最长递增子序列来减少移动操作，从而优化性能。
+  + 更复杂，采用双端对比和最长递增子序列的优化策略，能够更智能地处理节点的插入、删除和移动。

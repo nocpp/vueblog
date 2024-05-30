@@ -3,7 +3,7 @@ title: JSX相关知识
 date: '2021-10-09'
 sidebar: 'auto'
 categories:
- - react
+ - 前端基础
 tags:
  - jsx
 publish: true
@@ -32,7 +32,7 @@ JSX语法糖允许前端开发者使用我们最熟悉的类HTML标签语法来�
 也提升了研发效率与研发体验。
 
 ## 自定义组件为什么必须用大写，html组件为什么用小写
-以小写字母开头的元素代表一个 HTML 内置组件，比如 div 或者 span 标签 会生成相应的字符串 'div' 或者 'span' 传递给 React.createElement（作为参数）。大写字母开头的元素则对应着在 JavaScript 引入或自定义的组件，如 <Foo /> 会编译为 React.createElement(Foo)。
+以小写字母开头的元素代表一个 HTML 内置组件，比如 div 或者 span 标签 会生成相应的字符串 'div' 或者 'span' 传递给 React.createElement（作为参数）。大写字母开头的元素则对应着在 JavaScript 引入或自定义的组件，如&lt;Foo/&gt; 会编译为 React.createElement(Foo)。
 
 我们建议使用大写字母开头命名自定义组件。如果你确实需要一个以小写字母开头的组件，则在 JSX 中使用它之前，必须将它赋值给一个大写字母开头的变量。
 
