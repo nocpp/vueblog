@@ -1,7 +1,7 @@
 module.exports = {
 	title: '干蛋杂货铺',
 	description: '记录学到的知识，活到老，学到老',
-  base: '/vueblog/',
+  base: '/',
 	markdown: {
 		lineNumbers: true
 	},
