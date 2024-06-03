@@ -16,6 +16,7 @@ module.exports = {
 		subSidebar: 'auto', //在所有页面中启用自动生成子侧边栏，原 sidebar 仍然兼容
 		authorAvatar: './avatar.png',
 		searchMaxSuggestions: 10,
+    darkMode: true, // 启用暗模式
 		type: 'blog',
 		// 博客配置
 		blogConfig: {
