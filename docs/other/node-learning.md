@@ -590,3 +590,107 @@ db
 const count = await db.collection('collectionName').countDocuments(query);
 console.log('创建时间大于昨日的记录条数:', count);
 ```
+
+
+## Node事件循环
+Node.js 的事件循环是其异步编程模型的核心部分。了解事件循环如何工作有助于理解 Node.js 如何处理并发操作。事件循环基于 libuv 库，负责处理异步 I/O 操作。
+
+### 事件循环的阶段
+
+事件循环分为以下几个阶段，每个阶段都有特定的任务队列：
+
+1. **Timers** 阶段
+2. **I/O Callbacks** 阶段
+3. **Idle, Prepare** 阶段
+4. **Poll** 阶段
+5. **Check** 阶段
+6. **Close Callbacks** 阶段
+
+### 详细解释
+
+1. **Timers 阶段**
+    - 本阶段执行 `setTimeout` 和 `setInterval` 回调函数。定时器的回调会在该阶段执行，如果定时器到期了（即等待的时间已经过去）。
+
+2. **I/O Callbacks 阶段**
+    - 执行一些上一次循环中被延迟到这一轮的 I/O 回调，通常是一些系统操作的回调。
+
+3. **Idle, Prepare 阶段**
+    - 该阶段仅供 libuv 内部使用。用户代码不会在此阶段运行。
+
+4. **Poll 阶段**
+    - 轮询阶段是事件循环的心脏。它执行 I/O 回调，并在适当时阻塞等待新的 I/O 事件。这是 I/O 事件（例如来自网络的读取和写入）被处理的主要阶段。
+    - 如果 poll queue 不为空，将按顺序同步执行这些回调，直到队列为空或达到系统限制。
+    - 如果 poll queue 为空，则发生以下情况：
+        - 如果有 `setImmediate` 回调需要执行，事件循环会结束 poll 阶段并进入 check 阶段以执行这些回调。
+        - 如果没有 `setImmediate` 回调需要执行，事件循环将等待 I/O 事件或定时器到期。
+
+5. **Check 阶段**
+    - 该阶段执行 `setImmediate` 回调。这些回调是由 `setImmediate` 函数安排的。
+
+6. **Close Callbacks 阶段**
+    - 本阶段执行一些关闭回调，例如 `socket.on('close', ...)`。
+
+### 事件循环示例
+
+以下示例展示了不同阶段的代码执行顺序：
+
+```javascript
+const fs = require('fs');
+
+console.log('Start');
+
+setTimeout(() => {
+  console.log('setTimeout 1');
+}, 0);
+
+setImmediate(() => {
+  console.log('setImmediate 1');
+});
+
+fs.readFile(__filename, () => {
+  console.log('File read complete');
+
+  setTimeout(() => {
+    console.log('setTimeout 2');
+  }, 0);
+
+  setImmediate(() => {
+    console.log('setImmediate 2');
+  });
+});
+
+process.nextTick(() => {
+  console.log('process.nextTick');
+});
+
+console.log('End');
+```
+
+#### 输出顺序
+
+```
+Start
+End
+process.nextTick
+setTimeout 1
+setImmediate 1
+File read complete
+setImmediate 2
+setTimeout 2
+```
+### 解释
+
+1. `console.log('start')` 和 `console.log('end')` 立即执行，因为它们在主模块中。
+2. `setTimeout(..., 0)` 将回调添加到 Timers 阶段的队列中。
+3. `setImmediate(...)` 将回调添加到 Check 阶段的队列中。希望立即执行用这个，setTimeout有延迟
+4. `fs.readFile` 是一个 I/O 操作，回调将在 Poll 阶段执行。
+
+注意，虽然 `setTimeout` 和 `setImmediate` 都设定为 0 毫秒，但 `setImmediate` 通常在 `setTimeout` 之前执行，因为它被添加到 Check 阶段，而 `setTimeout` 被添加到 Timers 阶段。
+
+当 `fs.readFile` 的回调执行时，`setImmediate` 回调将被添加到 Check 阶段，`setTimeout` 回调将被添加到 Timers 阶段。因此，`setImmediate` 回调先执行，随后是 `setTimeout` 回调。
+
+### 总结
+
+Node.js 的事件循环分为多个阶段，每个阶段处理特定类型的回调。了解这些阶段有助于优化代码性能，并避免潜在的并发问题。在 Node.js 中编写异步代码时，充分理解事件循环可以帮助你更好地设计和调试程序。
+
+## EggJS相关

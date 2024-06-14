@@ -398,30 +398,104 @@ Function.prototype.myCall = function(context, ...args) {
             })
         }).then(data => console.log(data))
 ```
+```js
+// 简易理解版Promise
+class MyPromise {
+  status = PENDING;
+  value = null;
+  reason = null;
+  onFulfilledCallback = [];
+  onRejectedCallback = [];
+  
+  constructor(executor) {
+    executor(this.resolve, this.reject);
+  }
+  
+  resolve = (value) => {
+    if (this.status === PENDING) {
+      this.status = FULFILLED;
+      this.value = value;
+      while (this.onFulfilledCallback.length){
+        this.onFulfilledCallback.shift()(this.value)
+      }
+    }
+  }
+  
+  reject = (reason) => {
+    if (this.status === PENDING) {
+      this.status = REJECTED;
+      this.reason = reason;
+      while (this.onRejectedCallback.length) {
+        this.onRejectedCallback.shift()(this.reason)
+      }
+    }
+  }
+  
+  then = (onFulfilled, onRejected) => {
+    const promise2 = new MyPromise((resolve, reject) => {
+      if (this.status === FULFILLED) {
+        queueMicrotask(() => {
+          const x = onFulfilled(this.value)
+          
+          resolvePromise(promise2, x, resolve, reject)
+        })
+      } else if (this.status === REJECTED) {
+        onRejected(this.reason)
+      } else if (this.status === PENDING) {
+        this.onFulfilledCallback.push(() => {
+          queueMicrotask(() => {
+            const x = onFulfilled(this.value)
+            
+            resolvePromise(promise2, x, resolve, reject)
+          })
+        });
+        this.onRejectedCallback.push(onRejected);
+      }
+    })
+    
+    return promise2
+  }
+}
 
+function resolvePromise (promise2, x, resolve, reject) {
+  if (x === promise2) {
+    return reject(new TypeError('Chaining cycle detected for promise #<Promise>'))
+  }
+  if (x instanceof MyPromise) {
+    x.then(resolve, reject)
+  } else {
+    resolve(x)
+  }
+}
+```
 6. 实现一个深拷贝
 ```js
-function deepClone(obj) {
-    let ret = {};
-    
-    for (let key in obj) {
-        ret[key] = typeof obj[key] === object ? obj[key] : deepClone(obj[key]);
+function deepClone(cloneData) {
+  const ret = {}
+  
+  for (const key in cloneData) {
+    if (typeof cloneData[key] === 'object') {
+      ret[key] = deepClone(cloneData[key])
+    } else {
+      ret[key] = cloneData[key]
     }
-    
-    return ret;
+  }
+  
+  return ret
 }
 ```
 
 7. 实现一个instanceof
 ```js
-function test(left, right) {
-    if (typeof left !== 'object' || left === null) return false;
-    let proto = Object.getPrototypeof(left);
-    while(true) {
-        if (proto === null) return false;
-        if (proto === right.prototype) return true;
-        proto = Object.getPrototypeof(proto);
-    }
+function myInstanceOf(obj, baseClass) {
+  if (typeof obj !== 'object' || obj === null) return false
+  
+  let proto = Object.getPrototypeOf(obj)
+  while (true){
+    if (proto === null) return false;
+    if (proto === baseClass.prototype) return true;
+    proto = Object.getPrototypeOf(proto);
+  }
 }
 ```
 

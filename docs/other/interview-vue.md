@@ -795,3 +795,28 @@ vm.$forceUpdate：迫使 Vue 实例重新渲染。注意它仅仅影响实例本
   + 双端对比：Vue 从两端同时进行对比，先对比头部，再对比尾部，然后对比中间部分。
   + LIS 优化：在对比中间部分时，Vue 通过计算最长递增子序列来减少移动操作，从而优化性能。
   + 更复杂，采用双端对比和最长递增子序列的优化策略，能够更智能地处理节点的插入、删除和移动。
+
+
+# Vue3相关
+## toRef和toRefs什么时候用？
+如果你确实需要解构 props 对象，或者需要将某个 prop 传到一个外部函数中并保持响应性，那么你可以使用 toRefs() 和 toRef() 这两个工具函数：
+```vue
+import { toRefs, toRef } from 'vue'
+
+export default {
+  setup(props) {
+    // 将 `props` 转为一个其中全是 ref 的对象，然后解构
+    const { title } = toRefs(props)
+    // `title` 是一个追踪着 `props.title` 的 ref
+    console.log(title.value)
+
+    // 或者，将 `props` 的单个属性转为一个 ref
+    const title = toRef(props, 'title')
+  }
+}
+```
+
+
+## pinia响应式
+store 是一个用reactive 包裹的对象，这意味着不需要在getter 之后写.value，但是，就像setup 中的props 一样，我们不能对其进行解构
+> 为了从 Store 中提取属性同时保持其响应式，您需要使用storeToRefs()。 它将为任何响应式属性创建 refs。 当您仅使用 store 中的状态但不调用任何操作时，这很有用

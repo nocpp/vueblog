@@ -32,6 +32,12 @@ publish: true
 2. HTTP服务器至少应该实现GET和HEAD/POST方法，其他方法都是可选的，此外除上述方法，特定的HTTP服务器支持扩展自定义的方法。
 :::
 
+## 什么时候浏览器会发起OPTIONS请求？
+1. 使用了复杂的 HTTP 方法：除了简单的 GET、POST（带特定的 MIME 类型）和 HEAD 请求，其他如 PUT、DELETE、PATCH 等方法都会触发预检请求。
+2. 使用了自定义的头字段：如果请求头中包含了非简单的自定义头字段（如 Authorization、X-Custom-Header 等），浏览器会进行预检。
+3. 使用了非简单的内容类型：例如，使用 application/json 这样的内容类型，而不是简单的 application/x-www-form-urlencoded、multipart/form-data 或 text/plain。
+4. 服务器可以通过设置 Access-Control-Max-Age 头来指示浏览器在指定的时间内缓存预检请求的结果。这样可以减少频繁的预检请求，提高性能。
+
 ## 请求中常用的字段
 ### 请求头
 - Host

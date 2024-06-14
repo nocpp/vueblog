@@ -473,7 +473,7 @@ function object(o) {
 
 ## 闭包
 :::tip
-当函数可以记住并访问所在的词法作用域，即使函数是在当前词法作用域之外执行，这时就产生了闭包。
+闭包是指一个函数和其周围的状态（词法环境，lexical environment）的引用捆绑在一起形成的实体。在 JavaScript 中，闭包允许函数访问其词法环境，即使这个函数是在其词法环境之外调用的。
 :::
 ```js
 function wait(message) { 
@@ -535,6 +535,113 @@ try {
 2. 解析/语法分析，把词法单元流（数组）转为AST，抽象语法树
 3. 代码生成，把AST转为可执行代码
 
+## 变量声明提升
+JavaScript 中的变量提升（Hoisting）是描述 JavaScript 在代码执行之前，将变量和函数的声明移至其所在作用域顶部的现象。理解变量提升对编写和调试代码非常重要。以下是关于变量提升的一些详细解释：
+
+### 1. 变量声明提升
+
+当使用 `var` 关键字声明变量时，变量声明会被提升到其作用域的顶部，但变量赋值不会。这意味着，在变量声明之前就可以访问变量，但是其值是 `undefined`（除非提前赋值）。
+
+示例：
+
+```javascript
+console.log(a); // 输出: undefined
+var a = 10;
+console.log(a); // 输出: 10
+```
+
+实际上，JavaScript 引擎会将上面的代码理解为：
+
+```javascript
+var a;
+console.log(a); // 输出: undefined
+a = 10;
+console.log(a); // 输出: 10
+```
+
+### 2. 函数声明提升
+
+函数声明会被提升到其作用域的顶部，并且整个函数体都会在提升的过程中被提升。
+
+示例：
+
+```javascript
+console.log(foo()); // 输出: "Hello, World!"
+
+function foo() {
+    return "Hello, World!";
+}
+```
+
+上述代码等价于：
+
+```javascript
+function foo() {
+    return "Hello, World!";
+}
+
+console.log(foo()); // 输出: "Hello, World!"
+```
+
+### 3. 变量赋值提升 VS 函数声明提升
+
+如果变量和函数同名，函数声明会优先于变量声明被提升，但是变量赋值仍然会在代码执行到赋值的那一行时才生效。
+### 分析
+- 函数声明会在变量声明之前被提升。这意味着如果一个名字同时被用于函数和变量声明，在提升时都会提升，但函数声明会覆盖变量声明。
+- 变量赋值在脚本执行时才会生效，而不是在变量被声明的时候。这是在具体执行代码行时进行的。
+
+示例：
+
+```javascript
+console.log(bar); // 输出: function bar() {...}
+
+var bar = 10;
+
+function bar() {
+    return "World";
+}
+
+console.log(bar); // 输出: 10
+```
+
+上述代码等价于：
+
+```javascript
+function bar() {
+    return "World";
+}
+
+var bar;
+
+console.log(bar); // 输出: function bar() {...}
+
+bar = 10;
+
+console.log(bar); // 输出: 10
+```
+
+### 4. `let` 和 `const` 的变量提升
+
+与 `var` 不同，`let` 和 `const` 声明的变量也会被提升，但在变量声明之前访问它们会引发 `ReferenceError`，这一现象叫做 “暂时性死区（TDZ, Temporal Dead Zone）”。
+
+示例：
+
+```javascript
+console.log(a); // ReferenceError: Cannot access 'a' before initialization
+let a = 10;
+console.log(a); // 输出: 10
+```
+
+上述代码等价于：
+
+```javascript
+// 进入暂时性死区
+let a; // 被提升，但不可访问
+console.log(a); // ReferenceError
+a = 10; // 脱离暂时性死区
+console.log(a); // 输出: 10
+```
+
 ## 作用域链
 > 函数是特殊的可执行对象,函数中存在这一个内部属性[[Scope]]（我们不能使用，供js引擎使用）.
 > 函数被创建时，这个内部属性就会包含函数被创建的作用域中对象的集合，这个集合呈链式链接，被称为函数的作用域链。
@@ -587,11 +694,56 @@ function bar(f) {
 
 bar(fn);
 ```
+### 自由变量
+- 在JavaScript中，自由变量（Free Variable）指的是在函数中使用的变量，但是这个变量不是在函数的参数列表中定义的，也不是在函数体内部通过let或var声明的。换句话说，自由变量是在函数外部定义的变量，然后在函数内部被引用。
+- 自由变量通常与闭包（Closure）概念相关联。闭包是JavaScript中一个重要的特性，它允许函数访问创建时的作用域链，即使这个函数在其原始作用域之外被执行。这意味着闭包可以访问并操作自由变量。
 
 ### 参考文章
 - [CSDN详解](https://blog.csdn.net/q1056843325/article/details/53086893)
 - [深入理解javascript原型和闭包（完结）](https://www.cnblogs.com/wangfupeng1988/p/3977924.html)
 - [context和scope的区别](https://modernweb.com/understanding-scope-and-context-in-javascript/#:~:text=Fundamentally%2C%20scope%20is%20function%2Dbased,owns%E2%80%9D%20the%20currently%20executing%20code.)
+
+## JavaScript 引擎是如何查找变量的（词法作用域）
+JavaScript 引擎查找变量的过程遵循词法作用域（Lexical Scoping）规则。词法作用域是由变量声明的位置决定的，而不是变量赋值时的位置。这个过程通常被称为作用域链（Scope Chain）。
+
+以下是 JavaScript 引擎查找变量的步骤：
+
+1. **进入全局作用域**：引擎首先在全局作用域中查找变量。全局作用域是代码执行的起点，全局变量在整个程序中都是可见的。
+
+2. **函数作用域**：如果当前代码在函数内部执行，引擎会在当前函数的作用域中查找变量。如果找到了变量，查找过程结束。
+
+3. **嵌套作用域**：如果当前函数嵌套在其他函数中，引擎会继续在外部（父）函数的作用域中查找变量。这个过程会一直持续，直到找到匹配的变量或者到达全局作用域。
+
+4. **变量未找到**：如果在所有作用域中都没有找到变量，引擎会抛出一个 `ReferenceError` 错误。
+
+5. **遮蔽（Shadowing）**：在嵌套作用域中，内部作用域中的变量可以遮蔽外部作用域中的同名变量。引擎会优先查找内部作用域中的变量。
+
+6. **闭包**：闭包是指函数能够记住并访问其创建时的作用域，即使该函数在其原始作用域之外执行。当引擎查找变量时，它也会考虑闭包的作用域。
+
+### 示例：
+
+```javascript
+function outerFunction() {
+    var outerVariable = 'I am outer';
+
+    function innerFunction() {
+        var innerVariable = 'I am inner';
+        console.log(outerVariable); // 查找过程：innerFunction -> outerFunction
+    }
+
+    innerFunction();
+}
+
+outerFunction();
+```
+
+在这个例子中，当 `innerFunction` 执行并尝试访问 `outerVariable` 时，引擎会首先在 `innerFunction` 的作用域中查找，找不到就继续在 `outerFunction` 的作用域中查找，最终找到并输出 `'I am outer'`。
+
+### 词法作用域与提升：
+
+需要注意的是，词法作用域与变量和函数的提升（Hoisting）是两个不同的概念。提升是指变量和函数声明在代码执行前被移动到作用域顶部的过程，而词法作用域决定了引擎如何在作用域链中查找变量。
+
+理解词法作用域对于编写结构清晰、易于维护的JavaScript代码非常重要，它有助于避免作用域相关的错误和混淆。
 
 ## 函数上下文
 一般指的函数的this

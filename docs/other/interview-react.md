@@ -658,3 +658,19 @@ React.useEffect(() => {
 	}
 }, [data]);
 ```
+
+## 实现一个useState
+```jsx
+const useState = defaultValue => {
+  const val = useRef(defaultValue)
+  const setVal = (newVal) => {
+    if (typeof newVal === 'function') {
+      val.current = newVal(val.current)
+    } else {
+      val.current = newVal
+    }
+  }
+  
+  return [val, setVal]
+}
+```
